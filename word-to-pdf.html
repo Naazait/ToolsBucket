@@ -5,275 +5,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Word → PDF Converter | Tools Bucket</title>
   <meta name="description" content="Client‑side Word (.docx) to PDF converter for Tools Bucket. No server needed." />
-  <!-- Theme: Bright Blue & White -->
   <style>
     :root{
-      --primary:#1677ff; /* bright blue */
+      --primary:#1677ff;
       --primary-600:#1966d2;
-      --primary-700:#134da3;
       --bg:#ffffff;
       --text:#0b1220;
       --muted:#6b7280;
-      --ring: rgba(22,119,255,0.35);
-      --card:#f7faff;
       --border:#e5efff;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-      color:var(--text); background:linear-gradient(180deg,#ffffff 0%, #f7fbff 100%);
-    }
-    .container{max-width:920px; margin-inline:auto; padding:clamp(16px, 2.5vw, 32px)}
-    .header{
-      display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;
-    }
-    .logo{width:40px; height:40px; border-radius:10px; background:var(--primary); display:grid; place-items:center; color:#fff; font-weight:800; box-shadow:0 6px 20px rgba(22,119,255,.35)}
-    h1{font-size:clamp(22px, 4vw, 32px); margin:0}
-    .subtitle{color:var(--muted); margin-top:4px}
-
-    .card{background:var(--bg); border:1px solid var(--border); border-radius:18px; padding:clamp(16px,2.5vw,24px); box-shadow:0 10px 30px rgba(22,119,255,.08)}
-
-    .uploader{display:grid; gap:14px}
-    .dropzone{
-      position:relative; border:2px dashed var(--border); border-radius:16px; background:var(--card);
-      padding:clamp(16px, 4vw, 26px); transition:.2s border-color, .2s background;
-      display:grid; gap:10px; justify-items:center; text-align:center;
-    }
-    .dropzone.drag{border-color:var(--primary); background:#fff}
-    .dropzone input[type="file"]{position:absolute; inset:0; opacity:0; cursor:pointer}
-
-    .btn{
-      appearance:none; border:none; background:var(--primary); color:#fff; font-weight:600;
-      padding:12px 16px; border-radius:12px; cursor:pointer; transition:transform .05s ease, box-shadow .2s ease, background .2s ease;
-      box-shadow:0 8px 20px rgba(22,119,255,.35);
-    }
-    .btn:hover{background:var(--primary-600)}
-    .btn:active{transform:translateY(1px)}
-    .btn.secondary{background:#fff; color:var(--primary); border:1px solid var(--border); box-shadow:none}
-    .btn.secondary:hover{background:#f3f7ff}
-    .btn:disabled{opacity:.6; cursor:not-allowed}
-
-    .actions{display:flex; gap:10px; flex-wrap:wrap}
-
-    .status{display:flex; align-items:center; gap:10px; color:var(--muted); min-height:24px}
-    .status .dot{width:10px; height:10px; border-radius:50%; background:var(--muted)}
-    .status.active .dot{background:var(--primary); box-shadow:0 0 0 6px var(--ring)}
-    .status.success .dot{background:#16a34a}
-    .status.error .dot{background:#ef4444}
-
-    .progress-wrap{display:none}
-    .progress{
-      width:100%; height:10px; background:#eef3ff; border-radius:999px; overflow:hidden; border:1px solid var(--border)
-    }
-    .progress > span{display:block; height:100%; width:0%; background:var(--primary); transition:width .25s ease}
-
-    footer{margin-top:22px; color:var(--muted); font-size:14px}
-    .footnote{font-size:12px; color:#5b6475}
-
-    /* Mobile optimizations */
-    @media (max-width:560px){
-      .card{padding:14px}
-    }
-
-    /* Hidden converted content container */
-    #converted-html{position:fixed; inset:-9999px; visibility:hidden}
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:#fff;color:var(--text)}
+    .container{max-width:800px;margin:auto;padding:20px}
+    .header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+    .logo{width:40px;height:40px;border-radius:10px;background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800}
+    h1{margin:0;font-size:28px}
+    .subtitle{color:var(--muted);margin-top:4px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:0 4px 12px rgba(22,119,255,.15)}
+    .dropzone{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;position:relative}
+    .dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .btn{background:var(--primary);color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:600}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn.secondary{background:#fff;color:var(--primary);border:1px solid var(--border)}
+    .status{margin-top:10px;color:var(--muted)}
+    #converted-html{position:fixed;inset:-9999px;visibility:hidden}
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header" role="banner">
-      <div class="logo" aria-hidden="true">TB</div>
+    <div class="header">
+      <div class="logo">TB</div>
       <div>
         <h1>Word → PDF Converter</h1>
         <div class="subtitle">Convert .docx files to downloadable PDFs — 100% client‑side.</div>
       </div>
     </div>
 
-    <main class="card" role="main" aria-labelledby="tool-title">
-      <div class="uploader" id="uploader">
-        <label for="file" class="dropzone" id="dropzone" aria-label="Upload Word file by clicking or dragging and dropping">
-          <input id="file" type="file" accept=".docx,.doc" aria-describedby="help" />
-          <div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--primary)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          </div>
-          <div>
-            <div style="font-weight:700">Drop your Word file here</div>
-            <div class="footnote">or click to browse (.docx recommended)</div>
-          </div>
-        </label>
-
-        <div class="actions">
-          <button class="btn" id="convertBtn" disabled>Convert to PDF</button>
-          <button class="btn secondary" id="resetBtn" disabled>Reset</button>
-        </div>
-
-        <div class="status" id="status"><span class="dot" aria-hidden="true"></span><span id="statusText">Awaiting file…</span></div>
-        <div class="progress-wrap" id="progressWrap" aria-hidden="true">
-          <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Conversion progress">
-            <span id="progressBar"></span>
-          </div>
-        </div>
-
-        <footer>
-          <div id="help">Privacy‑friendly: files are processed in your browser. Complex layouts may render differently because we convert via HTML.</div>
-        </footer>
+    <main class="card">
+      <label class="dropzone" id="dropzone">
+        <input id="file" type="file" accept=".docx" />
+        <p><strong>Drop your Word file here</strong><br><small>or click to browse (.docx only)</small></p>
+      </label>
+      <div style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" id="convertBtn" disabled>Convert to PDF</button>
+        <button class="btn secondary" id="resetBtn" disabled>Reset</button>
       </div>
+      <div class="status" id="status">Awaiting file…</div>
     </main>
 
-    <!-- Hidden container to hold converted HTML before rendering to PDF -->
     <div id="converted-html"></div>
   </div>
 
-  <!-- Dependencies (CDN). Keep these at the end of body for faster paint. -->
-  <!-- Mammoth.js: DOCX → HTML (client-side) -->
+  <!-- Libraries -->
   <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
-  <!-- html2pdf.js (bundles html2canvas + jsPDF) → HTML → PDF -->
+  <script src="https://cdn.jsdelivr.net/npm/docx-preview@0.4.0/dist/docx-preview.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docx-preview@0.4.0/dist/docx-preview.css">
   <script src="https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
 
   <script>
-    (function(){
-      const fileInput = document.getElementById('file');
-      const dropzone = document.getElementById('dropzone');
-      const convertBtn = document.getElementById('convertBtn');
-      const resetBtn = document.getElementById('resetBtn');
-      const statusEl = document.getElementById('status');
-      const statusText = document.getElementById('statusText');
-      const progressWrap = document.getElementById('progressWrap');
-      const progressBar = document.getElementById('progressBar');
-      const convertedHtml = document.getElementById('converted-html');
+    const fileInput=document.getElementById('file');
+    const dropzone=document.getElementById('dropzone');
+    const convertBtn=document.getElementById('convertBtn');
+    const resetBtn=document.getElementById('resetBtn');
+    const statusEl=document.getElementById('status');
+    const convertedHtml=document.getElementById('converted-html');
 
-      let currentFile = null;
+    let currentFile=null;
 
-      function setStatus(type, text){
-        statusEl.classList.remove('active','success','error');
-        if(type) statusEl.classList.add(type);
-        statusText.textContent = text || '';
-      }
-      function setProgress(pct){
-        progressBar.style.width = pct + '%';
-        const bar = progressWrap.querySelector('.progress');
-        bar.setAttribute('aria-valuenow', pct);
-      }
-      function enableActions(hasFile){
-        convertBtn.disabled = !hasFile;
-        resetBtn.disabled = !hasFile;
-      }
+    function setStatus(msg,color){statusEl.textContent=msg;if(color)statusEl.style.color=color;else statusEl.style.color='var(--muted)'}
+    function enableButtons(has){convertBtn.disabled=!has;resetBtn.disabled=!has}
 
-      function onFileSelected(file){
-        if(!file) return;
-        currentFile = file;
-        const isDocx = /\.docx$/i.test(file.name);
-        const isDoc = /\.doc$/i.test(file.name);
-        if(isDoc){
-          setStatus('error', 'Older .doc files are not supported. Please upload a .docx file.');
-          enableActions(false);
-          return;
-        }
-        if(!isDocx){
-          setStatus('error', 'Unsupported file type. Please choose a .docx file.');
-          enableActions(false);
-          return;
-        }
-        setStatus('active', 'Ready to convert: ' + file.name);
-        enableActions(true);
-      }
+    fileInput.addEventListener('change',e=>{const f=e.target.files[0];if(f){currentFile=f;setStatus('Ready to convert: '+f.name,'var(--primary)');enableButtons(true)}});
 
-      // Drag & Drop interactions
-      ['dragenter','dragover'].forEach(evtName => {
-        dropzone.addEventListener(evtName, e=>{e.preventDefault(); e.stopPropagation(); dropzone.classList.add('drag')});
-      });
-      ['dragleave','drop'].forEach(evtName => {
-        dropzone.addEventListener(evtName, e=>{e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('drag')});
-      });
-      dropzone.addEventListener('drop', e=>{
-        const dt = e.dataTransfer; const files = dt && dt.files; if(files && files[0]){ fileInput.files = files; onFileSelected(files[0]); }
-      });
+    dropzone.addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f){fileInput.files=e.dataTransfer.files;currentFile=f;setStatus('Ready to convert: '+f.name,'var(--primary)');enableButtons(true)}});
+    dropzone.addEventListener('dragover',e=>e.preventDefault());
 
-      // File input
-      fileInput.addEventListener('change', e=> onFileSelected(e.target.files[0]));
+    resetBtn.addEventListener('click',()=>{fileInput.value='';currentFile=null;enableButtons(false);setStatus('Awaiting file…')});
 
-      // Reset
-      resetBtn.addEventListener('click', ()=>{
-        fileInput.value = '';
-        currentFile = null; enableActions(false); setStatus('', 'Awaiting file…');
-        setProgress(0); progressWrap.style.display = 'none'; convertedHtml.innerHTML='';
-      });
-
-      // Convert
-      convertBtn.addEventListener('click', async ()=>{
-        if(!currentFile) return;
+    convertBtn.addEventListener('click',async()=>{
+      if(!currentFile) return;
+      try{
+        setStatus('Converting…','var(--primary)');
+        const arrayBuffer=await currentFile.arrayBuffer();
+        let html="";
         try{
-          setStatus('active','Converting…');
-          progressWrap.style.display = 'block'; setProgress(5);
-
-          // Read file into ArrayBuffer
-          const arrayBuffer = await currentFile.arrayBuffer();
-          setProgress(25);
-
-          // Convert DOCX → HTML using Mammoth (better for text fidelity)
-          const { value: html, messages } = await window.mammoth.convertToHtml({ arrayBuffer });
-          setProgress(50);
-
-          // Inject HTML into hidden container with print styles
-          convertedHtml.innerHTML = `
-            <div style="font-family: Georgia, 'Times New Roman', serif; color:#111; line-height:1.5;">
-              <style>
-                /* Basic normalization for document */
-                h1,h2,h3,h4,h5{margin:0 0 .5em 0}
-                p{margin:0 0 .75em 0}
-                table{border-collapse:collapse; width:100%}
-                td,th{border:1px solid #ddd; padding:6px}
-                img{max-width:100%; height:auto}
-                @page{margin:18mm}
-              </style>
-              ${html}
-            </div>`;
-          setProgress(65);
-
-          // HTML → PDF via html2pdf/jsPDF
-          const filename = (currentFile.name.replace(/\.[^.]+$/, '') || 'document') + '.pdf';
-          const opt = {
-            margin:       [12, 12, 12, 12], // top, left, bottom, right (mm are approximated)
-            filename,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: Math.min(2, window.devicePixelRatio || 1.5), useCORS: true },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak:    { mode: ['avoid-all','css','legacy'] }
-          };
-
-          setProgress(80);
-          await html2pdf().from(convertedHtml).set(opt).save();
-          setProgress(100);
-          setStatus('success','Done! Download should start automatically: ' + filename);
-
-          // Show any conversion notes from Mammoth
-          if(messages && messages.length){
-            console.info('Mammoth messages:', messages);
-          }
-        }catch(err){
-          console.error(err);
-          setStatus('error','Conversion failed: ' + (err && err.message ? err.message : 'Unexpected error'));
+          const result=await window.mammoth.convertToHtml({arrayBuffer});
+          html=result.value;
+        }catch(e){console.warn('Mammoth failed, using docx-preview',e)}
+        if(html && html.trim()){
+          convertedHtml.innerHTML='<div>'+html+'</div>';
+        }else{
+          convertedHtml.innerHTML='';
+          await window.DOCX.renderAsync(arrayBuffer,convertedHtml,null,{inWrapper:true});
         }
-      });
-
-      // Keyboard accessibility: press Enter to trigger convert when focused on Convert
-      convertBtn.addEventListener('keyup', (e)=>{ if(e.key==='Enter' && !convertBtn.disabled) convertBtn.click(); });
-
-    })();
+        const filename=(currentFile.name.replace(/\.[^.]+$/, '')||'document')+'.pdf';
+        await html2pdf().from(convertedHtml).set({filename,margin:10,html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4'}}).save();
+        setStatus('Done! PDF downloaded.','green');
+      }catch(err){console.error(err);setStatus('Conversion failed: '+err.message,'red')}
+    });
   </script>
-
-  <!--
-    NOTES & LIMITATIONS
-    - This tool converts .docx → HTML (Mammoth) and then HTML → PDF (html2pdf/jsPDF).
-    - Complex layouts (multi-column, SmartArt, some headers/footers, tracked changes) may render differently.
-    - Images are supported; embedded fonts are substituted by the browser.
-    - Everything runs in the browser; no files leave the device.
-
-    INTEGRATION TIPS (Tools Bucket):
-    - Drop this single file into your tools directory. If you use a shared header/footer, move the <main> block where needed.
-    - To match your site shell, you can remove the outer container and mount the uploader inside your layout.
-    - If your site uses CSP, allow CDNs: unpkg.com for Mammoth & html2pdf.
-  -->
 </body>
 </html>
