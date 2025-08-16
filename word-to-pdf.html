@@ -27,7 +27,7 @@
     .btn:disabled{opacity:.6;cursor:not-allowed}
     .btn.secondary{background:#fff;color:var(--primary);border:1px solid var(--border)}
     .status{margin-top:10px;color:var(--muted)}
-    #converted-html{position:fixed;inset:-9999px;visibility:hidden}
+    #converted-html{background:#fff;color:#000;padding:20px;max-width:800px;margin:auto}
   </style>
 </head>
 <body>
@@ -59,7 +59,7 @@
   <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docx-preview@0.4.0/dist/docx-preview.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docx-preview@0.4.0/dist/docx-preview.css">
-  <script src="https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
     const fileInput=document.getElementById('file');
@@ -79,7 +79,7 @@
     dropzone.addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f){fileInput.files=e.dataTransfer.files;currentFile=f;setStatus('Ready to convert: '+f.name,'var(--primary)');enableButtons(true)}});
     dropzone.addEventListener('dragover',e=>e.preventDefault());
 
-    resetBtn.addEventListener('click',()=>{fileInput.value='';currentFile=null;enableButtons(false);setStatus('Awaiting file…')});
+    resetBtn.addEventListener('click',()=>{fileInput.value='';currentFile=null;enableButtons(false);setStatus('Awaiting file…');convertedHtml.innerHTML='';});
 
     convertBtn.addEventListener('click',async()=>{
       if(!currentFile) return;
@@ -91,14 +91,25 @@
           const result=await window.mammoth.convertToHtml({arrayBuffer});
           html=result.value;
         }catch(e){console.warn('Mammoth failed, using docx-preview',e)}
+
         if(html && html.trim()){
           convertedHtml.innerHTML='<div>'+html+'</div>';
         }else{
           convertedHtml.innerHTML='';
           await window.DOCX.renderAsync(arrayBuffer,convertedHtml,null,{inWrapper:true});
         }
+
         const filename=(currentFile.name.replace(/\.[^.]+$/, '')||'document')+'.pdf';
-        await html2pdf().from(convertedHtml).set({filename,margin:10,html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4'}}).save();
+
+        const opt={
+          margin:       10,
+          filename:     filename,
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2, useCORS:true },
+          jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        await html2pdf().set(opt).from(convertedHtml).save();
+
         setStatus('Done! PDF downloaded.','green');
       }catch(err){console.error(err);setStatus('Conversion failed: '+err.message,'red')}
     });
