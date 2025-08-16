@@ -11,10 +11,10 @@
   <input type="file" id="pptFile" accept=".pptx">
   <button onclick="convertToPDF()">Convert to PDF</button>
 
-  <!-- jsPDF for PDF generation -->
+  <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- Pptx2Json for parsing PPTX -->
-  <script src="https://cdn.jsdelivr.net/npm/pptx2json/dist/pptx2json.min.js"></script>
+  <!-- JSZip -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
   <script>
     async function convertToPDF() {
@@ -25,24 +25,39 @@
       }
 
       const pptFile = fileInput.files[0];
-      const pptData = await pptx2json(pptFile); // Extract PPTX content
+      const arrayBuffer = await pptFile.arrayBuffer();
 
+      const zip = await JSZip.loadAsync(arrayBuffer);
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
 
-      pptData.slides.forEach((slide, i) => {
-        if (i > 0) doc.addPage(); // New page per slide
+      let slideIndex = 0;
+
+      // Look inside ppt/slides/
+      const slideFiles = Object.keys(zip.files).filter(f => f.startsWith("ppt/slides/slide") && f.endsWith(".xml"));
+
+      slideFiles.sort(); // Ensure slide order
+
+      for (const slideFile of slideFiles) {
+        const content = await zip.files[slideFile].async("string");
+
+        // Extract text between <a:t>...</a:t>
+        const matches = [...content.matchAll(/<a:t>(.*?)<\/a:t>/g)].map(m => m[1]);
+
+        if (slideIndex > 0) doc.addPage();
 
         doc.setFontSize(16);
-        doc.text(`Slide ${i + 1}`, 20, 20);
+        doc.text(`Slide ${slideIndex + 1}`, 20, 20);
 
         let y = 40;
-        slide.texts.forEach(t => {
+        matches.forEach(text => {
           doc.setFontSize(12);
-          doc.text(t.text, 20, y);
-          y += 10; // Move down for next text
+          doc.text(text, 20, y);
+          y += 10;
         });
-      });
+
+        slideIndex++;
+      }
 
       doc.save("converted_ppt.pdf");
     }
