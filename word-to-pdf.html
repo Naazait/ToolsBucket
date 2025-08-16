@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Word to PDF Converter</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -68,32 +69,33 @@
 
   <script>
     async function convertToPDF() {
+      const { jsPDF } = window.jspdf;
       const fileInput = document.getElementById('wordUpload');
       const status = document.getElementById('status');
+      
       if (!fileInput.files.length) {
         status.textContent = 'Please select a Word file.';
         return;
       }
 
       const file = fileInput.files[0];
-      status.textContent = 'Uploading and converting file...';
+      status.textContent = 'Reading and converting file...';
 
-      // Simulate conversion delay
-      setTimeout(() => {
-        status.textContent = 'Conversion successful! Download will start shortly.';
-
-        // Simulate PDF download
-        const blob = new Blob(
-          ["%PDF-1.4\n%Mock PDF file generated from Word\n"],
-          { type: 'application/pdf' }
-        );
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'converted.pdf';
-        a.click();
-        URL.revokeObjectURL(url);
-      }, 2000);
+      // For demo: just take file name and put into PDF
+      const reader = new FileReader();
+      reader.onload = function () {
+        const doc = new jsPDF();
+        doc.setFontSize(16);
+        doc.text("Word to PDF Conversion", 20, 20);
+        doc.setFontSize(12);
+        doc.text("Original File: " + file.name, 20, 40);
+        doc.text("This is a mock conversion. Real text extraction requires a parser.", 20, 60);
+        
+        // Save as PDF
+        doc.save("converted.pdf");
+        status.textContent = "Conversion successful! PDF downloaded.";
+      };
+      reader.readAsArrayBuffer(file);
     }
   </script>
 </body>
