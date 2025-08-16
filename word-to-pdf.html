@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Word to PDF Converter</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -62,7 +63,7 @@
 <body>
   <div class="container">
     <h1>Word to PDF Converter</h1>
-    <input type="file" id="wordUpload" accept=".doc,.docx" />
+    <input type="file" id="wordUpload" accept=".docx" />
     <button onclick="convertToPDF()">Convert to PDF</button>
     <p id="status"></p>
   </div>
@@ -70,31 +71,52 @@
   <script>
     async function convertToPDF() {
       const { jsPDF } = window.jspdf;
-      const fileInput = document.getElementById('wordUpload');
-      const status = document.getElementById('status');
-      
+      const fileInput = document.getElementById("wordUpload");
+      const status = document.getElementById("status");
+
       if (!fileInput.files.length) {
-        status.textContent = 'Please select a Word file.';
+        status.textContent = "Please select a Word (.docx) file.";
         return;
       }
 
       const file = fileInput.files[0];
-      status.textContent = 'Reading and converting file...';
+      status.textContent = "Reading Word file...";
 
-      // For demo: just take file name and put into PDF
       const reader = new FileReader();
-      reader.onload = function () {
-        const doc = new jsPDF();
-        doc.setFontSize(16);
-        doc.text("Word to PDF Conversion", 20, 20);
-        doc.setFontSize(12);
-        doc.text("Original File: " + file.name, 20, 40);
-        doc.text("This is a mock conversion. Real text extraction requires a parser.", 20, 60);
-        
-        // Save as PDF
-        doc.save("converted.pdf");
-        status.textContent = "Conversion successful! PDF downloaded.";
+      reader.onload = async function(event) {
+        try {
+          // Extract text from Word (.docx)
+          const arrayBuffer = event.target.result;
+          const result = await mammoth.extractRawText({ arrayBuffer });
+          const text = result.value.trim() || "No readable text found.";
+
+          status.textContent = "Converting to PDF...";
+
+          // Create PDF with extracted text
+          const doc = new jsPDF();
+          const margin = 20;
+          const pageHeight = doc.internal.pageSize.height;
+          let y = margin;
+
+          const lines = doc.splitTextToSize(text, 170);
+
+          lines.forEach(line => {
+            if (y > pageHeight - margin) {
+              doc.addPage();
+              y = margin;
+            }
+            doc.text(line, margin, y);
+            y += 10;
+          });
+
+          doc.save("converted.pdf");
+          status.textContent = "Conversion successful! PDF downloaded.";
+        } catch (err) {
+          console.error(err);
+          status.textContent = "Error converting file. Make sure it's a valid .docx.";
+        }
       };
+
       reader.readAsArrayBuffer(file);
     }
   </script>
