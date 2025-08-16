@@ -1,84 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>PPT to PDF Converter</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 255, 0.1);
-      text-align: center;
-    }
-    h1 {
-      color: #007bff;
-    }
-    input[type="file"] {
-      margin: 20px auto;
-      display: block;
-    }
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>PowerPoint to PDF Converter</h1>
-    <input type="file" id="pptUpload" accept=".ppt,.pptx" />
-    <button onclick="convertToPDF()">Convert to PDF</button>
-    <p id="status"></p>
-  </div>
+  <h2>PowerPoint to PDF Converter (Demo)</h2>
+  <input type="file" id="pptFile" accept=".ppt,.pptx">
+  <button onclick="convertToPDF()">Convert to PDF</button>
 
   <script>
     async function convertToPDF() {
-      const fileInput = document.getElementById("pptUpload");
-      const status = document.getElementById("status");
-
-      if (!fileInput.files.length) {
-        status.textContent = "Please select a PowerPoint file.";
+      const fileInput = document.getElementById('pptFile');
+      if (fileInput.files.length === 0) {
+        alert("Please upload a PowerPoint file");
         return;
       }
 
-      const file = fileInput.files[0];
-      status.textContent = "Uploading and converting file...";
+      // Create a real PDF using jsPDF
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
 
-      // Simulate backend conversion with timeout
-      setTimeout(() => {
-        status.textContent = "Conversion successful! Download will start shortly.";
+      // Demo: just put text saying the file was converted
+      doc.text("This is a demo PDF for: " + fileInput.files[0].name, 20, 30);
 
-        // Simulated PDF file
-        const blob = new Blob(
-          ["This is a mock PDF converted from PowerPoint."],
-          { type: "application/pdf" }
-        );
-
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "converted.pdf";
-        a.click();
-        URL.revokeObjectURL(url);
-      }, 2000);
+      // Save as a valid PDF
+      doc.save("converted.pdf");
     }
   </script>
 </body>
