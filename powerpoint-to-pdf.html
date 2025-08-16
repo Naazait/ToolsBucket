@@ -2,32 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PPT to PDF Converter</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PPTX to PDF Converter</title>
 </head>
-<body>
-  <h2>PowerPoint to PDF Converter (Demo)</h2>
-  <input type="file" id="pptFile" accept=".ppt,.pptx">
+<body style="font-family:sans-serif; text-align:center; padding:20px;">
+
+  <h2>PPTX to PDF Converter</h2>
+  <input type="file" id="pptFile" accept=".pptx">
   <button onclick="convertToPDF()">Convert to PDF</button>
+
+  <!-- jsPDF for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Pptx2Json for parsing PPTX -->
+  <script src="https://cdn.jsdelivr.net/npm/pptx2json/dist/pptx2json.min.js"></script>
 
   <script>
     async function convertToPDF() {
-      const fileInput = document.getElementById('pptFile');
+      const fileInput = document.getElementById("pptFile");
       if (fileInput.files.length === 0) {
-        alert("Please upload a PowerPoint file");
+        alert("Please upload a PPTX file first!");
         return;
       }
 
-      // Create a real PDF using jsPDF
+      const pptFile = fileInput.files[0];
+      const pptData = await pptx2json(pptFile); // Extract PPTX content
+
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
 
-      // Demo: just put text saying the file was converted
-      doc.text("This is a demo PDF for: " + fileInput.files[0].name, 20, 30);
+      pptData.slides.forEach((slide, i) => {
+        if (i > 0) doc.addPage(); // New page per slide
 
-      // Save as a valid PDF
-      doc.save("converted.pdf");
+        doc.setFontSize(16);
+        doc.text(`Slide ${i + 1}`, 20, 20);
+
+        let y = 40;
+        slide.texts.forEach(t => {
+          doc.setFontSize(12);
+          doc.text(t.text, 20, y);
+          y += 10; // Move down for next text
+        });
+      });
+
+      doc.save("converted_ppt.pdf");
     }
   </script>
+
 </body>
 </html>
