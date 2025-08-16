@@ -6,8 +6,12 @@
   <title>PDF to PowerPoint Converter</title>
 
   <!-- pdf.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script>
+    // Explicit worker setup
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+  </script>
 
   <!-- pptxgenjs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.11.0/pptxgen.bundle.js"></script>
@@ -16,49 +20,45 @@
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
-      color: #333;
       text-align: center;
-      padding: 20px;
+      padding: 30px;
     }
-    .container {
+    .box {
       max-width: 500px;
       margin: auto;
-      background: white;
+      background: #fff;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     button {
       background: #007bff;
       color: white;
       padding: 10px 20px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
+      margin-top: 10px;
     }
     button:hover {
       background: #0056b3;
     }
     #status {
-      margin-top: 15px;
-      font-size: 14px;
+      margin-top: 12px;
       color: #007bff;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="box">
     <h1>PDF to PowerPoint Converter</h1>
-    <input type="file" id="pdfUpload" accept=".pdf" />
+    <input type="file" id="pdfUpload" accept="application/pdf" />
+    <br>
     <button onclick="convertPDFtoPPT()">Convert to PPTX</button>
     <p id="status"></p>
   </div>
 
   <script>
-    // Tell pdf.js where to find its worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js";
-
     async function convertPDFtoPPT() {
       const fileInput = document.getElementById("pdfUpload");
       const status = document.getElementById("status");
@@ -90,19 +90,17 @@
 
             await page.render({ canvasContext: context, viewport: viewport }).promise;
 
-            // Convert page to image
             const imgData = canvas.toDataURL("image/png");
 
-            // Add slide with full image
             let slide = pptx.addSlide();
             slide.addImage({ data: imgData, x: 0, y: 0, w: 10, h: 7.5 });
           }
 
-          pptx.writeFile({ fileName: "converted-presentation.pptx" });
+          await pptx.writeFile({ fileName: "converted-presentation.pptx" });
           status.textContent = "Conversion successful! PPTX downloaded.";
         } catch (err) {
           console.error(err);
-          status.textContent = "Error converting file. Make sure it's a valid PDF.";
+          status.textContent = "Error converting file. Try running from a local server.";
         }
       };
 
