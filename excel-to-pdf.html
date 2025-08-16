@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Excel to PDF Converter</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 255, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      display: block;
+      margin: 20px auto;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 15px;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Excel to PDF Converter</h1>
+    <input type="file" id="excelUpload" accept=".xls,.xlsx" />
+    <button onclick="convertToPDF()">Convert to PDF</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    async function convertToPDF() {
+      const { jsPDF } = window.jspdf;
+      const fileInput = document.getElementById("excelUpload");
+      const status = document.getElementById("status");
+
+      if (!fileInput.files.length) {
+        status.textContent = "Please select an Excel file.";
+        return;
+      }
+
+      const file = fileInput.files[0];
+      status.textContent = "Reading Excel file...";
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const data = new Uint8Array(event.target.result);
+          const workbook = XLSX.read(data, { type: "array" });
+
+          // take first sheet
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+
+          // Convert sheet to JSON (rows & cols)
+          const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+          status.textContent = "Converting to PDF...";
+
+          const doc = new jsPDF();
+          const margin = 10;
+          const pageHeight = doc.internal.pageSize.height;
+          let y = margin;
+
+          doc.setFontSize(14);
+          doc.text("Excel to PDF Conversion", margin, y);
+          y += 10;
+
+          doc.setFontSize(10);
+
+          json.forEach((row) => {
+            let rowText = row.join("   |   ");
+            if (y > pageHeight - margin) {
+              doc.addPage();
+              y = margin;
+            }
+            doc.text(rowText, margin, y);
+            y += 8;
+          });
+
+          doc.save("converted.pdf");
+          status.textContent = "Conversion successful! PDF downloaded.";
+        } catch (err) {
+          console.error(err);
+          status.textContent = "Error converting file. Make sure it's a valid Excel file.";
+        }
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+  </script>
+</body>
+</html>
