@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF to PowerPoint Converter</title>
+
+  <!-- pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+  <!-- pptxgenjs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.11.0/pptxgen.bundle.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      text-align: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #status {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PDF to PowerPoint Converter</h1>
+    <input type="file" id="pdfUpload" accept=".pdf" />
+    <button onclick="convertPDFtoPPT()">Convert to PPTX</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    async function convertPDFtoPPT() {
+      const fileInput = document.getElementById("pdfUpload");
+      const status = document.getElementById("status");
+
+      if (!fileInput.files.length) {
+        status.textContent = "Please select a PDF file.";
+        return;
+      }
+
+      const file = fileInput.files[0];
+      status.textContent = "Processing...";
+
+      const reader = new FileReader();
+      reader.onload = async function (event) {
+        try {
+          const pdfData = new Uint8Array(event.target.result);
+          const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+
+          let pptx = new PptxGenJS();
+
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 2 });
+
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+            // Convert page to image
+            const imgData = canvas.toDataURL("image/png");
+
+            // Add slide with full image
+            let slide = pptx.addSlide();
+            slide.addImage({ data: imgData, x: 0, y: 0, w: 10, h: 7.5 });
+          }
+
+          pptx.writeFile({ fileName: "converted-presentation.pptx" });
+          status.textContent = "Conversion successful! PPTX downloaded.";
+        } catch (err) {
+          console.error(err);
+          status.textContent = "Error converting file. Make sure it's a valid PDF.";
+        }
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+  </script>
+</body>
+</html>
