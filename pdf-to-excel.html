@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF to Excel Converter</title>
+
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <!-- SheetJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 255, 0.1);
+      text-align: center;
+    }
+    h1 {
+      color: #007bff;
+    }
+    input[type="file"] {
+      margin: 20px auto;
+      display: block;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PDF to Excel Converter</h1>
+    <input type="file" id="pdfUpload" accept="application/pdf" />
+    <button onclick="convertToExcel()">Convert to Excel</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    async function convertToExcel() {
+      const fileInput = document.getElementById("pdfUpload");
+      const status = document.getElementById("status");
+
+      if (!fileInput.files.length) {
+        status.textContent = "Please select a PDF file.";
+        return;
+      }
+
+      const file = fileInput.files[0];
+      status.textContent = "Reading PDF file...";
+
+      const reader = new FileReader();
+      reader.onload = async function(event) {
+        try {
+          const typedArray = new Uint8Array(event.target.result);
+
+          const pdf = await pdfjsLib.getDocument(typedArray).promise;
+          let allText = [];
+
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const strings = textContent.items.map(item => item.str);
+            allText.push(strings.join(" "));
+          }
+
+          status.textContent = "Converting to Excel...";
+
+          // Convert extracted text into rows for Excel
+          const worksheetData = allText.map(line => [line]);
+
+          const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "PDF_Text");
+
+          XLSX.writeFile(wb, "converted.xlsx");
+
+          status.textContent = "Conversion successful! Excel file downloaded.";
+        } catch (err) {
+          console.error(err);
+          status.textContent = "Error converting file. Make sure it's a valid text-based PDF.";
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  </script>
+</body>
+</html>
