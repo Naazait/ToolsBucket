@@ -1,121 +1,303 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HEX to RGB Converter</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4faff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>HEX to RGB Converter | Free Online Color Tool</title>
+    <meta name="description" content="A free and fast online tool to convert HEX color codes to RGB values and vice-versa. Instantly get the corresponding RGB or HEX code with a live color preview.">
+    <meta name="keywords" content="hex to rgb, rgb to hex, hex to rgb converter, color converter, hex code, rgb values, online color tool, css color converter">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/hex-to-rgb.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online HEX to RGB Converter">
+    <meta property="og:description" content="Instantly convert between HEX and RGB color codes with our easy-to-use tool. Features a live color preview and one-click copy.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/hex-to-rgb.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/hex-to-rgb-og.png">
 
-    h2 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
 
-    .converter {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 1fr 200px; }
+        }
 
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
+        .converters { text-align: left; }
+        .control-group { margin-bottom: 20px; }
+        .control-group label { font-weight: 600; display: block; margin-bottom: 5px; }
+        .input-with-copy { display: flex; align-items: center; gap: 10px; }
+        .input-with-copy input { flex-grow: 1; }
+        
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+            font-family: monospace;
+        }
+        
+        .rgb-inputs { display: flex; gap: 10px; }
+        
+        .color-preview { width: 100%; height: 100%; min-height: 150px; border-radius: 10px; border: 1px solid var(--border-color); }
+        
+        .copy-btn {
+            background: #f0f0f0; border: 1px solid var(--border-color); cursor: pointer;
+            padding: 8px 12px; border-radius: 5px; font-size: 0.9em;
+        }
 
-    button {
-      background-color: #007bff;
-      color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-bottom: 15px;
-    }
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    button:hover {
-      background-color: #0056b3;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "HEX to RGB Converter",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to convert colors between HEX and RGB formats with a live preview."
     }
-
-    .result {
-      font-weight: bold;
-      color: #333;
-      margin-top: 10px;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a HEX color code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A HEX color code is a six-digit hexadecimal number used in web design and development to represent colors. It consists of three pairs of characters representing the intensity of Red, Green, and Blue (e.g., #FF5733)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What are RGB color values?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "RGB (Red, Green, Blue) is a color model that represents colors by mixing these three primary colors. Each color has a value between 0 and 255. For example, `rgb(255, 87, 51)` corresponds to the HEX code #FF5733."
+        }
+      }]
     }
-  </style>
+    </script>
 </head>
 <body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <h2>HEX to RGB Converter</h2>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>HEX to RGB Color Converter</h1>
+        <p>A simple and fast tool for web designers, developers, and artists to convert color codes between HEX and RGB formats. Our converter works in both directions and updates in real-time as you type. Use the color preview to see your selected color instantly, and copy the codes with a single click. No more guesswork—get the exact color codes you need, right when you need them.</p>
+    </section>
 
-  <div class="converter">
-    <input type="text" id="hexInput" placeholder="Enter HEX code e.g. #ff5733" />
-    <button onclick="convertHexToRgb()">Convert</button>
-    <div class="result" id="rgbResult">RGB: -</div>
-  </div>
-
-  <script>
-    function convertHexToRgb() {
-      const hex = document.getElementById("hexInput").value.trim();
-      const output = document.getElementById("rgbResult");
-
-      let validHex = hex.replace("#", "");
-      if (validHex.length === 3) {
-        validHex = validHex.split('').map(c => c + c).join('');
-      }
-
-      if (/^[0-9A-Fa-f]{6}$/.test(validHex)) {
-        const r = parseInt(validHex.substring(0, 2), 16);
-        const g = parseInt(validHex.substring(2, 4), 16);
-        const b = parseInt(validHex.substring(4, 6), 16);
-        output.textContent = `RGB: (${r}, ${g}, ${b})`;
-      } else {
-        output.textContent = "Invalid HEX code!";
-      }
-    }
-  </script>
-<!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
+    <div class="tool-container">
+        <div class="converters">
+            <h2>Converter</h2>
+            <div class="control-group">
+                <label for="hexInput">HEX Color Code</label>
+                <div class="input-with-copy">
+                    <input type="text" id="hexInput" placeholder="#RRGGBB" value="#007BFF">
+                    <button id="copyHex" class="copy-btn">Copy</button>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+            <div class="control-group">
+                <label>RGB Color Values</label>
+                <div class="rgb-inputs">
+                    <input type="number" id="rInput" min="0" max="255" placeholder="R">
+                    <input type="number" id="gInput" min="0" max="255" placeholder="G">
+                    <input type="number" id="bInput" min="0" max="255" placeholder="B">
+                </div>
+                 <div class="input-with-copy" style="margin-top:10px;">
+                    <input type="text" id="rgbString" readonly>
+                    <button id="copyRgb" class="copy-btn">Copy</button>
+                </div>
             </div>
         </div>
+        
+        <div class="preview-side">
+            <h2>Preview</h2>
+            <div id="colorPreview" class="color-preview"></div>
+        </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>About HEX and RGB</h2>
+        <p><strong>HEX</strong> and <strong>RGB</strong> are two of the most common ways to define colors in digital design. <strong>RGB</strong> uses a combination of Red, Green, and Blue light values (each from 0 to 255) to create a color. <strong>HEX</strong> is simply a different way of writing that same information, using a six-digit hexadecimal code that is easier to manage in CSS and HTML.</p>
+    </section>
+
+    <!-- === FIXED FOOTER SECTION === -->
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
+    <!-- === END FIXED FOOTER SECTION === -->
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const hexInput = document.getElementById('hexInput');
+        const rInput = document.getElementById('rInput');
+        const gInput = document.getElementById('gInput');
+        const bInput = document.getElementById('bInput');
+        const rgbString = document.getElementById('rgbString');
+        const colorPreview = document.getElementById('colorPreview');
+        
+        const copyHexBtn = document.getElementById('copyHex');
+        const copyRgbBtn = document.getElementById('copyRgb');
+
+        const hexToRgb = (hex) => {
+            let validHex = hex.replace("#", "");
+            if (validHex.length === 3) {
+                validHex = validHex.split('').map(c => c + c).join('');
+            }
+            if (!/^[0-9A-Fa-f]{6}$/.test(validHex)) return null;
+            
+            const r = parseInt(validHex.substring(0, 2), 16);
+            const g = parseInt(validHex.substring(2, 4), 16);
+            const b = parseInt(validHex.substring(4, 6), 16);
+            return { r, g, b };
+        };
+
+        const rgbToHex = (r, g, b) => {
+            if (isNaN(r) || isNaN(g) || isNaN(b) || r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+                return null;
+            }
+            return "#" + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+        };
+
+        const updateFromHex = () => {
+            const hex = hexInput.value;
+            const rgb = hexToRgb(hex);
+            if (rgb) {
+                rInput.value = rgb.r;
+                gInput.value = rgb.g;
+                bInput.value = rgb.b;
+                rgbString.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                colorPreview.style.backgroundColor = hex;
+            }
+        };
+
+        const updateFromRgb = () => {
+            const r = parseInt(rInput.value);
+            const g = parseInt(gInput.value);
+            const b = parseInt(bInput.value);
+            const hex = rgbToHex(r, g, b);
+            if (hex) {
+                hexInput.value = hex.toUpperCase();
+                rgbString.value = `rgb(${r}, ${g}, ${b})`;
+                colorPreview.style.backgroundColor = hex;
+            }
+        };
+
+        // Event Listeners
+        hexInput.addEventListener('input', updateFromHex);
+        [rInput, gInput, bInput].forEach(input => {
+            input.addEventListener('input', updateFromRgb);
+        });
+
+        const copyToClipboard = (text, button) => {
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = originalText; }, 2000);
+            });
+        };
+
+        copyHexBtn.addEventListener('click', () => copyToClipboard(hexInput.value, copyHexBtn));
+        copyRgbBtn.addEventListener('click', () => copyToClipboard(rgbString.value, copyRgbBtn));
+        
+        // Initial load
+        updateFromHex();
+    });
+  </script>
 
 </body>
 </html>
-
-  
-  
