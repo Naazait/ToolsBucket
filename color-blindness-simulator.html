@@ -1,175 +1,301 @@
-  
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Color Blindness Simulator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Color Blindness Simulator | Test Accessibility</title>
+    <meta name="description" content="Simulate different types of color blindness (Protanopia, Deuteranopia, Tritanopia, etc.) on any image. A free online tool for designers and developers to test for web accessibility.">
+    <meta name="keywords" content="color blindness simulator, colorblind simulator, accessibility tool, test for color blindness, protanopia simulator, deuteranopia, tritanopia, web accessibility checker">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/color-blindness-simulator.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Color Blindness Simulator">
+    <meta property="og:description" content="See how your images and designs look to people with different types of color vision deficiency. Upload an image to test for accessibility.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/color-blindness-simulator.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/color-blindness-simulator-og.png">
 
-    h2 {
-      color: #007bff;
-      margin-top: 20px;
-      margin-bottom: 20px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .main-container { width: 100%; max-width: 1000px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+        .controls-area { text-align: center; margin-bottom: 20px; }
+        .previews {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .previews { grid-template-columns: 1fr 1fr; }
+        }
+        .image-box { border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; }
+        .image-box h3 { text-align: center; }
+        .image-box img, .image-box canvas { max-width: 100%; border-radius: 5px; }
 
-    input[type="file"] {
-      margin: 20px 0;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 16px;
-      background-color: #f1f1f1;
-      border: 1px solid #ddd;
-    }
+        .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .upload-area.dragover { background-color: #e6f2ff; border-color: var(--primary-color); }
+        input[type="file"] { display: none; }
+        
+        select {
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    select {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      margin-top: 10px;
-      background-color: #f1f1f1;
-      border: 1px solid #ddd;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Color Blindness Simulator",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool for developers and designers to simulate various types of color vision deficiency on any image to test for accessibility."
     }
-
-    .image-container {
-      margin-top: 20px;
-      position: relative;
-      text-align: center;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Why is it important to test for color blindness?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Testing for color blindness is a critical part of web accessibility (a11y). Approximately 1 in 12 men and 1 in 200 women have some form of color vision deficiency. By simulating this, designers and developers can ensure that their websites, apps, and graphics are usable and understandable by everyone, regardless of their ability to distinguish colors."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How accurate is this simulation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This tool uses scientifically established color matrix transformations to simulate how an image's colors are perceived by individuals with different types of color blindness. While it provides a very close and useful approximation, individual perception can vary."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Are my images uploaded to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Your privacy is paramount. All image processing is done locally in your web browser using JavaScript. Your images are never uploaded to any server, ensuring they remain completely private."
+        }
+      }]
     }
-
-    img {
-      max-width: 100%;
-      border-radius: 8px;
-      transition: filter 0.3s ease;
-      object-fit: cover;
-    }
-
-    .note {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #555;
-    }
-
-    footer {
-      margin-top: 30px;
-      font-size: 14px;
-      color: #888;
-    }
-
-    footer a {
-      text-decoration: none;
-      color: #007bff;
-    }
-  </style>
+    </script>
 </head>
 <body>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Color Blindness Simulator</h1>
+        <p>Discover how your images, designs, and websites appear to people with different types of color vision deficiency. This accessibility tool is essential for designers, developers, and artists who want to create inclusive content that can be enjoyed by everyone. Simply upload an image and select a simulation type to see the world through a different set of eyes.</p>
+    </section>
 
-  <h2>Color Blindness Simulator</h2>
-
-  <div class="container">
-    <input type="file" id="imageInput" accept="image/*">
-    
-    <div class="image-container">
-      <img id="imagePreview" src="" alt="Upload an image to preview">
-    </div>
-
-    <select id="colorBlindnessType">
-      <option value="normal">Normal Vision</option>
-      <option value="deuteranopia">Deuteranopia (Red-Green)</option>
-      <option value="protanopia">Protanopia (Red-Green)</option>
-      <option value="tritanopia">Tritanopia (Blue-Yellow)</option>
-    </select>
-
-    <p class="note">Select the type of color blindness simulation on the image.</p>
-  </div>
-
-  <footer>
-    <p>Designed by <a href="https://example.com" target="_blank">YourName</a></p>
-  </footer>
-
-  <script>
-    const imageInput = document.getElementById('imageInput');
-    const imagePreview = document.getElementById('imagePreview');
-    const colorBlindnessType = document.getElementById('colorBlindnessType');
-
-    // Function to apply the color blindness filter using CSS
-    function applyColorBlindnessFilter() {
-      const selectedType = colorBlindnessType.value;
-      const image = imagePreview;
-
-      switch (selectedType) {
-        case 'normal':
-          image.style.filter = 'none';
-          break;
-        case 'deuteranopia':
-          image.style.filter = 'contrast(100%) saturate(150%) hue-rotate(50deg)';
-          break;
-        case 'protanopia':
-          image.style.filter = 'contrast(100%) saturate(150%) hue-rotate(-50deg)';
-          break;
-        case 'tritanopia':
-          image.style.filter = 'contrast(100%) saturate(150%) hue-rotate(170deg)';
-          break;
-        default:
-          image.style.filter = 'none';
-      }
-    }
-
-    // Preview the uploaded image
-    imageInput.addEventListener('change', function (e) {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        imagePreview.src = event.target.result;
-        applyColorBlindnessFilter();  // Apply filter immediately after image is uploaded
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    });
-
-    // Update filter on color blindness type change
-    colorBlindnessType.addEventListener('change', applyColorBlindnessFilter);
-  </script>
-<!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
+    <div class="tool-container">
+        <div class="controls-area">
+            <div id="uploadArea" class="upload-area">
+                <p>Drag & drop an image here, or click to select a file.</p>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+            <input type="file" id="imageInput" accept="image/*">
+            <br>
+            <label for="colorBlindnessType"><strong>Select Simulation Type:</strong></label>
+            <select id="colorBlindnessType">
+                <option value="normal">Normal Vision</option>
+                <option value="protanopia">Protanopia</option>
+                <option value="protanomaly">Protanomaly</option>
+                <option value="deuteranopia">Deuteranopia</option>
+                <option value="deuteranomaly">Deuteranomaly</option>
+                <option value="tritanopia">Tritanopia</option>
+                <option value="tritanomaly">Tritanomaly</option>
+                <option value="achromatopsia">Achromatopsia (Monochrome)</option>
+            </select>
+            <button id="downloadBtn" class="btn" style="display:none;">Download Simulation</button>
+        </div>
+
+        <div class="previews">
+            <div class="image-box">
+                <h3>Original Image</h3>
+                <img id="originalImage" src="" alt="Original image appears here">
+            </div>
+            <div class="image-box">
+                <h3>Simulated Image</h3>
+                <canvas id="simulatedCanvas"></canvas>
             </div>
         </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>Understanding Color Blindness</h2>
+        <ul>
+            <li><strong>Protanopia/Protanomaly:</strong> Reduced sensitivity to red light ("red-weakness"). Reds may appear dark or muted.</li>
+            <li><strong>Deuteranopia/Deuteranomaly:</strong> Reduced sensitivity to green light ("green-weakness"). This is the most common form of color blindness.</li>
+            <li><strong>Tritanopia/Tritanomaly:</strong> Reduced sensitivity to blue light ("blue-weakness"). This is a rarer condition.</li>
+            <li><strong>Achromatopsia:</strong> Complete color blindness, where everything is seen in shades of gray.</li>
+        </ul>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const imageInput = document.getElementById('imageInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const originalImage = document.getElementById('originalImage');
+        const simulatedCanvas = document.getElementById('simulatedCanvas');
+        const ctx = simulatedCanvas.getContext('2d');
+        const colorBlindnessSelect = document.getElementById('colorBlindnessType');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+
+        // Color blindness simulation matrices
+        const matrices = {
+            normal: [1, 0, 0, 0, 1, 0, 0, 0, 1],
+            protanopia: [0.567, 0.433, 0, 0.558, 0.442, 0, 0, 0.242, 0.758],
+            protanomaly: [0.817, 0.183, 0, 0.333, 0.667, 0, 0, 0.125, 0.875],
+            deuteranopia: [0.625, 0.375, 0, 0.7, 0.3, 0, 0, 0.3, 0.7],
+            deuteranomaly: [0.8, 0.2, 0, 0.258, 0.742, 0, 0, 0.142, 0.858],
+            tritanopia: [0.95, 0.05, 0, 0, 0.433, 0.567, 0, 0.475, 0.525],
+            tritanomaly: [0.967, 0.033, 0, 0, 0.733, 0.267, 0, 0.183, 0.817],
+            achromatopsia: [0.299, 0.587, 0.114, 0.299, 0.587, 0.114, 0.299, 0.587, 0.114]
+        };
+
+        const applySimulation = () => {
+            if (!img.src) return;
+
+            const matrix = matrices[colorBlindnessSelect.value];
+            simulatedCanvas.width = img.width;
+            simulatedCanvas.height = img.height;
+
+            ctx.drawImage(img, 0, 0);
+            const imageData = ctx.getImageData(0, 0, simulatedCanvas.width, simulatedCanvas.height);
+            const pixels = imageData.data;
+            
+            for (let i = 0; i < pixels.length; i += 4) {
+                const r = pixels[i];
+                const g = pixels[i + 1];
+                const b = pixels[i + 2];
+
+                pixels[i] = r * matrix[0] + g * matrix[1] + b * matrix[2];
+                pixels[i + 1] = r * matrix[3] + g * matrix[4] + b * matrix[5];
+                pixels[i + 2] = r * matrix[6] + g * matrix[7] + b * matrix[8];
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            downloadBtn.style.display = 'inline-block';
+        };
+
+        const handleFile = (file) => {
+            if (!file || !file.type.startsWith('image/')) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img.src = e.target.result;
+                originalImage.src = e.target.result;
+                img.onload = applySimulation;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // Event Listeners
+        uploadArea.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        colorBlindnessSelect.addEventListener('change', applySimulation);
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+        uploadArea.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
+        
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = `simulated-${colorBlindnessSelect.value}.png`;
+            link.href = simulatedCanvas.toDataURL('image/png');
+            link.click();
+        });
+    });
+  </script>
 
 </body>
 </html>
-
-  
-  
