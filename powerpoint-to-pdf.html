@@ -1,67 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PPTX to PDF Converter</title>
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free PPTX to PDF Converter | Convert PowerPoint to PDF Online</title>
+    <meta name="description" content="Convert PowerPoint (PPTX) presentations to PDF files online for free. Our tool processes your files securely in your browser, extracting text and images to create a PDF. No uploads required.">
+    <meta name="keywords" content="pptx to pdf, powerpoint to pdf, convert pptx to pdf, free pptx converter, pptx to pdf online">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/pptx-to-pdf.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online PPTX to PDF Converter">
+    <meta property="og:description" content="Easily convert your PowerPoint presentations into PDF documents. The entire conversion happens securely in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/pptx-to-pdf.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/pptx-to-pdf-og.png">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
+
+        .tool-container { text-align: center; }
+        .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .upload-area.dragover { background-color: #e6f2ff; border-color: var(--primary-color); }
+        input[type="file"] { display: none; }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .btn:disabled { background-color: #a0a0a0; cursor: not-allowed; }
+        
+        #status { font-weight: 600; margin-top: 15px; min-height: 24px; }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
+
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free PPTX to PDF Converter",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to convert PowerPoint (PPTX) presentations into PDF documents by extracting text and images."
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Is it safe to convert my PPTX file here?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, this tool is completely secure. Your PPTX file is unzipped and processed directly in your web browser. Your data is never uploaded to a server, ensuring it remains private."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Will the PDF look exactly like my PowerPoint presentation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This tool extracts text and images and places them in the PDF. While it attempts to maintain the content of each slide, complex layouts, animations, and special fonts may not be perfectly replicated. It is best for presentations with standard text and image layouts."
+        }
+      }]
+    }
+    </script>
 </head>
-<body style="font-family:sans-serif; text-align:center; padding:20px;">
+<body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <h2>PPTX to PDF Converter</h2>
-  <input type="file" id="pptFile" accept=".pptx">
-  <button onclick="convertToPDF()">Convert to PDF</button>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>PPTX to PDF Converter</h1>
+        <p>Easily convert your PowerPoint presentations (.pptx) into high-quality PDF documents. This tool is perfect for sharing presentations in a universal, non-editable format, or for archiving your work. Our converter processes your file securely in your browser, extracting text and images to create a PDF representation of your slides without uploading anything to a server.</p>
+    </section>
 
-  <!-- jsPDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- JSZip -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <div class="tool-container">
+        <h2>Convert PowerPoint to PDF</h2>
+        <div id="uploadArea" class="upload-area">
+            <p>Drag & drop your PPTX file here, or click to select a file.</p>
+            <p id="fileName" style="font-weight: bold;"></p>
+        </div>
+        <input type="file" id="pptxInput" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation">
+        
+        <button id="convertBtn" class="btn" disabled>Convert to PDF</button>
+        
+        <div id="status"></div>
+    </div>
+    
+    <section class="content-section">
+        <h2>Why Convert PPTX to PDF?</h2>
+        <ul>
+            <li><strong>Universal Compatibility:</strong> PDFs can be opened on almost any device without needing PowerPoint.</li>
+            <li><strong>Fixed Layout:</strong> Ensure your presentation looks the same everywhere, with no formatting changes.</li>
+            <li><strong>Easy Sharing:</strong> PDFs are often smaller and easier to share via email or online platforms.</li>
+        </ul>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
+    </footer>
+  </main>
 
   <script>
-    async function convertToPDF() {
-      const fileInput = document.getElementById("pptFile");
-      if (fileInput.files.length === 0) {
-        alert("Please upload a PPTX file first!");
-        return;
-      }
+    document.addEventListener('DOMContentLoaded', () => {
+        const pptxInput = document.getElementById('pptxInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileNameEl = document.getElementById('fileName');
+        const convertBtn = document.getElementById('convertBtn');
+        const statusEl = document.getElementById('status');
 
-      const pptFile = fileInput.files[0];
-      const arrayBuffer = await pptFile.arrayBuffer();
+        let pptxFile = null;
 
-      const zip = await JSZip.loadAsync(arrayBuffer);
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+        const setStatus = (message, type) => {
+            statusEl.textContent = message;
+            statusEl.style.color = type === 'success' ? 'var(--success-color)' : type === 'error' ? 'var(--error-color)' : 'var(--heading-color)';
+        };
 
-      let slideIndex = 0;
+        const handleFile = (file) => {
+            if (!file) return;
+            pptxFile = file;
+            fileNameEl.textContent = `Selected: ${file.name}`;
+            convertBtn.disabled = false;
+            setStatus('', 'info');
+        };
 
-      // Look inside ppt/slides/
-      const slideFiles = Object.keys(zip.files).filter(f => f.startsWith("ppt/slides/slide") && f.endsWith(".xml"));
-
-      slideFiles.sort(); // Ensure slide order
-
-      for (const slideFile of slideFiles) {
-        const content = await zip.files[slideFile].async("string");
-
-        // Extract text between <a:t>...</a:t>
-        const matches = [...content.matchAll(/<a:t>(.*?)<\/a:t>/g)].map(m => m[1]);
-
-        if (slideIndex > 0) doc.addPage();
-
-        doc.setFontSize(16);
-        doc.text(`Slide ${slideIndex + 1}`, 20, 20);
-
-        let y = 40;
-        matches.forEach(text => {
-          doc.setFontSize(12);
-          doc.text(text, 20, y);
-          y += 10;
+        uploadArea.addEventListener('click', () => pptxInput.click());
+        pptxInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
         });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+        uploadArea.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
 
-        slideIndex++;
-      }
+        convertBtn.addEventListener('click', async () => {
+            if (!pptxFile) return;
 
-      doc.save("converted_ppt.pdf");
-    }
+            convertBtn.disabled = true;
+            setStatus('Reading PPTX file...', 'info');
+
+            try {
+                const arrayBuffer = await pptxFile.arrayBuffer();
+                const zip = await JSZip.loadAsync(arrayBuffer);
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: 'landscape', unit: 'px', format: 'a4' });
+
+                const slideFiles = Object.keys(zip.files)
+                    .filter(f => f.startsWith("ppt/slides/slide") && f.endsWith(".xml"))
+                    .sort((a, b) => {
+                        const numA = parseInt(a.match(/slide(\d+)\.xml/)[1]);
+                        const numB = parseInt(b.match(/slide(\d+)\.xml/)[1]);
+                        return numA - numB;
+                    });
+                
+                for (let i = 0; i < slideFiles.length; i++) {
+                    const slidePath = slideFiles[i];
+                    setStatus(`Processing Slide ${i + 1} of ${slideFiles.length}...`, 'info');
+                    
+                    if (i > 0) doc.addPage();
+                    const slideContent = await zip.file(slidePath).async("string");
+                    
+                    // Extract text
+                    const textMatches = [...slideContent.matchAll(/<a:t>(.*?)<\/a:t>/g)].map(m => m[1]);
+                    let y = 40;
+                    textMatches.forEach(text => {
+                        doc.setFontSize(12);
+                        doc.text(text, 20, y);
+                        y += 15;
+                    });
+
+                    // Extract and add images
+                    const relsPath = `ppt/slides/_rels/${slidePath.split('/').pop()}.rels`;
+                    const relsFile = zip.file(relsPath);
+                    if (relsFile) {
+                        const relsContent = await relsFile.async("string");
+                        const imageRels = [...relsContent.matchAll(/<Relationship Id="rId(\d+)" Type=".*?image" Target="..\/media\/(.*?)"\/>/g)];
+
+                        for (const rel of imageRels) {
+                            const imagePath = `ppt/media/${rel[2]}`;
+                            const imageFile = zip.file(imagePath);
+                            if (imageFile) {
+                                const imageData = await imageFile.async("base64");
+                                const imageExt = imagePath.split('.').pop().toLowerCase();
+                                const format = (imageExt === 'jpeg' || imageExt === 'jpg') ? 'JPEG' : 'PNG';
+                                
+                                // This is a simplified placement. A real tool would need to parse coordinates from XML.
+                                doc.addImage(`data:image/${imageExt};base64,${imageData}`, format, 20, y, 100, 75);
+                                y += 85;
+                            }
+                        }
+                    }
+                }
+
+                setStatus('Generating PDF...', 'info');
+                const newFileName = pptxFile.name.replace(/\.pptx$/i, '.pdf');
+                doc.save(newFileName);
+                setStatus('Conversion successful! Your download has started.', 'success');
+
+            } catch (err) {
+                console.error(err);
+                setStatus("Error: Could not convert file. It may be corrupted or use an unsupported format.", 'error');
+            } finally {
+                convertBtn.disabled = false;
+            }
+        });
+        
+    });
   </script>
-
 </body>
 </html>
