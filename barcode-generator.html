@@ -1,142 +1,369 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Barcode Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #eef8ff;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Online Barcode Generator | Create Custom Barcodes</title>
+    <meta name="description" content="Generate high-quality, printable barcodes online for free. Supports various formats like CODE128, EAN, UPC, and more. Customize colors, size, and download as PNG, JPG, or SVG.">
+    <meta name="keywords" content="barcode generator, free barcode generator, create barcode, online barcode maker, CODE128 generator, EAN barcode, UPC generator, barcode creator">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/barcode-generator.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Barcode Generator">
+    <meta property="og:description" content="Instantly create and customize barcodes. Change colors, size, formats, and download high-resolution barcodes for free.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/barcode-generator.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/barcode-generator-og.png">
 
-    .container {
-      max-width: 400px;
-      margin: auto;
-      background: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
-    }
+    <!-- JsBarcode Library -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
-    h2 {
-      color: #007bff;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+            --error-color: #d9534f;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
 
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 1fr 350px; }
+        }
 
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-    }
+        .controls { text-align: left; }
+        .output {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            background-color: #fafafa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #barcodeContainer {
+            background-color: white;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .btn:hover { background-color: #0056b3; }
+        .btn:disabled { background-color: #a0a0a0; cursor: not-allowed; }
+        
+        .control-group { margin-top: 20px; }
+        .color-inputs { display: flex; gap: 15px; }
+        .color-inputs div { flex: 1; }
+        
+        textarea, select, input[type="number"], input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        label { font-weight: 600; display: block; margin-bottom: 5px; }
+        
+        #validationError {
+            color: var(--error-color);
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
 
-    button:hover {
-      background-color: #0056b3;
-    }
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    #barcode {
-      margin-top: 20px;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Online Barcode Generator",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to generate and customize barcodes. Supports various formats like CODE128, EAN, and UPC."
     }
-
-    #downloadBtn {
-      display: none;
-      margin-top: 15px;
-      background-color: #28a745;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What are barcodes used for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Barcodes are used to quickly and accurately track products, assets, and inventory. They are commonly found on retail products for checkout, in warehouses for stock management, and on shipping labels for tracking."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Which barcode format should I use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The choice of barcode format depends on your use case. CODE128 is a versatile format for general use. EAN-13 and UPC-A are standard for retail products sold internationally and in North America, respectively. ITF is often used for shipping and packaging."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Do the barcodes generated here expire?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, the barcodes created by this tool are static and do not expire. They simply encode the data you provide."
+        }
+      }]
     }
-
-    #downloadBtn:hover {
-      background-color: #1e7e34;
-    }
-  </style>
+    </script>
 </head>
 <body>
-  <div class="container">
-    <h2>Barcode Generator</h2>
-    <input type="text" id="barcodeText" placeholder="Enter text or number" />
-    <button onclick="generateBarcode()">Generate Barcode</button>
-    <div id="barcode">
-      <svg id="barcodeSvg"></svg>
-    </div>
-    <button id="downloadBtn" onclick="downloadBarcode()">Download Barcode</button>
-  </div>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Free Online Barcode Generator</h1>
+        <p>Create high-quality, scannable barcodes for your business or personal projects with our easy-to-use generator. This tool allows you to create various types of barcodes, customize their appearance, and download them in high-resolution formats like PNG, JPG, or SVG. It's perfect for product labeling, inventory management, or any other application where a barcode is needed. All processing is done in your browser, ensuring your data is private.</p>
+    </section>
 
-  <!-- JsBarcode CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-  <script>
-    function generateBarcode() {
-      const text = document.getElementById("barcodeText").value.trim();
-      const downloadBtn = document.getElementById("downloadBtn");
-
-      if (text === "") {
-        alert("Please enter some text.");
-        return;
-      }
-
-      JsBarcode("#barcodeSvg", text, {
-        format: "CODE128",
-        lineColor: "#000",
-        width: 2,
-        height: 100,
-        displayValue: true
-      });
-
-      downloadBtn.style.display = "inline-block";
-    }
-
-    function downloadBarcode() {
-      const svg = document.getElementById("barcodeSvg");
-      const serializer = new XMLSerializer();
-      const source = serializer.serializeToString(svg);
-      const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "barcode.svg";
-      link.click();
-    }
-  </script>
-  <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
+    <div class="tool-container">
+        <div class="output">
+            <div id="barcodeContainer">
+              <svg id="barcodeSvg"></svg>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+            <p id="validationError"></p>
+            <div class="control-group" id="download-section" style="display:none; width: 100%;">
+                <h3>Download</h3>
+                <select id="downloadFormat" class="btn secondary" style="width:100%; padding: 10px;">
+                    <option value="png">Download as PNG</option>
+                    <option value="jpeg">Download as JPG</option>
+                    <option value="svg">Download as SVG</option>
+                </select>
+                <button id="downloadBtn" class="btn">Download Barcode</button>
             </div>
         </div>
+        
+        <div class="controls">
+            <h2>Options</h2>
+            <div class="control-group">
+                <label for="barcodeText">Data to encode:</label>
+                <textarea id="barcodeText" rows="2">Example 12345</textarea>
+            </div>
+            
+            <div class="control-group">
+                <label for="barcodeFormat">Barcode Type:</label>
+                <select id="barcodeFormat">
+                    <option value="CODE128" selected>CODE128</option>
+                    <option value="EAN13">EAN-13</option>
+                    <option value="UPC">UPC-A</option>
+                    <option value="ITF14">ITF-14</option>
+                    <option value="CODE39">CODE39</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <h3>Appearance</h3>
+                <label for="barWidth">Bar Width:</label>
+                <input type="range" id="barWidth" min="1" max="4" value="2" step="0.5">
+                <label for="barHeight">Bar Height:</label>
+                <input type="range" id="barHeight" min="20" max="150" value="100">
+                <div class="color-inputs">
+                    <div>
+                        <label for="lineColor">Bar Color:</label>
+                        <input type="color" id="lineColor" value="#000000">
+                    </div>
+                    <div>
+                        <label for="bgColor">Background:</label>
+                        <input type="color" id="bgColor" value="#ffffff">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Text</h3>
+                <input type="checkbox" id="displayValue" checked>
+                <label for="displayValue">Show text value</label>
+            </div>
+        </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>About Barcode Formats</h2>
+        <ul>
+            <li><strong>CODE128:</strong> A high-density code used widely in logistics and transportation for alphanumeric or numeric-only data.</li>
+            <li><strong>EAN-13:</strong> The European Article Number, a 13-digit code used for marking retail products worldwide.</li>
+            <li><strong>UPC-A:</strong> The Universal Product Code, a 12-digit code primarily used in the United States and Canada for retail products.</li>
+        </ul>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const barcodeTextInput = document.getElementById('barcodeText');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const downloadSection = document.getElementById('download-section');
+        const downloadFormatSelect = document.getElementById('downloadFormat');
+        const validationError = document.getElementById('validationError');
+        
+        // Customization inputs
+        const formatSelect = document.getElementById('barcodeFormat');
+        const barWidthSlider = document.getElementById('barWidth');
+        const barHeightSlider = document.getElementById('barHeight');
+        const lineColorInput = document.getElementById('lineColor');
+        const bgColorInput = document.getElementById('bgColor');
+        const displayValueCheckbox = document.getElementById('displayValue');
+        
+        let debounceTimer;
+
+        const generateBarcode = () => {
+            const text = barcodeTextInput.value;
+            if (text.trim() === "") {
+                document.getElementById('barcodeSvg').innerHTML = "";
+                downloadSection.style.display = "none";
+                validationError.style.display = "none";
+                return;
+            }
+
+            try {
+                JsBarcode("#barcodeSvg", text, {
+                    format: formatSelect.value,
+                    lineColor: lineColorInput.value,
+                    background: bgColorInput.value,
+                    width: parseFloat(barWidthSlider.value),
+                    height: parseInt(barHeightSlider.value),
+                    displayValue: displayValueCheckbox.checked,
+                    fontOptions: "bold",
+                });
+                downloadSection.style.display = "block";
+                validationError.style.display = "none";
+            } catch (e) {
+                document.getElementById('barcodeSvg').innerHTML = "";
+                downloadSection.style.display = "none";
+                validationError.textContent = `Error: ${e.message}. Please check your input for the selected format.`;
+                validationError.style.display = "block";
+            }
+        };
+        
+        const downloadBarcode = () => {
+            const svg = document.getElementById("barcodeSvg");
+            const serializer = new XMLSerializer();
+            const source = '<?xml version="1.0" standalone="no"?>\r\n' + serializer.serializeToString(svg);
+            
+            const format = downloadFormatSelect.value;
+            const fileName = `barcode.${format}`;
+
+            if (format === 'svg') {
+                const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                triggerDownload(url, fileName);
+            } else { // PNG or JPG
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                const img = new Image();
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.fillStyle = bgColorInput.value;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    const url = canvas.toDataURL(`image/${format}`);
+                    triggerDownload(url, fileName);
+                };
+                img.src = "data:image/svg+xml;base64," + btoa(source);
+            }
+        };
+
+        const triggerDownload = (href, fileName) => {
+            const link = document.createElement("a");
+            link.href = href;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        const debouncedGenerate = () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(generateBarcode, 250); // 250ms delay
+        };
+
+        // Event Listeners
+        const inputs = [barcodeTextInput, formatSelect, barWidthSlider, barHeightSlider, lineColorInput, bgColorInput, displayValueCheckbox];
+        inputs.forEach(element => {
+            element.addEventListener('input', debouncedGenerate);
+        });
+
+        downloadBtn.addEventListener('click', downloadBarcode);
+
+        // Initial generation
+        generateBarcode();
+    });
+  </script>
 
 </body>
 </html>
-
-  
