@@ -1,126 +1,314 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Base64 Encoder/Decoder</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Base64 Encoder & Decoder | Online Tool for Text & Files</title>
+    <meta name="description" content="Easily encode text and files (like images) to Base64 or decode Base64 strings back to their original format. Our free online tool is fast, secure, and works entirely in your browser.">
+    <meta name="keywords" content="base64 encoder, base64 decoder, base64 converter, text to base64, base64 to text, encode file to base64, decode base64 online, image to base64">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/base64-encoder-decoder.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Base64 Encoder & Decoder">
+    <meta property="og:description" content="Instantly encode/decode text and files with this secure Base64 tool. No server uploads, all processing is done locally.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/base64-encoder-decoder.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/base64-tool-og.png">
 
-    h2 {
-      color: #007bff;
-      text-align: center;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inconsolata:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .main-container { width: 100%; max-width: 1000px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
 
-    .content-box {
-      width: 90%;
-      max-width: 600px;
-      min-height: 120px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      background: #fff;
-      font-size: 16px;
-      margin-bottom: 15px;
-      white-space: pre-wrap;
-      overflow-y: auto;
-      outline: none;
-    }
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 1fr 1fr; }
+        }
+        .box-title { font-weight: 600; margin-bottom: 10px; }
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-family: 'Inconsolata', monospace;
+            font-size: 1.1em;
+            resize: vertical;
+        }
+        
+        .actions { text-align: center; margin-top: 20px; }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .btn:hover { background-color: #0056b3; }
+        .btn.secondary { background-color: #6c757d; }
+        .btn.secondary:hover { background-color: #5a6268; }
 
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin: 5px;
-      border: none;
-      border-radius: 8px;
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-    }
+        .file-upload-label {
+            display: inline-block;
+            cursor: pointer;
+            text-decoration: underline;
+            color: var(--primary-color);
+        }
+        input[type="file"] { display: none; }
+        
+        #downloadLink { display: none; margin-top: 10px; }
 
-    button:hover {
-      background-color: #0056b3;
-    }
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    #output {
-      margin-top: 20px;
-      width: 90%;
-      max-width: 600px;
-      background: #e9f7ff;
-      padding: 10px;
-      border-radius: 10px;
-      white-space: pre-wrap;
-      word-break: break-all;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Base64 Encoder & Decoder",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to encode and decode data in Base64 format. Supports text and file conversions directly in the browser for privacy."
     }
-  </style>
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is Base64 encoding used for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Base64 encoding is used to convert binary data (like images or files) into a text format that can be safely transmitted over systems that are designed to handle only text. It is commonly used for email attachments and for embedding images directly into HTML or CSS files (Data URIs)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is Base64 encoding a form of encryption?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, Base64 is an encoding scheme, not an encryption algorithm. It is a way of representing data, but it does not hide or secure the data. Anyone can easily decode a Base64 string back to its original form. It should not be used for security purposes."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this tool secure to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, this tool is completely secure. All encoding and decoding operations are performed locally in your web browser using JavaScript. Your data is never sent to our servers, ensuring your information remains private."
+        }
+      }]
+    }
+    </script>
 </head>
 <body>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Online Base64 Encoder & Decoder</h1>
+        <p>This is a free and powerful online tool for encoding and decoding data in Base64 format. You can easily convert plain text to a Base64 string, or decode a Base64 string back to its original text. For added convenience, you can also encode local files (like images) into a Base64 data string. All operations are performed securely in your browser, with no data sent to any server.</p>
+    </section>
 
-  <h2>Base64 Encoder / Decoder</h2>
+    <div class="tool-container">
+        <div class="input-side">
+            <h3 class="box-title">Input</h3>
+            <textarea id="inputBox" placeholder="Enter text or paste Base64 here..."></textarea>
+            <p style="text-align:center; margin-top: 10px;">
+                Or, <label for="fileInput" class="file-upload-label">upload a file to encode</label>.
+                <input type="file" id="fileInput">
+            </p>
+        </div>
+        
+        <div class="output-side">
+            <h3 class="box-title">Output</h3>
+            <textarea id="outputBox" readonly placeholder="Result will appear here..."></textarea>
+            <a id="downloadLink" class="btn secondary">Download Decoded File</a>
+        </div>
+    </div>
 
-  <div id="inputBox" class="content-box" contenteditable="true" placeholder="Enter text here..."></div>
+    <div class="actions">
+        <button id="encodeBtn" class="btn">Encode</button>
+        <button id="decodeBtn" class="btn">Decode</button>
+        <button id="swapBtn" class="btn secondary">Swap</button>
+        <button id="copyInputBtn" class="btn secondary">Copy Input</button>
+        <button id="copyOutputBtn" class="btn secondary">Copy Output</button>
+        <button id="clearBtn" class="btn secondary" style="background-color: #dc3545;">Clear</button>
+    </div>
+    
+    <section class="content-section">
+        <h2>About Base64 Encoding</h2>
+        <h3>What Is It?</h3>
+        <p>Base64 is a binary-to-text encoding scheme that represents binary data in an ASCII string format by translating it into a radix-64 representation. In simple terms, it's a way of converting complex data (like an image) into a safe, text-only format for transmission.</p>
+        
+        <h3>Common Use Cases</h3>
+        <ul>
+            <li><strong>Data URIs:</strong> Embedding images or other files directly into HTML or CSS code to reduce HTTP requests. For example, `src="data:image/png;base64,..."`.</li>
+            <li><strong>Email Attachments:</strong> The MIME (Multipurpose Internet Mail Extensions) standard uses Base64 to attach binary files to emails.</li>
+            <li><strong>Storing Binary Data in XML/JSON:</strong> Since XML and JSON are text-based, Base64 is used to store binary data within them.</li>
+        </ul>
+    </section>
 
-  <div>
-    <button onclick="encodeBase64()">Encode</button>
-    <button onclick="decodeBase64()">Decode</button>
-  </div>
-
-  <div id="output"></div>
-
-  <script>
-    function encodeBase64() {
-      const input = document.getElementById("inputBox").innerText.trim();
-      try {
-        const encoded = btoa(unescape(encodeURIComponent(input)));
-        document.getElementById("output").innerText = "Encoded Base64:\n" + encoded;
-      } catch (e) {
-        document.getElementById("output").innerText = "Error encoding text.";
-      }
-    }
-
-    function decodeBase64() {
-      const input = document.getElementById("inputBox").innerText.trim();
-      try {
-        const decoded = decodeURIComponent(escape(atob(input)));
-        document.getElementById("output").innerText = "Decoded Text:\n" + decoded;
-      } catch (e) {
-        document.getElementById("output").innerText = "Invalid Base64 string.";
-      }
-    }
-  </script>
-<!-- Footer -->
     <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
-            </div>
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputBox = document.getElementById('inputBox');
+        const outputBox = document.getElementById('outputBox');
+        const fileInput = document.getElementById('fileInput');
+        
+        const encodeBtn = document.getElementById('encodeBtn');
+        const decodeBtn = document.getElementById('decodeBtn');
+        const swapBtn = document.getElementById('swapBtn');
+        const copyInputBtn = document.getElementById('copyInputBtn');
+        const copyOutputBtn = document.getElementById('copyOutputBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const downloadLink = document.getElementById('downloadLink');
+
+        // Function to handle Unicode correctly
+        const toBase64 = (str) => {
+            try {
+                return btoa(unescape(encodeURIComponent(str)));
+            } catch (e) {
+                return null;
+            }
+        };
+
+        const fromBase64 = (str) => {
+            try {
+                return decodeURIComponent(escape(atob(str)));
+            } catch (e) {
+                return null;
+            }
+        };
+
+        const updateOutput = (result, errorMsg) => {
+            downloadLink.style.display = 'none';
+            if (result !== null) {
+                outputBox.value = result;
+            } else {
+                outputBox.value = errorMsg;
+            }
+        };
+        
+        encodeBtn.addEventListener('click', () => {
+            const input = inputBox.value;
+            updateOutput(toBase64(input), 'Error: Could not encode text. Check for invalid characters.');
+        });
+        
+        decodeBtn.addEventListener('click', () => {
+            const input = inputBox.value;
+            const decoded = fromBase64(input);
+            updateOutput(decoded, 'Error: Invalid Base64 string.');
+
+            // Check if the decoded string is a data URI and offer download
+            if (input.startsWith('data:') && input.includes(';base64,')) {
+                downloadLink.href = input;
+                downloadLink.download = 'decoded-file';
+                downloadLink.style.display = 'block';
+            }
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                inputBox.value = e.target.result;
+                updateOutput(e.target.result, '');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        swapBtn.addEventListener('click', () => {
+            const temp = inputBox.value;
+            inputBox.value = outputBox.value;
+            outputBox.value = temp;
+        });
+
+        const copyToClipboard = (element, button) => {
+            if (element.value === "") return;
+            navigator.clipboard.writeText(element.value).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        };
+        
+        copyInputBtn.addEventListener('click', () => copyToClipboard(inputBox, copyInputBtn));
+        copyOutputBtn.addEventListener('click', () => copyToClipboard(outputBox, copyOutputBtn));
+
+        clearBtn.addEventListener('click', () => {
+            inputBox.value = '';
+            outputBox.value = '';
+            fileInput.value = '';
+            downloadLink.style.display = 'none';
+        });
+    });
+  </script>
 
 </body>
 </html>
-
-  
-  
