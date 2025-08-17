@@ -1,143 +1,381 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Color Picker from Image</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Image Color Picker | Online Eyedropper Tool</title>
+    <meta name="description" content="Pick colors from any image with our free online eyedropper tool. Upload your image and click to get HEX, RGB, and HSL color codes instantly. Perfect for designers and artists.">
+    <meta name="keywords" content="image color picker, eyedropper tool, get color from image, online color picker, color picker from image, find hex code from image, html color picker">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/image-color-picker.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Color Picker from Image">
+    <meta property="og:description" content="Instantly get HEX, RGB, and HSL color codes from any image. Our eyedropper tool with a magnifier makes it easy to select the perfect color.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/image-color-picker.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/image-color-picker-og.png">
 
-    h2 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
 
-    input[type="file"] {
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      margin-bottom: 15px;
-    }
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 1fr 300px; }
+        }
 
-    canvas {
-      max-width: 100%;
-      width: 300px;
-      height: auto;
-      border: 1px solid #ccc;
-      margin-bottom: 20px;
-    }
+        .image-side { position: relative; }
+        #canvas { max-width: 100%; border: 1px solid var(--border-color); cursor: crosshair; }
+        #loupe {
+            width: 100px;
+            height: 100px;
+            border: 3px solid white;
+            border-radius: 50%;
+            position: absolute;
+            pointer-events: none;
+            display: none;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            background-repeat: no-repeat;
+            image-rendering: pixelated;
+        }
 
-    .color-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .controls-side { text-align: center; }
+        .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .upload-area.dragover { background-color: #e6f2ff; border-color: var(--primary-color); }
+        input[type="file"] { display: none; }
+        
+        .color-info-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            text-align: left;
+        }
+        .color-preview { width: 100%; height: 50px; border-radius: 5px; border: 1px solid var(--border-color); margin-bottom: 10px; }
+        .color-code {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-family: monospace;
+        }
+        .copy-btn {
+            background: none; border: 1px solid var(--border-color); cursor: pointer;
+            padding: 3px 8px; border-radius: 5px; font-size: 0.8em;
+        }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    .color-box {
-      width: 40px;
-      height: 40px;
-      border: 2px solid #000;
-      border-radius: 6px;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Image Color Picker (Eyedropper Tool)",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to pick colors from an image. Get HEX, RGB, and HSL codes instantly with an online eyedropper and magnifier."
     }
-
-    .color-code {
-      font-weight: bold;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is an image color picker used for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "An image color picker, or eyedropper tool, allows you to select a specific color from a digital image and identify its exact color codes (like HEX, RGB, HSL). It's essential for designers, web developers, and artists who want to match colors precisely for their projects."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How does this tool work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When you upload an image, it is drawn onto an HTML canvas. The tool then listens for your mouse movements and clicks. When you click, it reads the color data of the single pixel under your cursor and converts that data into standard color formats like HEX and RGB."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Are my images uploaded to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Your privacy is our priority. Your image is loaded and processed directly in your web browser using JavaScript. It is never uploaded to any server, ensuring your files remain completely private."
+        }
+      }]
     }
-  </style>
+    </script>
 </head>
 <body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <h2>Color Picker from Image</h2>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Online Image Color Picker (Eyedropper Tool)</h1>
+        <p>Ever see a color in an image and want to use it in your own project? Our free online eyedropper tool makes it easy. Simply upload any image, and then hover and click to pick the exact color you need. The tool provides the color's HEX, RGB, and HSL codes, which you can copy with a single click. Our built-in magnifier helps you select pixels with precision. Your images are processed locally and are never uploaded, ensuring your privacy.</p>
+    </section>
 
-  <input type="file" id="imageInput" accept="image/*" />
-
-  <canvas id="canvas"></canvas>
-
-  <div class="color-info">
-    <div class="color-box" id="pickedColor"></div>
-    <div class="color-code" id="colorCode">Click on image</div>
-  </div>
-
-  <script>
-    const imageInput = document.getElementById("imageInput");
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-    const pickedColor = document.getElementById("pickedColor");
-    const colorCode = document.getElementById("colorCode");
-
-    imageInput.addEventListener("change", function () {
-      const file = this.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const img = new Image();
-        img.onload = function () {
-          const scale = 300 / img.width; // scale to fit width
-          const scaledWidth = 300;
-          const scaledHeight = img.height * scale;
-
-          canvas.width = scaledWidth;
-          canvas.height = scaledHeight;
-          ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    canvas.addEventListener("click", function (e) {
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
-      const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
-
-      pickedColor.style.backgroundColor = hex;
-      colorCode.textContent = `HEX: ${hex} | RGB: (${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
-    });
-
-    function rgbToHex(r, g, b) {
-      return "#" + [r, g, b].map(x => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? "0" + hex : hex;
-      }).join("");
-    }
-  </script>
-<!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
+    <div class="tool-container">
+        <div class="image-side">
+            <canvas id="canvas"></canvas>
+            <div id="loupe"></div>
+        </div>
+        <div class="controls-side">
+            <h3>Step 1: Upload Image</h3>
+            <div id="uploadArea" class="upload-area">
+                <p>Drag & drop an image here, or click to select a file.</p>
+            </div>
+            <input type="file" id="imageInput" accept="image/*" />
+            
+            <div class="color-info-box">
+                <h3>Step 2: Hover & Click on Image</h3>
+                <div class="color-preview" id="colorPreview"></div>
+                <div class="color-code">
+                    <span>HEX: <strong id="hexCode">#FFFFFF</strong></span>
+                    <button class="copy-btn" data-target="hexCode">Copy</button>
+                </div>
+                 <div class="color-code">
+                    <span>RGB: <strong id="rgbCode">255, 255, 255</strong></span>
+                    <button class="copy-btn" data-target="rgbCode">Copy</button>
+                </div>
+                 <div class="color-code">
+                    <span>HSL: <strong id="hslCode">0, 0%, 100%</strong></span>
+                    <button class="copy-btn" data-target="hslCode">Copy</button>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
-            </div>
+        </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>About Color Codes</h2>
+        <ul>
+            <li><strong>HEX:</strong> A six-digit code used in web design (e.g., `#FF5733`).</li>
+            <li><strong>RGB:</strong> Represents colors by mixing Red, Green, and Blue values (0-255).</li>
+            <li><strong>HSL:</strong> An intuitive model representing Hue (color type), Saturation (intensity), and Lightness.</li>
+        </ul>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const imageInput = document.getElementById("imageInput");
+        const uploadArea = document.getElementById("uploadArea");
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const loupe = document.getElementById("loupe");
+        
+        const colorPreview = document.getElementById("colorPreview");
+        const hexCodeEl = document.getElementById("hexCode");
+        const rgbCodeEl = document.getElementById("rgbCode");
+        const hslCodeEl = document.getElementById("hslCode");
+        
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+
+        const handleFile = (file) => {
+            if (!file || !file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img.src = e.target.result;
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    loupe.style.backgroundImage = `url(${img.src})`;
+                };
+            };
+            reader.readAsDataURL(file);
+        };
+
+        const updateColorInfo = (r, g, b) => {
+            const hex = rgbToHex(r, g, b);
+            const hsl = rgbToHsl(r, g, b);
+            
+            colorPreview.style.backgroundColor = hex;
+            hexCodeEl.textContent = hex.toUpperCase();
+            rgbCodeEl.textContent = `${r}, ${g}, ${b}`;
+            hslCodeEl.textContent = `${hsl.h}, ${hsl.s}%, ${hsl.l}%`;
+        };
+
+        const getMousePos = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY
+            };
+        };
+
+        // Event Listeners
+        uploadArea.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+        uploadArea.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
+        
+        canvas.addEventListener("mousemove", (e) => {
+            if (!img.src) return;
+            const pos = getMousePos(e);
+            
+            loupe.style.display = 'block';
+            loupe.style.left = e.clientX - 50 + 'px';
+            loupe.style.top = e.clientY - 50 + 'px';
+
+            const zoom = 5;
+            loupe.style.backgroundSize = `${img.width * zoom}px ${img.height * zoom}px`;
+            loupe.style.backgroundPosition = `-${pos.x * zoom - 50}px -${pos.y * zoom - 50}px`;
+            
+            const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+            loupe.style.borderColor = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+        });
+        
+        canvas.addEventListener("mouseleave", () => loupe.style.display = 'none');
+
+        canvas.addEventListener("click", (e) => {
+            if (!img.src) return;
+            const pos = getMousePos(e);
+            const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+            updateColorInfo(pixel[0], pixel[1], pixel[2]);
+        });
+
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const targetId = e.target.getAttribute('data-target');
+                const targetEl = document.getElementById(targetId);
+                navigator.clipboard.writeText(targetEl.textContent).then(() => {
+                    const originalText = e.target.textContent;
+                    e.target.textContent = 'Copied!';
+                    setTimeout(() => { e.target.textContent = originalText; }, 2000);
+                });
+            });
+        });
+
+        // Helper Functions
+        const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+        const rgbToHsl = (r, g, b) => {
+            r /= 255; g /= 255; b /= 255;
+            let max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            if (max == min) { h = s = 0; }
+            else {
+                let d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch(max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+        };
+    });
+  </script>
 
 </body>
 </html>
-
-  
-  
