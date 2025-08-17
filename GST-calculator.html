@@ -1,128 +1,555 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GST Calculator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4faff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online GST Calculator India | Calculate Goods & Services Tax</title>
+    <meta name="description" content="The easiest and free online GST Calculator for India. Instantly add or remove GST from any amount with all official GST rates (5%, 12%, 18%, 28%). Also, view the CGST/SGST split.">
+    <meta name="keywords" content="gst calculator, online gst calculator, gst calculation, india gst, cgst sgst calculator, reverse gst calculator, add gst, remove gst">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <!-- Replace with your website's full URL -->
+    <link rel="canonical" href="https://yourwebsite.com/gst-calculator.html">
+    <meta property="og:title" content="Online GST Calculator India | Add & Remove GST | Free Tool">
+    <meta property="og:description" content="The easiest and free online GST Calculator for India. Instantly calculate GST for any amount with all official GST rates (5%, 12%, 18%, 28%).">
+    <meta property="og:type" content="website">
+    <!-- Replace with your website's URL again -->
+    <meta property="og:url" content="https://yourwebsite.com/gst-calculator.html">
+    <!-- Add a URL to an attractive image for social media sharing -->
+    <meta property="og:image" content="https://yourwebsite.com/images/gst-calculator-og-image.png">
+    
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --primary-color: #4CAF50; /* Green */
+            --secondary-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --border-color: #ddd;
+            --input-bg: #fafafa;
+            --placeholder-color: #888;
+        }
 
-    .container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-    }
+        body.dark-mode {
+            --bg-color: #1a1a2e;
+            --card-bg: #2d2d44;
+            --text-color: #e0e0e0;
+            --primary-color: #64ffda; /* Teal/Mint */
+            --secondary-color: #444;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --border-color: #444;
+            --input-bg: #3c3c5c;
+            --placeholder-color: #aaa;
+        }
 
-    h1 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
 
-    button {
-      background-color: #007bff;
-      color: #fff;
-      padding: 12px 20px;
-      border: none;
-      font-size: 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 10px;
-      width: 100%;
-    }
+        .main-container {
+            width: 100%;
+            max-width: 900px;
+        }
 
-    button:hover {
-      background-color: #0056b3;
-    }
+        .content-section {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        .content-section h1 { font-size: 28px; margin-bottom: 15px; }
+        .content-section h2 { font-size: 22px; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; }
+        .content-section h3 { font-size: 18px; margin-top: 20px; margin-bottom: 5px; }
+        .content-section p, .content-section li { color: var(--text-color); }
+        .content-section ul, .content-section ol { margin-left: 20px; }
 
-    .result {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 18px;
-    }
+        .calculator-container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            transition: background-color 0.3s;
+        }
 
-    @media (max-width: 500px) {
-      .container {
-        padding: 20px;
-      }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+        header h2 { font-size: 24px; margin: 0; }
+
+        .theme-switch .toggle-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 20px;
+        }
+        .theme-switch .toggle-btn .icon { display: block; }
+        .calc-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        @media (min-width: 768px) { .calc-grid { grid-template-columns: 1fr 1fr; } }
+        .input-section, .output-section { padding: 20px; border-radius: 8px; background-color: var(--input-bg); box-shadow: inset 0 2px 8px var(--shadow-color); }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; }
+        input[type="number"], select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-color); font-size: 16px; transition: border-color 0.3s, box-shadow 0.3s; }
+        input[type="number"]:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent); }
+        input::placeholder { color: var(--placeholder-color); }
+        .radio-group, .checkbox-group { display: flex; align-items: center; gap: 20px; margin-top: 15px; }
+        .radio-option { display: flex; align-items: center; }
+        input[type="radio"], input[type="checkbox"] { margin-right: 8px; accent-color: var(--primary-color); width: 1.1em; height: 1.1em; }
+        .button-group { display: flex; gap: 15px; margin-top: 25px; }
+        .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; transition: background-color 0.3s, transform 0.1s; flex: 1; }
+        .btn.primary { background-color: var(--primary-color); color: var(--card-bg); }
+        .btn.primary:hover { filter: brightness(1.1); }
+        .btn.secondary { background-color: var(--secondary-color); color: var(--text-color); border: 1px solid var(--border-color); }
+        .btn.secondary:hover { background-color: var(--border-color); }
+        .btn:active { transform: scale(0.98); }
+        .results-container { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
+        .result-card { background-color: var(--card-bg); padding: 15px; border-radius: 8px; flex: 1 1 calc(50% - 15px); box-shadow: 0 5px 15px var(--shadow-color); text-align: center; }
+        .result-card .label { font-size: 14px; color: var(--placeholder-color); margin-bottom: 5px; }
+        .result-card .value { font-size: 24px; font-weight: 600; color: var(--text-color); }
+        .main-result { flex-basis: 100%; }
+        .tax-split-results { display: flex; flex-wrap: wrap; gap: 15px; }
+        .hidden { display: none !important; }
+        .action-buttons { display: flex; gap: 15px; margin-top: 20px; }
+        .action-btn { background-color: var(--secondary-color); color: var(--text-color); border: 1px solid var(--border-color); flex: 1; }
+        .history-section { margin-top: 40px; }
+        #history-log { background-color: var(--input-bg); padding: 20px; border-radius: 8px; max-height: 250px; overflow-y: auto; box-shadow: inset 0 2px 8px var(--shadow-color); }
+        .history-item { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed var(--border-color); font-size: 14px; line-height: 1.5; }
+        .history-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .history-item span { color: var(--placeholder-color); font-weight: 400; }
+        .placeholder { color: var(--placeholder-color); text-align: center; }
+
+        footer {
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--placeholder-color);
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .content-section, .calculator-container { padding: 20px; }
+            .btn { padding: 10px; font-size: 14px; }
+            .result-card { padding: 10px; }
+            .result-card .value { font-size: 20px; }
+        }
+    </style>
+
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <!-- Schema for Software Application (Tool) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Online GST Calculator India",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "description": "A free, responsive web-based tool to calculate Goods and Services Tax (GST) for India. It supports all official GST slabs and can perform both forward (add GST) and reverse (remove GST) calculations."
     }
-  </style>
+    </script>
+    
+    <!-- Schema for FAQs -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is GST?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Goods and Services Tax (GST) is an indirect tax levied on the supply of goods and services in India. It has replaced many older indirect taxes such as VAT, service tax, and excise duty, creating a unified market."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the different GST rates in India?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In India, there are primarily five GST rate slabs: 0% (on essential items), 5%, 12%, 18%, and 28% (on luxury items). This calculator supports all these official rates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between CGST, SGST, and IGST?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CGST (Central GST) and SGST (State GST) are levied on intra-state (within the same state) transactions, with the tax revenue being split equally between the Central and State governments. IGST (Integrated GST) is levied on inter-state (between two states) transactions and is collected by the Central government."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a reverse GST calculation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A reverse GST calculation is used when you have a GST-inclusive price (like an MRP) and you want to find out the original base price and the GST amount included in it. Our calculator can do this easily using the 'Remove GST' option."
+          }
+        }
+      ]
+    }
+    </script>
 </head>
 <body>
+    <main class="main-container">
+        <!-- ============== ON-PAGE SEO CONTENT SECTION ============== -->
+        <section class="content-section">
+            <h1>Online GST Calculator for India</h1>
+            <p>
+                Simplify your GST calculations with our free and easy-to-use online GST calculator. This tool is designed for business owners, freelancers, and consumers in India to quickly calculate the Goods and Services Tax (GST) on any amount. Whether you need to add GST to a product's base price or remove GST from an MRP, this calculator will do the job in seconds.
+            </p>
+            <p>
+                This tool supports all official Indian GST rates (0%, 5%, 12%, 18%, and 28%) and even gives you the option to calculate the CGST + SGST split.
+            </p>
 
-  <div class="container">
-    <h1>GST Calculator</h1>
-    <input type="number" id="amount" placeholder="Enter Amount (₹)" />
-    <input type="number" id="gstRate" placeholder="GST Rate (%)" />
-    <button onclick="calculateGST()">Calculate GST</button>
-    <div class="result" id="result"></div>
-  </div>
+            <h2>How to Use This GST Calculator?</h2>
+            <ol>
+                <li><strong>Enter Amount:</strong> Input the amount on which you want to calculate GST.</li>
+                <li><strong>Select GST Rate:</strong> Choose the applicable GST rate (5%, 12%, 18%, 28%) from the dropdown menu.</li>
+                <li><strong>Choose Calculation Type:</strong> Select 'Add GST' if you want to add tax to the base price. Select 'Remove GST' if you want to extract the tax from a total price.</li>
+                <li><strong>Calculate:</strong> Click the 'Calculate' button to see the results instantly.</li>
+            </ol>
+        </section>
 
-  <script>
-    function calculateGST() {
-      const amount = parseFloat(document.getElementById("amount").value);
-      const gstRate = parseFloat(document.getElementById("gstRate").value);
+        <!-- ============== GST CALCULATOR TOOL ============== -->
+        <div class="calculator-container">
+            <header>
+                <h2>GST Calculator</h2>
+                <div class="theme-switch">
+                    <button id="theme-toggle-btn" class="toggle-btn" aria-label="Toggle dark and light mode">
+                        <span class="icon">☀️</span>
+                    </button>
+                </div>
+            </header>
 
-      if (!amount || !gstRate || amount < 0 || gstRate < 0) {
-        document.getElementById("result").textContent = "Please enter valid values.";
-        return;
-      }
+            <div class="calc-grid">
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="amount">Amount (₹)</label>
+                        <input type="number" id="amount" placeholder="e.g., 1000">
+                    </div>
+                    <div class="input-group">
+                        <label for="gst-rate">GST Rate (%)</label>
+                        <select id="gst-rate">
+                            <option value="0">0%</option>
+                            <option value="5">5%</option>
+                            <option value="12">12%</option>
+                            <option value="18" selected>18%</option>
+                            <option value="28">28%</option>
+                        </select>
+                    </div>
+                    <div class="input-group radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="add-gst" name="calculation-type" value="add" checked>
+                            <label for="add-gst">Add GST</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="remove-gst" name="calculation-type" value="remove">
+                            <label for="remove-gst">Remove GST</label>
+                        </div>
+                    </div>
+                    <div class="input-group checkbox-group">
+                        <input type="checkbox" id="tax-split">
+                        <label for="tax-split">Show CGST + SGST Split</label>
+                    </div>
+                    <div class="button-group">
+                        <button id="calculate-btn" class="btn primary">Calculate</button>
+                        <button id="reset-btn" class="btn secondary">Reset</button>
+                    </div>
+                </div>
 
-      const gstAmount = (amount * gstRate) / 100;
-      const totalAmount = amount + gstAmount;
-
-      document.getElementById("result").innerHTML = `
-        GST Amount: ₹${gstAmount.toFixed(2)}<br/>
-        Total Amount (Incl. GST): ₹${totalAmount.toFixed(2)}
-      `;
-    }
-  </script>
-<!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
+                <div class="output-section">
+                    <div class="results-container">
+                        <div class="result-card">
+                            <div class="label" id="gst-amount-label">GST Amount</div>
+                            <div class="value" id="gst-amount">₹ 0.00</div>
+                        </div>
+                        <div class="result-card main-result">
+                            <div class="label" id="net-amount-label">Net Price (With GST)</div>
+                            <div class="value" id="net-amount">₹ 0.00</div>
+                        </div>
+                    </div>
+                    <div class="tax-split-results">
+                        <div class="result-card hidden" id="cgst-card">
+                            <div class="label">CGST</div>
+                            <div class="value" id="cgst-amount">₹ 0.00</div>
+                        </div>
+                        <div class="result-card hidden" id="sgst-card">
+                            <div class="label">SGST</div>
+                            <div class="value" id="sgst-amount">₹ 0.00</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button id="copy-clipboard-btn" class="btn action-btn">Copy Results</button>
+                        <button id="export-csv-btn" class="btn action-btn">Export History (CSV)</button>
+                    </div>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+
+            <div class="history-section">
+                <h3>Calculation History (Last 5)</h3>
+                <div id="history-log">
+                    <p class="placeholder">No history yet.</p>
+                </div>
             </div>
         </div>
-    </footer>
 
+        <!-- ============== FAQ CONTENT SECTION ============== -->
+        <section class="content-section">
+            <h2>Frequently Asked Questions (FAQs) about GST</h2>
+
+            <h3>What is GST?</h3>
+            <p>The Goods and Services Tax (GST) is an indirect tax levied on the supply of goods and services in India. It has replaced many older indirect taxes such as VAT, service tax, and excise duty, creating a unified market under the principle of 'One Nation, One Tax'.</p>
+
+            <h3>What are the different GST rates in India?</h3>
+            <p>In India, there are primarily five GST rate slabs: 0% (on essential items), 5%, 12%, 18%, and 28% (on luxury items). This calculator supports all these official rates, allowing you to get precise calculations for any category of product or service.</p>
+            
+            <h3>What is the difference between CGST, SGST, and IGST?</h3>
+            <ul>
+                <li><strong>CGST (Central GST):</strong> This is the tax collected by the Central Government on an intra-state sale (e.g., a transaction within Maharashtra).</li>
+                <li><strong>SGST (State GST):</strong> This is the tax collected by the State Government on an intra-state sale (e.g., a transaction within Maharashtra).</li>
+                <li><strong>IGST (Integrated GST):</strong> This is the tax collected by the Central Government for an inter-state sale (e.g., from Maharashtra to Gujarat).</li>
+            </ul>
+            <p>Our calculator shows the CGST and SGST split, where the total GST is divided equally between the two.</p>
+
+            <h3>What is a reverse GST calculation (Remove GST)?</h3>
+            <p>A reverse GST calculation is used when you have a GST-inclusive price (like a Maximum Retail Price or MRP) and you want to find out the original base price and the GST amount included in it. This is extremely useful for both buyers and sellers to understand the tax component. Our calculator can do this easily using the 'Remove GST' option.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 GST Calculator. All rights reserved. This is an informational tool; please consult a tax professional for financial advice.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const amountInput = document.getElementById('amount');
+            const gstRateSelect = document.getElementById('gst-rate');
+            const taxSplitCheckbox = document.getElementById('tax-split');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const copyBtn = document.getElementById('copy-clipboard-btn');
+            const exportCsvBtn = document.getElementById('export-csv-btn');
+            const gstAmountEl = document.getElementById('gst-amount');
+            const netAmountEl = document.getElementById('net-amount');
+            const netAmountLabelEl = document.getElementById('net-amount-label');
+            const gstAmountLabelEl = document.getElementById('gst-amount-label');
+            const cgstAmountEl = document.getElementById('cgst-amount');
+            const sgstAmountEl = document.getElementById('sgst-amount');
+            const cgstCard = document.getElementById('cgst-card');
+            const sgstCard = document.getElementById('sgst-card');
+            const historyLog = document.getElementById('history-log');
+
+            let calculationHistory = JSON.parse(localStorage.getItem('gstHistory')) || [];
+            const HISTORY_LIMIT = 5;
+
+            function formatCurrency(value) {
+                return `₹ ${value.toFixed(2)}`;
+            }
+
+            function calculateGST() {
+                const baseAmount = parseFloat(amountInput.value);
+                const rate = parseFloat(gstRateSelect.value);
+                const calculationType = document.querySelector('input[name="calculation-type"]:checked').value;
+                const showSplit = taxSplitCheckbox.checked;
+
+                if (isNaN(baseAmount) || baseAmount <= 0) {
+                    alert("Please enter a valid positive amount.");
+                    return;
+                }
+
+                let gstAmount = 0, netAmount = 0, finalBaseAmount = 0, initialAmount = baseAmount;
+
+                if (calculationType === 'add') {
+                    gstAmount = baseAmount * (rate / 100);
+                    netAmount = baseAmount + gstAmount;
+                    finalBaseAmount = baseAmount;
+                    netAmountLabelEl.innerText = 'Net Price (With GST)';
+                    gstAmountLabelEl.innerText = 'GST Amount';
+                } else {
+                    finalBaseAmount = baseAmount / (1 + rate / 100);
+                    gstAmount = baseAmount - finalBaseAmount;
+                    netAmount = finalBaseAmount;
+                    netAmountLabelEl.innerText = 'Base Price (Without GST)';
+                    gstAmountLabelEl.innerText = 'GST Amount Included';
+                }
+
+                gstAmountEl.innerText = formatCurrency(gstAmount);
+                netAmountEl.innerText = formatCurrency(netAmount);
+
+                if (showSplit) {
+                    const halfGst = gstAmount / 2;
+                    cgstAmountEl.innerText = formatCurrency(halfGst);
+                    sgstAmountEl.innerText = formatCurrency(halfGst);
+                    cgstCard.classList.remove('hidden');
+                    sgstCard.classList.remove('hidden');
+                } else {
+                    cgstCard.classList.add('hidden');
+                    sgstCard.classList.add('hidden');
+                }
+
+                const historyItem = {
+                    initialAmount: initialAmount,
+                    gstAmount: gstAmount,
+                    finalAmount: calculationType === 'add' ? netAmount : finalBaseAmount,
+                    rate: rate,
+                    type: calculationType,
+                    split: showSplit,
+                    timestamp: new Date().toLocaleString()
+                };
+                updateHistory(historyItem);
+            }
+
+            function resetCalculator() {
+                amountInput.value = '';
+                gstRateSelect.value = '18';
+                document.getElementById('add-gst').checked = true;
+                taxSplitCheckbox.checked = false;
+                gstAmountEl.innerText = '₹ 0.00';
+                netAmountEl.innerText = '₹ 0.00';
+                netAmountLabelEl.innerText = 'Net Price (With GST)';
+                gstAmountLabelEl.innerText = 'GST Amount';
+                cgstCard.classList.add('hidden');
+                sgstCard.classList.add('hidden');
+                amountInput.focus();
+            }
+
+            function updateHistory(newItem = null) {
+                if (newItem) {
+                    calculationHistory.unshift(newItem);
+                    if (calculationHistory.length > HISTORY_LIMIT) calculationHistory.pop();
+                    localStorage.setItem('gstHistory', JSON.stringify(calculationHistory));
+                }
+                renderHistory();
+            }
+            
+            function renderHistory() {
+                historyLog.innerHTML = calculationHistory.length === 0 ? '<p class="placeholder">No history yet.</p>' : '';
+                if (calculationHistory.length > 0) {
+                    calculationHistory.forEach(item => {
+                        const typeLabel = item.type === 'add' ? 'Added to' : 'Removed from';
+                        const initialLabel = item.type === 'add' ? 'Base' : 'Net';
+                        const finalLabel = item.type === 'add' ? 'Net' : 'Base';
+                        
+                        const historyHtml = `
+                            <div class="history-item">
+                                <strong>GST (${item.rate}%) ${typeLabel} ${formatCurrency(item.initialAmount)}:</strong><br>
+                                <span>${initialLabel}:</span> ${formatCurrency(item.initialAmount)} | 
+                                <span>GST:</span> ${formatCurrency(item.gstAmount)} | 
+                                <span>${finalLabel}:</span> ${formatCurrency(item.finalAmount)}
+                            </div>
+                        `;
+                        historyLog.innerHTML += historyHtml;
+                    });
+                }
+            }
+
+            function toggleTheme() {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                themeToggleBtn.innerHTML = isDarkMode ? '<span class="icon">🌙</span>' : '<span class="icon">☀️</span>';
+            }
+
+            function loadTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    themeToggleBtn.innerHTML = '<span class="icon">🌙</span>';
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    themeToggleBtn.innerHTML = '<span class="icon">☀️</span>';
+                }
+            }
+
+            function copyResults() {
+                if (parseFloat(netAmountEl.innerText.replace('₹ ', '')) === 0) {
+                    alert("Nothing to copy. Please perform a calculation first.");
+                    return;
+                }
+                const calculationType = document.querySelector('input[name="calculation-type"]:checked').value;
+                const baseLabel = calculationType === 'add' ? 'Base Amount' : 'GST-Inclusive Price';
+                const netLabel = calculationType === 'add' ? 'Net Price' : 'Base Price (Post-GST)';
+
+                let textToCopy = `GST Calculation Results:\n-------------------------\n`;
+                textToCopy += `${baseLabel}: ${formatCurrency(parseFloat(amountInput.value))}\n`;
+                textToCopy += `GST Rate: ${gstRateSelect.value}%\n`;
+                textToCopy += `GST Amount: ${gstAmountEl.innerText}\n`;
+                textToCopy += `${netLabel}: ${netAmountEl.innerText}\n`;
+
+                if (taxSplitCheckbox.checked) {
+                    textToCopy += `-------------------------\n`;
+                    textToCopy += `CGST: ${cgstAmountEl.innerText}\n`;
+                    textToCopy += `SGST: ${sgstAmountEl.innerText}\n`;
+                }
+                navigator.clipboard.writeText(textToCopy).then(() => alert('Results copied to clipboard!'));
+            }
+
+            function exportCSV() {
+                if (calculationHistory.length === 0) {
+                    alert("No history to export.");
+                    return;
+                }
+                const headers = ['Type', 'Rate (%)', 'Initial Amount', 'GST Amount', 'Final Amount', 'Timestamp'];
+                const csvRows = [headers.join(',')];
+                calculationHistory.forEach(item => {
+                    const row = [
+                        item.type === 'add' ? 'Add GST' : 'Remove GST',
+                        item.rate, item.initialAmount.toFixed(2), item.gstAmount.toFixed(2), item.finalAmount.toFixed(2), `"${item.timestamp}"`
+                    ];
+                    csvRows.push(row.join(','));
+                });
+
+                const csvString = csvRows.join('\n');
+                const blob = new Blob([csvString], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = 'gst_calculation_history.csv';
+                document.body.appendChild(a); a.click();
+                document.body.removeChild(a); URL.revokeObjectURL(url);
+            }
+
+            calculateBtn.addEventListener('click', calculateGST);
+            resetBtn.addEventListener('click', resetCalculator);
+            themeToggleBtn.addEventListener('click', toggleTheme);
+            copyBtn.addEventListener('click', copyResults);
+            exportCsvBtn.addEventListener('click', exportCSV);
+            amountInput.addEventListener('keydown', (event) => { if (event.key === 'Enter') calculateGST(); });
+
+            loadTheme();
+            renderHistory();
+        });
+    </script>
 </body>
 </html>
-
-  
-  
