@@ -1,139 +1,293 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Palette Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0faff;
-      margin: 0;
-      padding: 30px;
-      text-align: center;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Color Palette Generator | Create & Explore Color Schemes</title>
+    <meta name="description" content="Instantly generate beautiful color palettes with our free online tool. Press the spacebar for new schemes, lock your favorite colors, and copy HEX codes with a click. Perfect for designers and artists.">
+    <meta name="keywords" content="color palette generator, color scheme generator, color palette, color schemes, free color tool, design tool, hex color palette">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/palette-generator.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Color Palette Generator">
+    <meta property="og:description" content="Discover stunning color combinations for your next project. Our tool makes it easy to create and customize beautiful color palettes.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/palette-generator.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/palette-generator-og.png">
 
-    h2 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 1200px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        
+        .palette {
+            display: flex;
+            height: 60vh;
+            min-height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .color-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            color: white;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            padding: 10px;
+        }
+        .color-column .hex-code {
+            font-size: 1.2em;
+            font-weight: 600;
+            padding: 5px 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .color-column .lock-btn {
+            background: rgba(0,0,0,0.2);
+            color: white;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            opacity: 0.7;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            line-height: 40px;
+        }
+        .color-column .lock-btn:hover { opacity: 1; }
+        
+        .actions { text-align: center; margin-top: 20px; }
+        .btn {
+            background-color: var(--primary-color);
+            color: white; padding: 12px 25px; border: none; border-radius: 8px;
+            cursor: pointer; font-size: 16px; font-weight: 600;
+        }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    .palette-box {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 20px auto;
-      max-width: 600px;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Color Palette Generator",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool for designers and developers to generate and explore color palettes. Features color locking and one-click HEX code copying."
     }
-
-    .color-block {
-      flex: 1 1 100px;
-      height: 100px;
-      border-radius: 8px;
-      color: #fff;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform 0.2s ease;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a color palette?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A color palette is a set of colors that are used together in a design or project. A well-chosen color palette can create a specific mood, enhance branding, and improve the overall aesthetic appeal of your work."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I use this generator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply press the spacebar on your keyboard or click the 'Generate Palette' button to create a new random color scheme. You can click on the lock icon to keep a color you like, and it will remain while the others change. Click on any HEX code to copy it to your clipboard."
+        }
+      }]
     }
-
-    .color-block:hover {
-      transform: scale(1.05);
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 15px;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .note {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #555;
-    }
-  </style>
+    </script>
 </head>
 <body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <h2>Palette Generator</h2>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Color Palette Generator</h1>
+        <p>Discover the perfect color combination for your next project with our intuitive and powerful color palette generator. Whether you're a designer, developer, or artist, finding the right colors is crucial. This tool helps you explore stunning color schemes with ease. Just press the **spacebar** to generate a new palette, lock the colors you love, and copy the HEX codes with a single click.</p>
+    </section>
 
-  <div class="palette-box" id="paletteBox">
-    <!-- Colors will appear here -->
-  </div>
+    <div class="tool-container">
+        <div class="palette" id="paletteContainer">
+            <!-- Color columns will be generated here -->
+        </div>
+        <div class="actions">
+            <button id="generateBtn" class="btn">Generate Palette</button>
+            <p style="margin-top: 10px; color: #555;">Or just press the spacebar!</p>
+        </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>How to Choose a Great Color Palette</h2>
+        <p>A good color palette creates visual harmony. Think about the mood you want to convey. Bright, warm colors (like reds and yellows) can evoke energy and happiness, while cool colors (like blues and greens) often feel calm and professional. Don't be afraid to experiment! Use our generator to quickly cycle through ideas until you find something that inspires you.</p>
+    </section>
 
-  <button onclick="generatePalette()">Generate Palette</button>
-  <div class="note">Click a color to copy its HEX value</div>
-
-  <script>
-    function getRandomColor() {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
-
-    function generatePalette() {
-      const paletteBox = document.getElementById("paletteBox");
-      paletteBox.innerHTML = "";
-
-      for (let i = 0; i < 5; i++) {
-        const color = getRandomColor();
-        const block = document.createElement("div");
-        block.className = "color-block";
-        block.style.backgroundColor = color;
-        block.innerText = color;
-        block.onclick = () => {
-          navigator.clipboard.writeText(color);
-          alert("Copied: " + color);
-        };
-        paletteBox.appendChild(block);
-      }
-    }
-
-    // Generate palette on load
-    generatePalette();
-  </script>
-<!-- Footer -->
+    <!-- === FIXED FOOTER SECTION === -->
     <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
-            </div>
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
+    <!-- === END FIXED FOOTER SECTION === -->
+  </main>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const paletteContainer = document.getElementById('paletteContainer');
+        const generateBtn = document.getElementById('generateBtn');
+        const numColors = 5;
+        let lockedColors = new Array(numColors).fill(null);
+
+        const getRandomHex = () => {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+        };
+
+        const generatePalette = () => {
+            paletteContainer.innerHTML = '';
+            for (let i = 0; i < numColors; i++) {
+                const color = lockedColors[i] || getRandomHex();
+                
+                const isLocked = lockedColors[i] !== null;
+
+                const column = document.createElement('div');
+                column.classList.add('color-column');
+                column.style.backgroundColor = color;
+                
+                const hexCode = document.createElement('div');
+                hexCode.classList.add('hex-code');
+                hexCode.textContent = color.toUpperCase();
+                hexCode.addEventListener('click', () => copyToClipboard(color.toUpperCase(), hexCode));
+
+                const lockBtn = document.createElement('button');
+                lockBtn.classList.add('lock-btn');
+                lockBtn.innerHTML = isLocked ? '&#128274;' : '&#128275;'; // Locked vs Unlocked emoji
+                lockBtn.dataset.index = i;
+                lockBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent triggering other click events
+                    toggleLock(i, color);
+                });
+
+                column.appendChild(hexCode);
+                column.appendChild(lockBtn);
+                paletteContainer.appendChild(column);
+            }
+        };
+
+        const toggleLock = (index, color) => {
+            if (lockedColors[index]) {
+                lockedColors[index] = null;
+            } else {
+                lockedColors[index] = color;
+            }
+            // Visually update only the lock icon without regenerating the whole palette
+            const lockBtn = paletteContainer.querySelector(`[data-index='${index}']`);
+            if(lockBtn) {
+                 lockBtn.innerHTML = lockedColors[index] ? '&#128274;' : '&#128275;';
+            }
+        };
+
+        const copyToClipboard = (text, element) => {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = element.textContent;
+                element.textContent = 'Copied!';
+                setTimeout(() => {
+                    element.textContent = originalText;
+                }, 1500);
+            });
+        };
+
+        generateBtn.addEventListener('click', generatePalette);
+        
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                e.preventDefault();
+                generatePalette();
+            }
+        });
+
+        // Initial generation
+        generatePalette();
+    });
+  </script>
 </body>
 </html>
-
-  
-  
