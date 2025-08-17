@@ -1,134 +1,313 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Age Calculator</title>
-  <style>
-    body {
-      background: #f4f9ff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Age Calculator | Calculate Age in Years, Months & Days</title>
+    <meta name="description" content="Accurately calculate your age from your date of birth. Our free online tool shows your age in years, months, days, and even total weeks, days, and hours. Find out how old you are instantly.">
+    <meta name="keywords" content="age calculator, calculate age, how old am i, date of birth calculator, age in years months days, dob calculator, online age calculator">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/age-calculator.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Age Calculator">
+    <meta property="og:description" content="Instantly find out your exact age in years, months, days, and even see a countdown to your next birthday.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/age-calculator.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/age-calculator-og.png">
 
-    .container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ol { margin-left: 20px; }
 
-    h1 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 300px 1fr; }
+        }
 
-    input[type="date"] {
-      padding: 10px;
-      width: 100%;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
+        .input-side label { font-weight: 600; display: block; margin-bottom: 8px; }
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .date-info { margin-top: 15px; font-size: 0.9em; color: #555; }
+        
+        .output-side {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+        .result-card {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 5px solid var(--primary-color);
+        }
+        .result-card .value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .result-card .label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        .result-card.full-width { grid-column: 1 / -1; }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      font-size: 1rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Age Calculator",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to calculate age from a date of birth. It shows the age in years, months, and days, and provides a summary in total weeks, days, hours, etc."
     }
-
-    button:hover {
-      background-color: #0056b3;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How does the age calculator work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The age calculator determines the time elapsed from your date of birth to the current date. It calculates the difference in years, months, and days, accounting for variations in the number of days in each month and for leap years."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this age calculator accurate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, this calculator is highly accurate for determining chronological age. It uses precise date calculations to give you the exact number of years, months, and days you have been alive."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why calculate age in more than just years?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Calculating age in months, weeks, or days provides a more detailed perspective. It's often required for specific applications like pediatric health assessments, official documentation, or simply for fun to know exactly how long you've lived."
+        }
+      }]
     }
-
-    #result {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #333;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 20px;
-      }
-    }
-  </style>
+    </script>
 </head>
 <body>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Free Age Calculator</h1>
+        <p>Find out your exact age in a flash with our easy-to-use online Age Calculator. Simply enter your date of birth, and our tool will instantly calculate your age in years, months, and days. But that's not all—you can also see a summary of your age in total months, weeks, days, and even a countdown to your next birthday. It's perfect for official purposes, personal curiosity, or just for fun!</p>
+    </section>
 
-  <div class="container">
-    <h1>Age Calculator</h1>
-    <input type="date" id="dob" />
-    <button onclick="calculateAge()">Calculate Age</button>
-    <div id="result"></div>
-  </div>
-
-  <script>
-    function calculateAge() {
-      const dob = document.getElementById("dob").value;
-      if (!dob) {
-        document.getElementById("result").innerText = "Please select your date of birth.";
-        return;
-      }
-
-      const birthDate = new Date(dob);
-      const today = new Date();
-
-      let ageYears = today.getFullYear() - birthDate.getFullYear();
-      let ageMonths = today.getMonth() - birthDate.getMonth();
-      let ageDays = today.getDate() - birthDate.getDate();
-
-      if (ageDays < 0) {
-        ageMonths--;
-        ageDays += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
-      }
-
-      if (ageMonths < 0) {
-        ageYears--;
-        ageMonths += 12;
-      }
-
-      document.getElementById("result").innerText = `You are ${ageYears} years, ${ageMonths} months, and ${ageDays} days old.`;
-    }
-  </script>
-<!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
+    <div class="tool-container">
+        <div class="input-side">
+            <h2>Enter Your Date of Birth</h2>
+            <input type="date" id="dob" />
+            <div class="date-info">
+                <p><strong>Today's Date:</strong> <span id="todayDate"></span></p>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+            <button id="resetBtn" class="btn" style="background-color: #6c757d; margin-top: 20px;">Reset</button>
+        </div>
+        
+        <div class="output-side">
+            <div class="result-card full-width">
+                <div class="value"><span id="years">0</span> Years <span id="months">0</span> Months <span id="days">0</span> Days</div>
+                <div class="label">Your Age</div>
+            </div>
+            <div class="result-card full-width">
+                 <div class="value"><span id="nextMonths">0</span> Months <span id="nextDays">0</span> Days</div>
+                 <div class="label">Next Birthday</div>
+            </div>
+            <div class="result-card">
+                 <div class="value" id="totalMonths">-</div>
+                 <div class="label">Total Months</div>
+            </div>
+            <div class="result-card">
+                 <div class="value" id="totalWeeks">-</div>
+                 <div class="label">Total Weeks</div>
+            </div>
+             <div class="result-card">
+                 <div class="value" id="totalDays">-</div>
+                 <div class="label">Total Days</div>
+            </div>
+             <div class="result-card">
+                 <div class="value" id="totalHours">-</div>
+                 <div class="label">Total Hours</div>
             </div>
         </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>About Age Calculation</h2>
+        <h3>How It Works</h3>
+        <p>Our age calculator computes the time difference between two dates: your date of birth and the current date. The result is broken down into years, months, and days. The calculation accurately handles leap years and the varying number of days in each month to give you a precise result.</p>
+        
+        <h3>What is Chronological Age?</h3>
+        <p>Chronological age is the amount of time that has passed from your birth to a given date. It's the most common way of expressing age and is used for everything from legal matters to tracking developmental milestones. This tool calculates your precise chronological age.</p>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dobInput = document.getElementById("dob");
+        const todayDateEl = document.getElementById("todayDate");
+        const resetBtn = document.getElementById("resetBtn");
+        
+        // Result elements
+        const yearsEl = document.getElementById("years");
+        const monthsEl = document.getElementById("months");
+        const daysEl = document.getElementById("days");
+        const nextMonthsEl = document.getElementById("nextMonths");
+        const nextDaysEl = document.getElementById("nextDays");
+        const totalMonthsEl = document.getElementById("totalMonths");
+        const totalWeeksEl = document.getElementById("totalWeeks");
+        const totalDaysEl = document.getElementById("totalDays");
+        const totalHoursEl = document.getElementById("totalHours");
+
+        const today = new Date();
+        todayDateEl.textContent = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        const calculateAge = () => {
+            const dobString = dobInput.value;
+            if (!dobString) return;
+
+            const birthDate = new Date(dobString);
+            if (birthDate > today) {
+                alert("Date of birth cannot be in the future.");
+                resetUI();
+                return;
+            }
+
+            // --- Core Age Calculation ---
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonthLastDay = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+                days += prevMonthLastDay;
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            yearsEl.textContent = years;
+            monthsEl.textContent = months;
+            daysEl.textContent = days;
+
+            // --- Next Birthday Calculation ---
+            let nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+            if (nextBirthday < today) {
+                nextBirthday.setFullYear(today.getFullYear() + 1);
+            }
+            
+            let timeDiff = nextBirthday.getTime() - today.getTime();
+            let daysToNextBirthday = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            
+            let nextMonths = Math.floor(daysToNextBirthday / 30.4375); // Average days in month
+            let nextDays = Math.floor(daysToNextBirthday % 30.4375);
+            
+            nextMonthsEl.textContent = nextMonths;
+            nextDaysEl.textContent = nextDays;
+
+            // --- Summary Calculation ---
+            const totalTimeDiff = today.getTime() - birthDate.getTime();
+            const totalDays = Math.floor(totalTimeDiff / (1000 * 3600 * 24));
+            
+            totalDaysEl.textContent = totalDays.toLocaleString();
+            totalMonthsEl.textContent = (years * 12 + months).toLocaleString();
+            totalWeeksEl.textContent = Math.floor(totalDays / 7).toLocaleString();
+            totalHoursEl.textContent = (totalDays * 24).toLocaleString();
+        };
+
+        const resetUI = () => {
+            dobInput.value = "";
+            yearsEl.textContent = "0";
+            monthsEl.textContent = "0";
+            daysEl.textContent = "0";
+            nextMonthsEl.textContent = "0";
+            nextDaysEl.textContent = "0";
+            totalMonthsEl.textContent = "-";
+            totalWeeksEl.textContent = "-";
+            totalDaysEl.textContent = "-";
+            totalHoursEl.textContent = "-";
+        };
+
+        dobInput.addEventListener('input', calculateAge);
+        resetBtn.addEventListener('click', resetUI);
+    });
+  </script>
 
 </body>
 </html>
-
-  
