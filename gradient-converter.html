@@ -1,140 +1,305 @@
-  
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gradient Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      padding: 30px;
-      text-align: center;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free CSS Gradient Generator | Linear & Radial Gradients</title>
+    <meta name="description" content="Create beautiful custom CSS gradients with our free online tool. Generate linear and radial gradients, control colors and angles, and copy the code instantly.">
+    <meta name="keywords" content="css gradient generator, gradient generator, linear gradient, radial gradient, free gradient tool, css background generator, color gradient">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/gradient-generator.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online CSS Gradient Generator">
+    <meta property="og:description" content="Easily create, visualize, and copy CSS gradients. Supports linear and radial types with full control over colors and direction.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/gradient-generator.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/gradient-generator-og.png">
 
-    h2 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
 
-    .generator-box {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 20px;
-      max-width: 400px;
-      margin: auto;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 300px 1fr; }
+        }
 
-    input[type="color"],
-    select,
-    input[type="text"] {
-      margin: 10px 5px;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      width: 45%;
-    }
+        .controls label { font-weight: 600; display: block; margin-top: 15px; margin-bottom: 5px; }
+        .color-inputs { display: flex; justify-content: space-between; }
+        input[type="color"] { width: 48%; height: 40px; border: 1px solid var(--border-color); padding: 0; cursor: pointer; border-radius: 5px; }
+        select, input[type="range"] { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid var(--border-color); }
+        
+        .output-area .preview { height: 200px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .css-output {
+            margin-top: 15px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            word-break: break-all;
+            position: relative;
+            text-align: left;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            padding: 3px 8px;
+            border-radius: 5px;
+        }
 
-    .preview {
-      margin-top: 20px;
-      height: 150px;
-      border-radius: 8px;
-      border: 2px solid #007bff;
-    }
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    .css-output {
-      margin-top: 10px;
-      font-weight: bold;
-      word-break: break-word;
-      color: #333;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free CSS Gradient Generator",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to create linear and radial CSS gradients, with controls for colors, angle, and type."
     }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin-top: 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a CSS gradient?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A CSS gradient is a feature of CSS that allows you to display smooth transitions between two or more specified colors. Unlike an image, a gradient is generated by the browser and can be used as a background for any element."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the difference between linear and radial gradients?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A linear gradient transitions colors along a straight line. You can control the direction or angle of this line. A radial gradient transitions colors outwards from a central point in a circular or elliptical shape."
+        }
+      }]
     }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+    </script>
 </head>
 <body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <h2>CSS Gradient Generator</h2>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>CSS Gradient Generator</h1>
+        <p>Create stunning background gradients for your website with our easy-to-use CSS Gradient Generator. This tool allows you to visually design both linear and radial gradients, pick your colors, set the direction or angle, and instantly get the CSS code. It's a perfect resource for web designers and developers looking to add a touch of modern design to their projects without writing code from scratch.</p>
+    </section>
 
-  <div class="generator-box">
-    <div>
-      <input type="color" id="color1" value="#ff7f50" />
-      <input type="color" id="color2" value="#1e90ff" />
-    </div>
+    <div class="tool-container">
+        <div class="controls">
+            <h2>Options</h2>
+            <label for="type">Gradient Type:</label>
+            <select id="type">
+                <option value="linear">Linear</option>
+                <option value="radial">Radial</option>
+            </select>
+            
+            <label>Colors:</label>
+            <div class="color-inputs">
+                <input type="color" id="color1" value="#ff7f50">
+                <input type="color" id="color2" value="#1e90ff">
+            </div>
 
-    <div>
-      <select id="direction">
-        <option value="to right">Left to Right</option>
-        <option value="to left">Right to Left</option>
-        <option value="to bottom">Top to Bottom</option>
-        <option value="to top">Bottom to Top</option>
-        <option value="to top left">Bottom Right to Top Left</option>
-        <option value="to bottom right">Top Left to Bottom Right</option>
-      </select>
-    </div>
-
-    <button onclick="generateGradient()">Generate Gradient</button>
-
-    <div class="preview" id="previewBox"></div>
-    <div class="css-output" id="cssCode">CSS Code: -</div>
-  </div>
-
-  <script>
-    function generateGradient() {
-      const color1 = document.getElementById("color1").value;
-      const color2 = document.getElementById("color2").value;
-      const direction = document.getElementById("direction").value;
-
-      const gradient = `linear-gradient(${direction}, ${color1}, ${color2})`;
-
-      const previewBox = document.getElementById("previewBox");
-      previewBox.style.background = gradient;
-
-      const cssOutput = document.getElementById("cssCode");
-      cssOutput.textContent = `background: ${gradient};`;
-    }
-  </script>
-<!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
+            <div id="linearOptions">
+                <label for="angle">Angle:</label>
+                <input type="range" id="angle" min="0" max="360" value="90">
             </div>
             
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+            <div id="radialOptions" style="display:none;">
+                 <label for="shape">Shape:</label>
+                 <select id="shape">
+                    <option value="ellipse">Ellipse</option>
+                    <option value="circle">Circle</option>
+                </select>
             </div>
         </div>
+        
+        <div class="output-area">
+            <h2>Preview & Code</h2>
+            <div class="preview" id="previewBox"></div>
+            <div class="css-output">
+                <code id="cssCode"></code>
+                <button id="copyBtn" class="copy-btn">Copy</button>
+            </div>
+        </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>About CSS Gradients</h2>
+        <p>CSS gradients are a powerful way to create smooth color transitions without needing to use an image file. They are better for performance and scale perfectly to any size. There are two main types:</p>
+        <ul>
+            <li><strong>Linear Gradients:</strong> Progress from one color to another along a straight line. You can control this line's angle.</li>
+            <li><strong>Radial Gradients:</strong> Radiate from a central point. The shape can be a circle or an ellipse.</li>
+        </ul>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const typeSelect = document.getElementById('type');
+        const color1Input = document.getElementById('color1');
+        const color2Input = document.getElementById('color2');
+        const angleInput = document.getElementById('angle');
+        const shapeSelect = document.getElementById('shape');
+        
+        const linearOptions = document.getElementById('linearOptions');
+        const radialOptions = document.getElementById('radialOptions');
+        
+        const previewBox = document.getElementById('previewBox');
+        const cssCode = document.getElementById('cssCode');
+        const copyBtn = document.getElementById('copyBtn');
+
+        const generateGradient = () => {
+            const type = typeSelect.value;
+            const color1 = color1Input.value;
+            const color2 = color2Input.value;
+            const angle = angleInput.value;
+            const shape = shapeSelect.value;
+            let gradientCss = '';
+
+            if (type === 'linear') {
+                gradientCss = `linear-gradient(${angle}deg, ${color1}, ${color2})`;
+            } else { // 'radial'
+                gradientCss = `radial-gradient(${shape}, ${color1}, ${color2})`;
+            }
+
+            previewBox.style.background = gradientCss;
+            cssCode.textContent = `background: ${gradientCss};`;
+        };
+
+        const toggleOptions = () => {
+            if (typeSelect.value === 'linear') {
+                linearOptions.style.display = 'block';
+                radialOptions.style.display = 'none';
+            } else {
+                linearOptions.style.display = 'none';
+                radialOptions.style.display = 'block';
+            }
+            generateGradient();
+        };
+
+        // Event Listeners
+        const inputs = [typeSelect, color1Input, color2Input, angleInput, shapeSelect];
+        inputs.forEach(input => {
+            input.addEventListener('input', generateGradient);
+        });
+
+        typeSelect.addEventListener('change', toggleOptions);
+
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(cssCode.textContent).then(() => {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            });
+        });
+        
+        // Initial state
+        toggleOptions();
+    });
+  </script>
 
 </body>
 </html>
- 
-  
-  
