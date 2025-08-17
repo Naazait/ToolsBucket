@@ -1,133 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Excel to PDF Converter</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Excel to PDF Converter | Convert XLSX to PDF Online</title>
+    <meta name="description" content="Convert your Excel files (.xlsx, .xls) to high-quality PDF documents online for free. Our tool preserves table structures and works securely in your browser. No uploads required.">
+    <meta name="keywords" content="excel to pdf, xlsx to pdf, convert excel to pdf, free pdf converter, online excel converter, xls to pdf, excel to pdf converter online">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/excel-to-pdf.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Excel to PDF Converter">
+    <meta property="og:description" content="Instantly convert Excel spreadsheets to professional PDF tables. Secure, fast, and works entirely in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/excel-to-pdf.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/excel-to-pdf-og.png">
 
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 255, 0.1);
-      text-align: center;
-    }
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
-    h1 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
 
-    input[type="file"] {
-      display: block;
-      margin: 20px auto;
-    }
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: center;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 1fr 1fr; }
+        }
 
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+        .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .upload-area.dragover { background-color: #e6f2ff; border-color: var(--primary-color); }
+        input[type="file"] { display: none; }
+        #fileInfo { margin-top: 15px; font-weight: 600; }
 
-    button:hover {
-      background-color: #0056b3;
-    }
+        .options-area label { display: block; margin-top: 15px; font-weight: 600; }
+        #sheetSelect {
+            width: 100%; padding: 10px; border-radius: 8px;
+            border: 1px solid var(--border-color); font-size: 16px;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: auto;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .btn:disabled { background-color: #a0c8ff; cursor: not-allowed; }
+        
+        #status { margin-top: 15px; font-weight: 600; color: var(--heading-color); }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    @media (max-width: 600px) {
-      .container {
-        margin: 20px;
-        padding: 15px;
-      }
-      button {
-        width: 100%;
-      }
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Excel to PDF Converter",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to convert Excel files (.xlsx, .xls) into high-quality PDF documents with table structures preserved. All processing is done securely in the browser."
     }
-  </style>
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How does this tool convert Excel to PDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This tool uses JavaScript libraries (XLSX.js and jsPDF) to read your Excel file and recreate its table structure within a new PDF document. The key is that it preserves the rows and columns, creating a proper table in the PDF."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Are my Excel files secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, your files are 100% secure. The entire conversion process happens in your web browser. Your Excel file is never uploaded to our servers, ensuring your data remains completely private."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Will my formatting (colors, fonts) be preserved?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This tool focuses on accurately converting the data and table structure. Complex formatting like cell colors, font styles, and charts will not be carried over to the PDF. The output will be a clean, standard table."
+        }
+      }]
+    }
+    </script>
 </head>
 <body>
-  <div class="container">
-    <h1>Excel to PDF Converter</h1>
-    <input type="file" id="excelUpload" accept=".xls,.xlsx" />
-    <button onclick="convertToPDF()">Convert to PDF</button>
-    <p id="status"></p>
-  </div>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
+
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Excel to PDF Converter</h1>
+        <p>Convert your Excel spreadsheets (.xlsx, .xls) into high-quality, professional PDF documents with our free and secure online tool. Unlike other converters, our tool focuses on preserving the table structure of your data, making it perfect for reports, invoices, and data sheets. The entire process runs in your browser, so your files are never uploaded to a server, guaranteeing your privacy.</p>
+    </section>
+
+    <div class="tool-container">
+        <div class="input-side">
+            <h2>Step 1: Upload Your Excel File</h2>
+            <div id="uploadArea" class="upload-area">
+                <p>Drag & drop a file here, or click to select.</p>
+                <p style="font-size: 0.9em; color: #888;">Supports .xlsx, .xls</p>
+            </div>
+            <input type="file" id="excelUpload" accept=".xls,.xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            <div id="fileInfo"></div>
+        </div>
+        
+        <div class="output-side">
+            <h2>Step 2: Convert & Download</h2>
+            <div id="options" style="display:none;">
+                <label for="sheetSelect">Select sheet to convert:</label>
+                <select id="sheetSelect"></select>
+            </div>
+            <button id="convertBtn" class="btn" disabled>Convert to PDF</button>
+            <p id="status"></p>
+        </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>How to Use the Excel to PDF Converter</h2>
+        <ol>
+            <li><strong>Upload Your File:</strong> Drag and drop your Excel file onto the upload area, or click to select a file from your device.</li>
+            <li><strong>Select Sheet:</strong> If your workbook has multiple sheets, a dropdown menu will appear. Choose the sheet you want to convert.</li>
+            <li><strong>Convert:</strong> Click the "Convert to PDF" button. The tool will process your file locally. The PDF will be automatically downloaded when ready.</li>
+        </ol>
+    </section>
+
+    <!-- === FIXED FOOTER SECTION === -->
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- === END FIXED FOOTER SECTION === -->
+  </main>
 
   <script>
-    async function convertToPDF() {
-      const { jsPDF } = window.jspdf;
-      const fileInput = document.getElementById("excelUpload");
-      const status = document.getElementById("status");
+    document.addEventListener('DOMContentLoaded', () => {
+        const { jsPDF } = window.jspdf;
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('excelUpload');
+        const fileInfo = document.getElementById('fileInfo');
+        const convertBtn = document.getElementById('convertBtn');
+        const status = document.getElementById('status');
+        const optionsDiv = document.getElementById('options');
+        const sheetSelect = document.getElementById('sheetSelect');
+        
+        let workbook = null;
 
-      if (!fileInput.files.length) {
-        status.textContent = "Please select an Excel file.";
-        return;
-      }
+        const handleFile = (file) => {
+            if (!file) return;
+            status.textContent = 'Reading Excel file...';
+            fileInfo.textContent = `Selected: ${file.name}`;
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const data = new Uint8Array(event.target.result);
+                    workbook = XLSX.read(data, { type: "array" });
+                    
+                    sheetSelect.innerHTML = '';
+                    workbook.SheetNames.forEach(sheetName => {
+                        const option = document.createElement('option');
+                        option.value = sheetName;
+                        option.textContent = sheetName;
+                        sheetSelect.appendChild(option);
+                    });
+                    
+                    optionsDiv.style.display = workbook.SheetNames.length > 1 ? 'block' : 'none';
+                    convertBtn.disabled = false;
+                    status.textContent = 'File is ready to be converted.';
+                } catch (err) {
+                    status.textContent = 'Error reading file. Is it a valid Excel file?';
+                    console.error(err);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        };
 
-      const file = fileInput.files[0];
-      status.textContent = "Reading Excel file...";
+        uploadArea.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+        uploadArea.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
 
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        try {
-          const data = new Uint8Array(event.target.result);
-          const workbook = XLSX.read(data, { type: "array" });
+        convertBtn.addEventListener('click', () => {
+            if (!workbook) return;
 
-          // take first sheet
-          const sheetName = workbook.SheetNames[0];
-          const sheet = workbook.Sheets[sheetName];
+            try {
+                status.textContent = "Converting to PDF...";
+                convertBtn.disabled = true;
 
-          // Convert sheet to JSON (rows & cols)
-          const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                const sheetName = sheetSelect.value || workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-          status.textContent = "Converting to PDF...";
+                if (json.length === 0) {
+                    status.textContent = 'The selected sheet is empty.';
+                    convertBtn.disabled = false;
+                    return;
+                }
 
-          const doc = new jsPDF();
-          const margin = 10;
-          const pageHeight = doc.internal.pageSize.height;
-          let y = margin;
+                const doc = new jsPDF({ orientation: 'landscape' });
+                doc.autoTable({
+                    head: [json[0]], // First row as header
+                    body: json.slice(1), // The rest of the rows as body
+                    startY: 15,
+                    styles: {
+                        fontSize: 8,
+                        cellPadding: 2,
+                    },
+                    headStyles: {
+                        fillColor: [22, 160, 133], // A nice header color
+                        fontSize: 9,
+                    },
+                });
 
-          doc.setFontSize(14);
-          doc.text("Excel to PDF Conversion", margin, y);
-          y += 10;
+                doc.save(`${sheetName}.pdf`);
+                status.textContent = "Conversion successful! PDF downloaded.";
 
-          doc.setFontSize(10);
-
-          json.forEach((row) => {
-            let rowText = row.join("   |   ");
-            if (y > pageHeight - margin) {
-              doc.addPage();
-              y = margin;
+            } catch (err) {
+                console.error(err);
+                status.textContent = "Error converting file.";
+            } finally {
+                convertBtn.disabled = false;
             }
-            doc.text(rowText, margin, y);
-            y += 8;
-          });
-
-          doc.save("converted.pdf");
-          status.textContent = "Conversion successful! PDF downloaded.";
-        } catch (err) {
-          console.error(err);
-          status.textContent = "Error converting file. Make sure it's a valid Excel file.";
-        }
-      };
-
-      reader.readAsArrayBuffer(file);
-    }
+        });
+    });
   </script>
+
 </body>
 </html>
