@@ -1,135 +1,327 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Loan EMI Calculator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4faff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Loan EMI Calculator | Calculate Your Loan EMI Online</title>
+    <meta name="description" content="A free and easy-to-use online loan EMI calculator. Enter your loan amount, interest rate, and tenure to instantly calculate your equated monthly installment (EMI), total interest, and total payment.">
+    <meta name="keywords" content="emi calculator, loan emi calculator, emi calculation, personal loan emi calculator, home loan emi, online emi tool, interest calculator">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/loan-emi-calculator.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Loan EMI Calculator">
+    <meta property="og:description" content="Instantly calculate your loan EMI with our interactive tool. Features sliders, a payment breakdown pie chart, and live updates.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/loan-emi-calculator.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/loan-emi-calculator-og.png">
 
-    .container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
-      text-align: center;
-      width: 90%;
-      max-width: 450px;
-    }
+    <!-- Chart.js for Pie Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    h1 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 1fr 1fr; }
+        }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
+        .input-side label { font-weight: 600; display: block; margin-bottom: 5px; }
+        .input-group { margin-bottom: 15px; }
+        .input-field { display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 8px; }
+        .input-field span { padding: 0 10px; background-color: #f9f9f9; border-right: 1px solid var(--border-color); }
+        .input-field input { border: none; padding: 10px; width: 100%; border-radius: 0 8px 8px 0; }
+        
+        .tenure-group { display: flex; gap: 10px; }
+        .tenure-group .input-field { flex: 2; }
+        .tenure-group select { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; }
+        
+        .output-side { text-align: center; }
+        .result-item { margin-bottom: 10px; font-size: 1.1em; }
+        .result-item strong { color: var(--primary-color); font-size: 1.3em; }
+        #pieChartContainer { max-width: 250px; margin: 15px auto 0; }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    button {
-      background-color: #007bff;
-      color: #fff;
-      padding: 12px 20px;
-      border: none;
-      font-size: 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 10px;
-      width: 100%;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Loan EMI Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to calculate the Equated Monthly Installment (EMI) for a loan, with a visual breakdown of principal vs. interest."
     }
-
-    button:hover {
-      background-color: #0056b3;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is an EMI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "An EMI (Equated Monthly Installment) is a fixed payment amount made by a borrower to a lender at a specified date each calendar month. EMIs are used to pay off both interest and principal each month so that over a specified number of years, the loan is paid off in full."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What factors affect the EMI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Three main factors affect your EMI: 1. The Loan Amount (Principal): The total amount you borrow. 2. The Interest Rate: The rate at which the lender charges interest. 3. The Loan Tenure: The duration over which you will repay the loan."
+        }
+      }]
     }
-
-    .result {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    @media (max-width: 500px) {
-      .container {
-        padding: 20px;
-      }
-    }
-  </style>
+    </script>
 </head>
 <body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <div class="container">
-    <h1>Loan EMI Calculator</h1>
-    <input type="number" id="loanAmount" placeholder="Loan Amount (₹)" />
-    <input type="number" id="interestRate" placeholder="Annual Interest Rate (%)" />
-    <input type="number" id="loanTenure" placeholder="Loan Tenure (in months)" />
-    <button onclick="calculateEMI()">Calculate EMI</button>
-    <div class="result" id="result"></div>
-  </div>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Loan EMI Calculator</h1>
+        <p>Planning to take a loan? Our easy-to-use EMI calculator will help you understand your monthly financial commitment. Simply enter the loan amount, interest rate, and loan tenure to get a detailed breakdown of your Equated Monthly Installment (EMI). Our tool also provides a visual representation of the total principal versus the total interest you'll pay, helping you make smarter financial decisions.</p>
+    </section>
 
-  <script>
-    function calculateEMI() {
-      const loanAmount = parseFloat(document.getElementById("loanAmount").value);
-      const annualInterestRate = parseFloat(document.getElementById("interestRate").value);
-      const tenure = parseInt(document.getElementById("loanTenure").value);
-
-      if (!loanAmount || !annualInterestRate || !tenure || loanAmount <= 0 || annualInterestRate <= 0 || tenure <= 0) {
-        document.getElementById("result").textContent = "Please enter valid inputs.";
-        return;
-      }
-
-      const monthlyInterestRate = annualInterestRate / 12 / 100;
-      const emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenure)) /
-                  (Math.pow(1 + monthlyInterestRate, tenure) - 1);
-
-      const totalPayment = emi * tenure;
-      const totalInterest = totalPayment - loanAmount;
-
-      document.getElementById("result").innerHTML = `
-        Monthly EMI: ₹${emi.toFixed(2)}<br/>
-        Total Interest: ₹${totalInterest.toFixed(2)}<br/>
-        Total Payment: ₹${totalPayment.toFixed(2)}
-      `;
-    }
-  </script>
-<!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
+    <div class="tool-container">
+        <div class="input-side">
+            <h2>Loan Details</h2>
+            <div class="input-group">
+                <label for="loanAmount">Loan Amount</label>
+                <div class="input-field">
+                    <span>₹</span>
+                    <input type="number" id="loanAmount" value="1000000">
+                </div>
+                <input type="range" id="loanAmountSlider" min="10000" max="10000000" value="1000000" step="10000">
+            </div>
+            <div class="input-group">
+                <label for="interestRate">Interest Rate (p.a.)</label>
+                <div class="input-field">
+                    <span>%</span>
+                    <input type="number" id="interestRate" value="8.5" step="0.1">
+                </div>
+                <input type="range" id="interestRateSlider" min="1" max="20" value="8.5" step="0.1">
+            </div>
+            <div class="input-group">
+                <label for="loanTenure">Loan Tenure</label>
+                <div class="tenure-group">
+                    <div class="input-field">
+                        <input type="number" id="loanTenure" value="20">
+                    </div>
+                    <select id="tenureType">
+                        <option value="years" selected>Years</option>
+                        <option value="months">Months</option>
+                    </select>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
+        
+        <div class="output-side">
+            <h2>Your Repayment Summary</h2>
+            <div class="result-item">Monthly EMI: <br><strong id="emiResult">₹ 0</strong></div>
+            <div class="result-item">Total Interest: <br><strong id="interestResult">₹ 0</strong></div>
+            <div class="result-item">Total Payment: <br><strong id="totalResult">₹ 0</strong></div>
+            <div id="pieChartContainer">
+                <canvas id="repaymentChart"></canvas>
             </div>
         </div>
-    </footer>
+    </div>
+    
+    <section class="content-section">
+        <h2>Understanding Your EMI</h2>
+        <p>The EMI is calculated based on a standard formula that takes into account the loan amount, interest rate, and tenure. A longer tenure will result in a lower EMI but a higher total interest payment, while a shorter tenure increases the EMI but reduces the total interest paid over the life of the loan. Use our sliders to see how these factors impact your monthly payments.</p>
+    </section>
 
+    <!-- === FIXED FOOTER SECTION === -->
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- === END FIXED FOOTER SECTION === -->
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loanAmountInput = document.getElementById("loanAmount");
+        const interestRateInput = document.getElementById("interestRate");
+        const loanTenureInput = document.getElementById("loanTenure");
+        
+        const loanAmountSlider = document.getElementById("loanAmountSlider");
+        const interestRateSlider = document.getElementById("interestRateSlider");
+        const tenureTypeSelect = document.getElementById("tenureType");
+
+        const emiResultEl = document.getElementById("emiResult");
+        const interestResultEl = document.getElementById("interestResult");
+        const totalResultEl = document.getElementById("totalResult");
+        
+        const chartCanvas = document.getElementById('repaymentChart');
+        let repaymentChart;
+
+        const formatCurrency = (value) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
+
+        const calculateEMI = () => {
+            const P = parseFloat(loanAmountInput.value);
+            const annualRate = parseFloat(interestRateInput.value);
+            const tenureValue = parseInt(loanTenureInput.value);
+
+            if (isNaN(P) || isNaN(annualRate) || isNaN(tenureValue) || P <= 0 || annualRate <= 0 || tenureValue <= 0) {
+                return;
+            }
+            
+            const R = annualRate / 12 / 100;
+            const N = tenureTypeSelect.value === 'years' ? tenureValue * 12 : tenureValue;
+
+            if (N <= 0) return;
+
+            const emi = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+            const totalPayment = emi * N;
+            const totalInterest = totalPayment - P;
+
+            emiResultEl.textContent = formatCurrency(emi);
+            interestResultEl.textContent = formatCurrency(totalInterest);
+            totalResultEl.textContent = formatCurrency(totalPayment);
+            
+            updateChart(P, totalInterest);
+        };
+
+        const updateChart = (principal, interest) => {
+            if (repaymentChart) {
+                repaymentChart.data.datasets[0].data = [principal, interest];
+                repaymentChart.update();
+            } else {
+                repaymentChart = new Chart(chartCanvas, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Principal Amount', 'Total Interest'],
+                        datasets: [{
+                            data: [principal, interest],
+                            backgroundColor: ['#007BFF', '#FFC107'],
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'top' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += formatCurrency(context.parsed);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        // Sync sliders with inputs
+        loanAmountSlider.addEventListener('input', () => { loanAmountInput.value = loanAmountSlider.value; calculateEMI(); });
+        loanAmountInput.addEventListener('input', () => { loanAmountSlider.value = loanAmountInput.value; calculateEMI(); });
+        
+        interestRateSlider.addEventListener('input', () => { interestRateInput.value = interestRateSlider.value; calculateEMI(); });
+        interestRateInput.addEventListener('input', () => { interestRateSlider.value = interestRateInput.value; calculateEMI(); });
+
+        loanTenureInput.addEventListener('input', calculateEMI);
+        tenureTypeSelect.addEventListener('change', calculateEMI);
+        
+        // Initial Calculation
+        calculateEMI();
+    });
+  </script>
 </body>
 </html>
-
-  
-  
