@@ -26,7 +26,8 @@
             --bg-color: #f4f7f9;
             --card-bg: #ffffff;
             --text-color: #333;
-            --primary-color: #4CAF50; /* Green */
+            /* === COLOR CHANGE HERE === */
+            --primary-color: #007BFF; /* Light Blue */
             --secondary-color: #e0e0e0;
             --shadow-color: rgba(0, 0, 0, 0.08);
             --border-color: #ddd;
@@ -38,7 +39,8 @@
             --bg-color: #1a1a2e;
             --card-bg: #2d2d44;
             --text-color: #e0e0e0;
-            --primary-color: #64ffda; /* Teal/Mint */
+            /* === DARK MODE COLOR CHANGE HERE === */
+            --primary-color: #33aaff; /* Vibrant Light Blue for Dark Mode */
             --secondary-color: #444;
             --shadow-color: rgba(0, 0, 0, 0.4);
             --border-color: #444;
@@ -119,7 +121,7 @@
         input[type="radio"], input[type="checkbox"] { margin-right: 8px; accent-color: var(--primary-color); width: 1.1em; height: 1.1em; }
         .button-group { display: flex; gap: 15px; margin-top: 25px; }
         .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; transition: background-color 0.3s, transform 0.1s; flex: 1; }
-        .btn.primary { background-color: var(--primary-color); color: var(--card-bg); }
+        .btn.primary { background-color: var(--primary-color); color: #ffffff; }
         .btn.primary:hover { filter: brightness(1.1); }
         .btn.secondary { background-color: var(--secondary-color); color: var(--text-color); border: 1px solid var(--border-color); }
         .btn.secondary:hover { background-color: var(--border-color); }
