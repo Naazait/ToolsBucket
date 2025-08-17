@@ -1,178 +1,300 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meta Tag Analyzer</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f7fc;
-      margin: 0;
-      padding: 0;
-      text-align: center;
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Meta Tag Analyzer | Check Website Meta Tags for SEO</title>
+    <meta name="description" content="A free online tool to analyze the meta tags of any website. Check your title, description, keywords, Open Graph tags, and more to optimize your on-page SEO.">
+    <meta name="keywords" content="meta tag analyzer, meta tag checker, check meta tags, seo analyzer, website analysis tool, open graph checker, free seo tool">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/meta-tag-analyzer.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Meta Tag Analyzer Tool">
+    <meta property="og:description" content="Instantly analyze the meta tags and Open Graph data of any URL to improve your website's SEO and social media presence.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/meta-tag-analyzer.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/meta-tag-analyzer-og.png">
+
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2, h3 { color: var(--heading-color); }
+        h1 { font-size: 2em; text-align: center; margin-bottom: 15px; }
+        h2 { font-size: 1.6em; text-align: center; margin-bottom: 15px; }
+        
+        .input-group { display: flex; gap: 10px; }
+        #urlInput {
+            flex-grow: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: white; padding: 12px 20px; border: none; border-radius: 8px;
+            cursor: pointer; font-size: 16px; font-weight: 600;
+        }
+        .btn:disabled { background-color: #a0c8ff; cursor: not-allowed; }
+        
+        #resultsContainer { display: none; margin-top: 20px; }
+        .serp-preview {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+        }
+        .serp-url { color: #202124; font-size: 14px; }
+        .serp-title { color: #1a0dab; font-size: 20px; text-decoration: none; }
+        .serp-description { color: #4d5156; font-size: 14px; line-height: 1.5; }
+        
+        .results-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .results-table th, .results-table td {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            vertical-align: top;
+            word-break: break-word;
+        }
+        .results-table th { background-color: #f2f2f2; width: 150px; }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
+
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Meta Tag Analyzer",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to analyze meta tags, Open Graph tags, and other SEO-critical information from any website URL."
     }
-    h2 {
-      color: #007bff;
-      margin-top: 20px;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Why are meta tags important for SEO?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Meta tags are snippets of text that describe a page's content. The title tag and meta description are important because they are often what search engines show in search results. Well-written tags can increase click-through rates and help search engines understand what your page is about."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What are Open Graph (OG) tags?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Open Graph (OG) tags are a specific type of meta tag that control how a URL is displayed when shared on social media platforms like Facebook, Twitter, and LinkedIn. They allow you to specify the title, description, and image that appear in a social media post."
+        }
+      }]
     }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-    .input-box {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #333;
-    }
-    .result span {
-      font-weight: bold;
-      color: #007bff;
-    }
-    .note {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #555;
-    }
-    footer {
-      margin-top: 30px;
-      font-size: 14px;
-      color: #888;
-    }
-    footer a {
-      text-decoration: none;
-      color: #007bff;
-    }
-  </style>
+    </script>
 </head>
 <body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <h2>Meta Tag Analyzer</h2>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Meta Tag Analyzer</h1>
+        <p>Get a deep dive into the on-page SEO of any website with our free Meta Tag Analyzer. This tool extracts crucial metadata, including the title, meta description, Open Graph tags for social media, and more. See a live preview of how the page appears in Google search results and get a clear, organized view of all its important tags. It's an essential tool for SEO professionals, web developers, and content creators.</p>
+    </section>
 
-  <div class="container">
-    <label for="urlInput">Enter URL:</label>
-    <input type="text" id="urlInput" class="input-box" placeholder="Enter website URL" />
+    <div class="tool-container">
+        <h2>Analyze Website</h2>
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="Enter a website URL, e.g., https://google.com">
+            <button id="analyzeButton" class="btn">Analyze</button>
+        </div>
+        <p id="status"></p>
 
-    <button id="analyzeButton">Analyze Meta Tags</button>
+        <div id="resultsContainer">
+            <h3>Google Search Preview</h3>
+            <div class="serp-preview">
+                <div class="serp-url" id="serpUrl"></div>
+                <h3 style="margin:0;"><a class="serp-title" id="serpTitle" href="#" target="_blank"></a></h3>
+                <p class="serp-description" id="serpDescription"></p>
+            </div>
 
-    <div id="resultContainer" class="result" style="display:none;">
-      <p><span>Title:</span> <span id="metaTitle">N/A</span></p>
-      <p><span>Description:</span> <span id="metaDescription">N/A</span></p>
-      <p><span>Keywords:</span> <span id="metaKeywords">N/A</span></p>
-      <p><span>Author:</span> <span id="metaAuthor">N/A</span></p>
-      <p><span>Charset:</span> <span id="metaCharset">N/A</span></p>
+            <h3>Meta Tags Found</h3>
+            <table class="results-table">
+                <tbody id="metaTagsBody"></tbody>
+            </table>
+
+            <h3>Open Graph Tags</h3>
+            <table class="results-table">
+                <tbody id="ogTagsBody"></tbody>
+            </table>
+        </div>
     </div>
+    
+    <section class="content-section">
+        <h2>Understanding Meta Tags</h2>
+        <p>Meta tags are invisible tags that provide data about your page to search engines and website visitors. While much of this data is not directly visible on the page itself, it plays a critical role in how your site is understood and displayed by search engines and social media platforms. Optimizing these tags is a fundamental part of on-page SEO.</p>
+    </section>
 
-    <p class="note">This tool analyzes the meta tags of the provided URL and extracts key metadata.</p>
-  </div>
-
-  <footer>
-    <p>Designed by <a href="https://example.com" target="_blank">YourName</a></p>
-  </footer>
-
-  <script>
-    const urlInput = document.getElementById('urlInput');
-    const analyzeButton = document.getElementById('analyzeButton');
-    const resultContainer = document.getElementById('resultContainer');
-    const metaTitle = document.getElementById('metaTitle');
-    const metaDescription = document.getElementById('metaDescription');
-    const metaKeywords = document.getElementById('metaKeywords');
-    const metaAuthor = document.getElementById('metaAuthor');
-    const metaCharset = document.getElementById('metaCharset');
-
-    // Function to fetch meta tags from the provided URL
-    async function fetchMetaTags(url) {
-      try {
-        // Fetch the webpage HTML
-        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);
-        const html = await response.text();
-
-        // Create a temporary DOM element to parse the HTML content
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-
-        // Extract meta tag content
-        const title = doc.querySelector('title') ? doc.querySelector('title').innerText : 'N/A';
-        const description = doc.querySelector('meta[name="description"]') ? doc.querySelector('meta[name="description"]').getAttribute('content') : 'N/A';
-        const keywords = doc.querySelector('meta[name="keywords"]') ? doc.querySelector('meta[name="keywords"]').getAttribute('content') : 'N/A';
-        const author = doc.querySelector('meta[name="author"]') ? doc.querySelector('meta[name="author"]').getAttribute('content') : 'N/A';
-        const charset = doc.querySelector('meta[charset]') ? doc.querySelector('meta[charset]').getAttribute('charset') : 'N/A';
-
-        // Update the UI with the extracted values
-        metaTitle.textContent = title;
-        metaDescription.textContent = description;
-        metaKeywords.textContent = keywords;
-        metaAuthor.textContent = author;
-        metaCharset.textContent = charset;
-
-        // Show the result container
-        resultContainer.style.display = 'block';
-      } catch (error) {
-        alert("Error: Unable to fetch meta tags. Please check the URL.");
-      }
-    }
-
-    // Event listener to trigger the analysis
-    analyzeButton.addEventListener('click', () => {
-      const url = urlInput.value.trim();
-      if (url) {
-        fetchMetaTags(url);
-      } else {
-        alert('Please enter a valid URL.');
-      }
-    });
-  </script>
-<!-- Footer -->
+    <!-- === FIXED FOOTER SECTION === -->
     <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
-            </div>
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
+    <!-- === END FIXED FOOTER SECTION === -->
+  </main>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlInput = document.getElementById('urlInput');
+        const analyzeButton = document.getElementById('analyzeButton');
+        const status = document.getElementById('status');
+        const resultsContainer = document.getElementById('resultsContainer');
+
+        const analyze = async () => {
+            let url = urlInput.value.trim();
+            if (!url) {
+                status.textContent = 'Please enter a URL.';
+                return;
+            }
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = `https://${url}`;
+            }
+
+            status.textContent = 'Fetching and analyzing...';
+            analyzeButton.disabled = true;
+            resultsContainer.style.display = 'none';
+
+            try {
+                // Using a CORS proxy to fetch the HTML
+                const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);
+                if (!response.ok) throw new Error(`Failed to fetch URL, status: ${response.status}`);
+                
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // --- Extract Data ---
+                const getTagContent = (selector) => doc.querySelector(selector)?.innerText || 'Not found';
+                const getMetaContent = (attr, value) => doc.querySelector(`meta[${attr}="${value}"]`)?.getAttribute('content') || 'Not found';
+
+                const title = getTagContent('title');
+                const description = getMetaContent('name', 'description');
+                
+                const allMetaTags = Array.from(doc.querySelectorAll('meta')).map(tag => ({
+                    name: tag.getAttribute('name') || tag.getAttribute('property'),
+                    content: tag.getAttribute('content')
+                })).filter(tag => tag.name && tag.content); // Filter out tags without name or content
+                
+                const generalTags = allMetaTags.filter(t => !t.name.startsWith('og:'));
+                const ogTags = allMetaTags.filter(t => t.name.startsWith('og:'));
+
+                // --- Display Data ---
+                // SERP Preview
+                document.getElementById('serpUrl').textContent = url;
+                document.getElementById('serpTitle').textContent = title;
+                document.getElementById('serpTitle').href = url;
+                document.getElementById('serpDescription').textContent = description;
+                
+                // Tables
+                const createTableRows = (tags) => {
+                    if (tags.length === 0) return '<tr><td colspan="2">No tags of this type found.</td></tr>';
+                    return tags.map(tag => `<tr><th>${tag.name}</th><td>${tag.content}</td></tr>`).join('');
+                }
+
+                document.getElementById('metaTagsBody').innerHTML = createTableRows(generalTags);
+                document.getElementById('ogTagsBody').innerHTML = createTableRows(ogTags);
+
+                status.textContent = '';
+                resultsContainer.style.display = 'block';
+
+            } catch (error) {
+                console.error(error);
+                status.textContent = `Error: Could not analyze the URL. It might be down or blocking requests.`;
+            } finally {
+                analyzeButton.disabled = false;
+            }
+        };
+
+        analyzeButton.addEventListener('click', analyze);
+        urlInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') analyze();
+        });
+    });
+  </script>
 </body>
 </html>
-
-  
-  
