@@ -1,144 +1,326 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Regex Tester</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f1f9ff;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Online Regex Tester | Test & Debug Regular Expressions</title>
+    <meta name="description" content="A powerful and free online regex tester for developers. Test and debug your regular expressions (regex) with real-time highlighting, match information, and support for common flags (g, i, m).">
+    <meta name="keywords" content="regex tester, regular expression tester, online regex tool, debug regex, regex validator, javascript regex tester, regex highlighter">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/regex-tester.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Regex Tester">
+    <meta property="og:description" content="Test your regular expressions with live highlighting and detailed match info. A fast, free, and secure tool for every developer.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/regex-tester.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/regex-tester-og.png">
 
-    .container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      width: 90%;
-      max-width: 600px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+            --highlight-bg: #ffe066;
+            --error-bg: #f8d7da;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+        
+        .main-container { width: 100%; max-width: 1200px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        
+        .regex-input-container { display: flex; align-items: center; gap: 10px; }
+        #regexInput {
+            flex-grow: 1;
+            font-family: 'Inconsolata', monospace;
+            padding: 10px;
+            font-size: 1.1em;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+        #regexInput.error { border-color: var(--error-color); }
+        .flags { display: flex; gap: 10px; }
+        .flag-toggle { background-color: #f0f0f0; border: 1px solid var(--border-color); border-radius: 5px; padding: 5px 10px; cursor: pointer; }
+        .flag-toggle.active { background-color: var(--primary-color); color: white; }
 
-    h2 {
-      color: #007bff;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+        .text-area-container { position: relative; margin-top: 15px; }
+        #textInput, #highlightOverlay {
+            width: 100%;
+            min-height: 150px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-family: 'Inconsolata', monospace;
+            font-size: 1.1em;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        #textInput { background: transparent; z-index: 2; color: inherit; resize: vertical; }
+        #highlightOverlay { position: absolute; top: 0; left: 0; z-index: 1; color: transparent; pointer-events: none; }
+        #highlightOverlay mark { background-color: var(--highlight-bg); color: transparent; border-radius: 2px;}
 
-    input, .input-box {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
+        #matchInfo { margin-top: 15px; background-color: #f9f9f9; padding: 15px; border-radius: 8px; max-height: 200px; overflow-y: auto; }
+        
+        footer { text-align: center; }
+        footer h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+        footer li {
+            display: inline-block;
+            margin: 0 12px;
+        }
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+        }
+        footer .footer-bottom p {
+            font-size: 0.9em;
+            color: #888;
+            margin: 0;
+        }
+    </style>
 
-    .input-box {
-      min-height: 100px;
-      background: #f9f9f9;
-      white-space: pre-wrap;
-      overflow-y: auto;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Online Regex Tester",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A web-based tool for testing and debugging regular expressions with live highlighting and detailed match information."
     }
-
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 10px;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What are regular expressions (regex)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A regular expression is a sequence of characters that specifies a search pattern. It's a powerful tool used in programming and text editing to find, replace, and validate strings of text."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What do the 'g', 'i', and 'm' flags do?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "'g' stands for Global search, which finds all matches instead of stopping after the first one. 'i' stands for Case-Insensitive search, which ignores differences between uppercase and lowercase letters. 'm' stands for Multiline mode, which allows the start (^) and end ($) anchors to match the start and end of individual lines, not just the whole string."
+        }
+      }]
     }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    #result {
-      margin-top: 15px;
-      background: #e7f9e9;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 16px;
-      white-space: pre-wrap;
-      color: #333;
-    }
-  </style>
+    </script>
 </head>
 <body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <div class="container">
-    <h2>Regex Tester</h2>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Online Regex Tester</h1>
+        <p>Test and debug your regular expressions with our powerful and intuitive online tool. Get real-time feedback with match highlighting as you type, and explore detailed information about each match, including groups and indices. This regex tester is perfect for developers, data scientists, and anyone working with text patterns. All testing is done securely in your browser.</p>
+    </section>
 
-    <input type="text" id="regexInput" placeholder="Enter regular expression (e.g. \\d+)" />
-    
-    <div class="input-box" id="textInput" contenteditable="true" placeholder="Enter test string here..."></div>
-
-    <button onclick="testRegex()">Test Regex</button>
-
-    <div id="result"></div>
-  </div>
-
-  <script>
-    function testRegex() {
-      const pattern = document.getElementById("regexInput").value;
-      const text = document.getElementById("textInput").innerText;
-      const resultDiv = document.getElementById("result");
-
-      try {
-        const regex = new RegExp(pattern, 'g');
-        const matches = [...text.matchAll(regex)];
-
-        if (matches.length > 0) {
-          let output = "Matches found:\n";
-          matches.forEach((match, index) => {
-            output += `${index + 1}: ${match[0]}\n`;
-          });
-          resultDiv.style.background = "#e7f9e9";
-          resultDiv.textContent = output;
-        } else {
-          resultDiv.style.background = "#fff3cd";
-          resultDiv.textContent = "No matches found.";
-        }
-      } catch (e) {
-        resultDiv.style.background = "#f8d7da";
-        resultDiv.textContent = "Invalid regular expression!";
-      }
-    }
-  </script>
-<!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+    <div class="tool-container">
+        <div class="regex-input-container">
+            <input type="text" id="regexInput" placeholder="Enter your regex here...">
+            <div class="flags">
+                <button class="flag-toggle active" data-flag="g">g</button>
+                <button class="flag-toggle" data-flag="i">i</button>
+                <button class="flag-toggle" data-flag="m">m</button>
             </div>
         </div>
+        
+        <div class="text-area-container">
+            <div id="highlightOverlay"></div>
+            <textarea id="textInput" placeholder="Enter your test string here..."></textarea>
+        </div>
+        
+        <div id="matchInfo">
+            <p>No matches found yet. Start typing your regex and text.</p>
+        </div>
+    </div>
+    
+    <!-- === MOVED HOW-TO SECTION === -->
+    <section class="content-section">
+        <h2>How to Use This Regex Tester</h2>
+        <ol>
+            <li><strong>Enter Your Regular Expression:</strong> Type your regex pattern into the top input field. You can use the 'g' (global), 'i' (case-insensitive), and 'm' (multiline) flags by clicking on them.</li>
+            <li><strong>Provide the Test String:</strong> In the larger text area below, type or paste the text you want to test your expression against.</li>
+            <li><strong>See Instant Results:</strong> As you type, any matching text will be highlighted in real-time. Below the text area, you will find detailed information about each match, including its index and any captured groups.</li>
+        </ol>
+    </section>
+    <!-- === END MOVED HOW-TO SECTION === -->
+
+    <footer id="contact">
+        <h3>Quick Links</h3>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#tools">All Tools</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const regexInput = document.getElementById('regexInput');
+        const textInput = document.getElementById('textInput');
+        const highlightOverlay = document.getElementById('highlightOverlay');
+        const matchInfo = document.getElementById('matchInfo');
+        const flags = document.querySelectorAll('.flag-toggle');
+
+        const testRegex = () => {
+            const pattern = regexInput.value;
+            const text = textInput.value;
+            let activeFlags = '';
+            flags.forEach(f => {
+                if (f.classList.contains('active')) {
+                    activeFlags += f.getAttribute('data-flag');
+                }
+            });
+
+            if (!pattern) {
+                highlightOverlay.innerHTML = escapeHtml(text) + '\n';
+                matchInfo.innerHTML = '<p>Enter a regular expression to see matches.</p>';
+                return;
+            }
+
+            try {
+                const regex = new RegExp(pattern, activeFlags);
+                regexInput.classList.remove('error');
+                
+                const highlightedText = text.replace(regex, match => `<mark>${escapeHtml(match)}</mark>`);
+                highlightOverlay.innerHTML = highlightedText + '\n';
+                
+                const matches = [...text.matchAll(regex)];
+                if (matches.length > 0) {
+                    let infoHtml = `<h3>${matches.length} Match${matches.length > 1 ? 'es' : ''} Found</h3>`;
+                    matches.forEach((match, index) => {
+                        infoHtml += `<p><strong>Match ${index + 1}:</strong> "${escapeHtml(match[0])}" at index ${match.index}</p>`;
+                        if (match.groups) {
+                            infoHtml += '<ul>';
+                            for (const [key, value] of Object.entries(match.groups)) {
+                                if (value) {
+                                    infoHtml += `<li><strong>${key}:</strong> "${escapeHtml(value)}"</li>`;
+                                }
+                            }
+                            infoHtml += '</ul>';
+                        }
+                    });
+                    matchInfo.innerHTML = infoHtml;
+                } else {
+                    matchInfo.innerHTML = '<p>No matches found.</p>';
+                }
+                
+            } catch (e) {
+                regexInput.classList.add('error');
+                highlightOverlay.innerHTML = escapeHtml(text) + '\n';
+                matchInfo.innerHTML = `<p style="color:var(--error-color);"><strong>Invalid Regex:</strong> ${escapeHtml(e.message)}</p>`;
+            }
+        };
+
+        const escapeHtml = (str) => {
+            return str.replace(/[&<>"']/g, (match) => {
+                const escape = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+                return escape[match];
+            });
+        };
+        
+        const syncScroll = () => {
+            highlightOverlay.scrollTop = textInput.scrollTop;
+            highlightOverlay.scrollLeft = textInput.scrollLeft;
+        };
+        
+        textInput.addEventListener('scroll', syncScroll);
+        textInput.addEventListener('input', () => {
+            testRegex();
+            syncScroll();
+        });
+
+        flags.forEach(flag => {
+            flag.addEventListener('click', () => {
+                flag.classList.toggle('active');
+                testRegex();
+            });
+        });
+        
+        regexInput.addEventListener('input', testRegex);
+
+        // Initial test
+        testRegex();
+    });
+  </script>
 
 </body>
 </html>
-
-  
-  
