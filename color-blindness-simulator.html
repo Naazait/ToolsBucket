@@ -40,7 +40,6 @@
             padding: 20px;
         }
         
-        /* === NEW HEADER STYLES === */
         .page-header {
             width: 100%;
             max-width: 1000px;
@@ -52,8 +51,15 @@
         .brand-name {
             font-size: 1.8em;
             font-weight: 700;
-            color: var(--heading-color);
         }
+        /* === NEW BRAND COLOR STYLES === */
+        .brand-part-1 {
+            color: var(--primary-color); /* Light Blue */
+        }
+        .brand-part-2 {
+            color: var(--text-color); /* Black */
+        }
+        /* === END NEW BRAND COLOR STYLES === */
         .back-button {
             text-decoration: none;
             background-color: #e9ecef;
@@ -67,7 +73,6 @@
         .back-button:hover {
             background-color: #dee2e6;
         }
-        /* === END NEW HEADER STYLES === */
         
         .main-container { width: 100%; max-width: 1000px; }
         .content-section, .tool-container, footer {
@@ -176,12 +181,13 @@
 </head>
 <body>
 
-  <!-- === NEW HEADER SECTION === -->
   <header class="page-header">
-      <a href="index.html#tools" class="back-button">← Back to Tools</a>
-      <div class="brand-name">ToolsBucket</div>
+      <a href="index.html" class="back-button">← Back to Tools</a>
+      <!-- === UPDATED BRAND NAME HTML === -->
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
   </header>
-  <!-- === END NEW HEADER SECTION === -->
 
   <main class="main-container">
     <section class="content-section">
