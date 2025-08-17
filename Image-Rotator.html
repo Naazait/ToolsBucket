@@ -1,218 +1,373 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Image Rotator/Flipper Tool</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free Online Image Rotator & Flipper | Rotate & Flip Photos</title>
+    <meta name="description" content="Easily rotate images left or right, and flip them horizontally or vertically with our free online tool. Secure, fast, and no software installation needed. Works with JPG, PNG files.">
+    <meta name="keywords" content="image rotator, rotate image, flip image, photo flipper, mirror image, rotate jpg online, free image rotator, flip photo">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/image-rotator.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Image Rotator & Flipper Tool">
+    <meta property="og:description" content="Correct the orientation of any photo. Rotate 90 degrees or create a mirror image (flip) instantly. Our tool is free, secure, and works in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/image-rotator.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/image-rotator-og.png">
 
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      text-align: center;
-      padding: 20px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ol { margin-left: 20px; }
 
-    h1 {
-      color: #007bff;
-    }
-
-    .upload-section {
-      margin: 20px 0;
-    }
-
-    .controls {
-      margin: 20px 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 5px;
-      cursor: pointer;
-      border-radius: 5px;
-      flex: 1 1 40%;
-      max-width: 180px;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .preview {
-      margin: 20px 0;
-      max-height: 300px;
-      overflow: auto;
-      border: 1px solid #ddd;
-      padding: 10px;
-    }
-
-    #image-preview {
-      max-width: 100%;
-      max-height: 280px;
-      transition: transform 0.3s ease;
-    }
-
-    .download {
-      margin-top: 20px;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 10px;
-      }
-
-      button {
-        width: 100%;
-        max-width: none;
-        margin-top: 10px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Image Rotator/Flipper Tool</h1>
-    <div class="upload-section">
-      <input type="file" id="image-upload" accept="image/*">
-    </div>
-    <div class="controls">
-      <button id="rotate-left">Rotate Left</button>
-      <button id="rotate-right">Rotate Right</button>
-      <button id="flip-horizontal">Flip Horizontal</button>
-      <button id="flip-vertical">Flip Vertical</button>
-    </div>
-    <div class="preview">
-      <img id="image-preview" src="" alt="Image Preview" />
-    </div>
-    <div class="download">
-      <a id="download-link" href="#" download="edited_image.jpg">
-        <button>Download Image</button>
-      </a>
-    </div>
-  </div>
-
-  <script>
-    let imagePreview = document.getElementById('image-preview');
-    let imageUpload = document.getElementById('image-upload');
-    let rotateLeftBtn = document.getElementById('rotate-left');
-    let rotateRightBtn = document.getElementById('rotate-right');
-    let flipHorizontalBtn = document.getElementById('flip-horizontal');
-    let flipVerticalBtn = document.getElementById('flip-vertical');
-    let downloadLink = document.getElementById('download-link');
-
-    let rotation = 0;
-    let flipHorizontal = false;
-    let flipVertical = false;
-
-    imageUpload.addEventListener('change', (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-          imagePreview.src = e.target.result;
-          rotation = 0;
-          flipHorizontal = false;
-          flipVertical = false;
-          imagePreview.style.transform = '';
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    rotateLeftBtn.addEventListener('click', () => {
-      rotation -= 90;
-      updateImage();
-    });
-
-    rotateRightBtn.addEventListener('click', () => {
-      rotation += 90;
-      updateImage();
-    });
-
-    flipHorizontalBtn.addEventListener('click', () => {
-      flipHorizontal = !flipHorizontal;
-      updateImage();
-    });
-
-    flipVerticalBtn.addEventListener('click', () => {
-      flipVertical = !flipVertical;
-      updateImage();
-    });
-
-    function updateImage() {
-      imagePreview.style.transform = `rotate(${rotation}deg)` +
-        (flipHorizontal ? ' scaleX(-1)' : '') +
-        (flipVertical ? ' scaleY(-1)' : '');
-      updateDownloadLink();
-    }
-
-    function updateDownloadLink() {
-      if (!imagePreview.src) return;
-
-      let canvas = document.createElement('canvas');
-      let ctx = canvas.getContext('2d');
-      let img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = imagePreview.src;
-
-      img.onload = function() {
-        let w = img.width;
-        let h = img.height;
-
-        if (rotation % 180 !== 0) {
-          canvas.width = h;
-          canvas.height = w;
-        } else {
-          canvas.width = w;
-          canvas.height = h;
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 300px 1fr; }
         }
 
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate(rotation * Math.PI / 180);
-        ctx.scale(flipHorizontal ? -1 : 1, flipVertical ? -1 : 1);
-        ctx.drawImage(img, -w / 2, -h / 2);
+        .controls { text-align: center; }
+        .preview-area {
+            min-height: 300px;
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fafafa;
+            position: relative;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .preview-area p { color: #888; }
+        #image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover { background-color: #0056b3; }
+        .btn.secondary { background-color: #6c757d; }
+        .btn.secondary:hover { background-color: #5a6268; }
+        .btn svg { width: 20px; height: 20px; fill: white; }
+        
+        input[type="file"] { display: none; }
+        
+        .control-group { margin-top: 20px; text-align: left; }
+        .control-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-        downloadLink.href = canvas.toDataURL("image/jpeg");
-      };
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
+
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Online Image Rotator and Flipper",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to rotate images 90 degrees clockwise or counter-clockwise, and flip images horizontally or vertically."
     }
-  </script>
-  <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I permanently rotate a picture?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To permanently rotate a picture, upload it to our tool, click the 'Rotate Left' or 'Rotate Right' buttons until it has the correct orientation, and then click 'Download Image'. The saved file will have the new orientation permanently applied."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the difference between flipping and rotating an image?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Rotating an image turns it around a central point, like spinning a wheel (e.g., 90 degrees). Flipping an image creates a mirror reflection of it, either horizontally (left to right) or vertically (top to bottom)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is it safe to use this tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, it is completely safe. Your images are not uploaded to any server. All the rotation and flipping operations happen directly in your web browser, ensuring your photos remain 100% private."
+        }
+      }]
+    }
+    </script>
+</head>
+<body>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Free Online Image Rotator and Flipper</h1>
+        <p>Correct the orientation of any photo with our simple and powerful online tool. Did you take a picture sideways? Need to create a mirror image? Our rotator and flipper can fix it in seconds. You can rotate your images 90 degrees left or right, or flip them horizontally and vertically to get the perfect alignment.</p>
+        <p><strong>100% Secure and Private:</strong> Your images are processed directly in your browser and are never uploaded to our servers.</p>
+    </section>
+
+    <div class="tool-container">
+        <div class="controls">
+            <h3>Step 1: Upload Image</h3>
+            <label for="upload" class="btn">
+                <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"></path></svg>
+                Select Image
+            </label>
+            <input type="file" id="upload" accept="image/*" />
+
+            <div id="options" class="hidden">
+                <div class="control-group">
+                    <h3>Step 2: Adjust Image</h3>
+                    <div class="control-buttons">
+                        <button id="rotate-left" class="btn secondary">
+                            <svg viewBox="0 0 24 24"><path d="M7.11 8.54l-4.25 4.25.71.71 4.25-4.25-1.42-1.41-.7.7zm4.63-.43c-.49-.49-1.12-.79-1.74-.9v-2.05c1.55.15 2.98.88 4.01 1.91l-1.42 1.42c-.59-.59-1.32-.98-2.07-1.15v2.02c.32.09.63.24.9.45l-1.41 1.41.7.7.9-.9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
+                            Rotate Left
+                        </button>
+                        <button id="rotate-right" class="btn secondary">
+                             <svg viewBox="0 0 24 24"><path d="M15.55 5.55L11 1v3.07C7.06 4.56 4 7.92 4 12s3.05 7.44 7 7.93v-2.02c-2.84-.48-5-2.94-5-5.91s2.16-5.43 5-5.91V11l4.55-4.45zM19.93 11c-.17-1.39-.72-2.73-1.62-3.89l-1.42 1.42c.54.75.88 1.6 1.02 2.47h2.02zM13 17.9v2.02c1.39-.17 2.74-.71 3.9-1.61l-1.42-1.42c-.75.54-1.59.89-2.48 1.01z"></path></svg>
+                            Rotate Right
+                        </button>
+                        <button id="flip-horizontal" class="btn secondary">
+                            <svg viewBox="0 0 24 24"><path d="M15 21h2v-2h-2v2zm4-12h2V7h-2v2zM3 5v14c0 1.1.9 2 2 2h4v-2H5V5h4V3H5c-1.1 0-2 .9-2 2zm16-2v2h2c0-1.1-.9-2-2-2zm-8 20h2V1h-2v22zm8-6h2v-2h-2v2zM15 5h2V3h-2v2zm4 8h2v-2h-2v2zm0 8c1.1 0 2-.9 2-2h-2v2z"></path></svg>
+                            Flip Horizontal
+                        </button>
+                        <button id="flip-vertical" class="btn secondary">
+                            <svg viewBox="0 0 24 24"><path d="M21 8h-2V6h2v2zm-2-4h2c0-1.1-.9-2-2-2v2zM3 16h2v2H3v-2zm16 0h2v2h-2v-2zM21 4h-2V2c1.1 0 2 .9 2 2zM3 8h2v2H3V8zM9 22h6v-2H9v2zM5 4H3v2h2V4zM3 4V2c-1.1 0-2 .9-2 2h2zm12 2h2V4h-2v2zM9 2h6V0H9v2zM5 22H3v-2h2v2zm12-2h2v-2h-2v2z"></path></svg>
+                            Flip Vertical
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>Step 3: Download</h3>
+                    <select id="format" class="btn secondary" style="padding: 10px;">
+                        <option value="image/png">Download as PNG</option>
+                        <option value="image/jpeg">Download as JPG</option>
+                    </select>
+                    <button class="btn" id="download-btn">Download Image</button>
+                    <button class="btn secondary" id="reset-btn">Reset</button>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
-            </div>
+        </div>
+        <div class="preview-area">
+            <p id="placeholder">Image preview will appear here</p>
+            <img id="image-preview" src="" alt="Image Preview" style="display:none;" />
+        </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>How to Rotate or Flip Your Image</h2>
+        <ol>
+            <li><strong>Upload Image:</strong> Click the "Select Image" button to choose a photo from your device.</li>
+            <li><strong>Rotate or Flip:</strong> Use the control buttons to adjust your image. 'Rotate' turns the image 90 degrees. 'Flip' creates a mirror image either horizontally (left-to-right) or vertically (upside-down).</li>
+            <li><strong>Choose Format:</strong> Select whether you want to save the final image as a PNG (best for transparency) or JPG (best for smaller file sizes).</li>
+            <li><strong>Download:</strong> Once you're happy with the result, click "Download Image" to save it to your computer or phone.</li>
+        </ol>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const imagePreview = document.getElementById('image-preview');
+        const imageUpload = document.getElementById('upload');
+        const placeholder = document.getElementById('placeholder');
+        const optionsDiv = document.getElementById('options');
+        
+        const rotateLeftBtn = document.getElementById('rotate-left');
+        const rotateRightBtn = document.getElementById('rotate-right');
+        const flipHorizontalBtn = document.getElementById('flip-horizontal');
+        const flipVerticalBtn = document.getElementById('flip-vertical');
+        const downloadBtn = document.getElementById('download-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const formatSelect = document.getElementById('format');
+
+        let originalImageSrc = null;
+        let rotation = 0;
+        let scaleX = 1; // 1 for normal, -1 for flipped
+        let scaleY = 1; // 1 for normal, -1 for flipped
+
+        const resetState = () => {
+            rotation = 0;
+            scaleX = 1;
+            scaleY = 1;
+            imagePreview.style.transform = '';
+            if (originalImageSrc) {
+                imagePreview.src = originalImageSrc;
+            }
+        };
+        
+        const showControls = (show) => {
+            if (show) {
+                placeholder.style.display = 'none';
+                imagePreview.style.display = 'block';
+                optionsDiv.classList.remove('hidden');
+            } else {
+                placeholder.style.display = 'block';
+                imagePreview.style.display = 'none';
+                optionsDiv.classList.add('hidden');
+                imageUpload.value = ''; // Reset file input
+                originalImageSrc = null;
+            }
+        };
+
+        imageUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    originalImageSrc = e.target.result;
+                    resetState();
+                    showControls(true);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const updatePreview = () => {
+            imagePreview.style.transform = `rotate(${rotation}deg) scaleX(${scaleX}) scaleY(${scaleY})`;
+        };
+
+        rotateLeftBtn.addEventListener('click', () => {
+            rotation -= 90;
+            updatePreview();
+        });
+
+        rotateRightBtn.addEventListener('click', () => {
+            rotation += 90;
+            updatePreview();
+        });
+
+        flipHorizontalBtn.addEventListener('click', () => {
+            scaleX *= -1;
+            updatePreview();
+        });
+
+        flipVerticalBtn.addEventListener('click', () => {
+            scaleY *= -1;
+            updatePreview();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            resetState();
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (!originalImageSrc) return;
+
+            const img = new Image();
+            img.src = originalImageSrc;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                const w = img.width;
+                const h = img.height;
+                const rad = rotation * Math.PI / 180;
+
+                // Adjust canvas size for rotation
+                if (rotation % 180 !== 0) {
+                    canvas.width = h;
+                    canvas.height = w;
+                } else {
+                    canvas.width = w;
+                    canvas.height = h;
+                }
+
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(rad);
+                ctx.scale(scaleX, scaleY);
+                ctx.drawImage(img, -w / 2, -h / 2);
+
+                const format = formatSelect.value;
+                const fileExtension = format.split('/')[1];
+
+                const link = document.createElement('a');
+                link.download = `edited-image.${fileExtension}`;
+                link.href = canvas.toDataURL(format);
+                link.click();
+            };
+        });
+        
+        // Initial state
+        showControls(false);
+    });
+  </script>
 
 </body>
 </html>
-  
