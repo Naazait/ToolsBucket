@@ -1,148 +1,362 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Image to Text Tool</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      color: #000;
-      margin: 0;
-      padding: 0;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free Image to Text Converter | Online OCR Tool</title>
+    <meta name="description" content="Extract text from images online for free using our powerful OCR tool. Convert JPG, PNG, and other image formats to editable text. Supports multiple languages, is fast, secure, and private.">
+    <meta name="keywords" content="image to text, ocr online, extract text from image, jpg to text, png to text, picture to text converter, image ocr, free ocr tool">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/image-to-text.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Image to Text Converter (OCR)">
+    <meta property="og:description" content="Instantly extract editable text from any image. Our free OCR tool is secure, supports multiple languages, and works directly in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/image-to-text.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/image-to-text-og.png">
 
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 1rem;
-    }
+    <!-- Tesseract.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
 
-    h1 {
-      text-align: center;
-      color: #007bff;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ol { margin-left: 20px; }
 
-    .upload-section {
-      background: #ffffff;
-      border: 2px dashed #007bff;
-      padding: 2rem;
-      text-align: center;
-      border-radius: 10px;
-    }
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 1fr 1fr; }
+        }
 
-    input[type="file"] {
-      display: none;
-    }
+        .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .upload-area.dragover {
+            background-color: #e6f2ff;
+            border-color: var(--primary-color);
+        }
+        #preview { max-width: 100%; max-height: 200px; margin-top: 15px; border-radius: 5px; }
+        input[type="file"] { display: none; }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        #progressBarFill {
+            width: 0%;
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+        #status { font-size: 0.9em; margin-top: 5px; color: #555; }
+        
+        .output-area textarea {
+            width: 100%;
+            min-height: 250px;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            font-family: monospace;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: auto;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .btn:hover { background-color: #0056b3; }
+        .btn.secondary { background-color: #6c757d; }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    label[for="imageInput"] {
-      background-color: #007bff;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Image to Text Converter (OCR)",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based OCR tool to extract text from images and documents. Supports multiple languages and processes files securely in the browser."
     }
-
-    #output {
-      margin-top: 1rem;
-      background: #e6f0ff;
-      padding: 1rem;
-      border-radius: 5px;
-      white-space: pre-wrap;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is OCR (Optical Character Recognition)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Optical Character Recognition (OCR) is a technology that converts different types of documents, such as scanned paper documents, PDF files or images captured by a digital camera into editable and searchable data. Our tool uses this technology to extract text from your images."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this Image to Text tool free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our online OCR tool is completely free to use. You can convert as many images to text as you need without any cost."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Are my images secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, your privacy and security are our top priorities. Your images are processed directly in your web browser and are never uploaded to our servers. This ensures that your data remains completely private."
+        }
+      }]
     }
-
-    button.copy-btn {
-      margin-top: 0.5rem;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 0.5rem;
-      }
-
-      .upload-section {
-        padding: 1rem;
-      }
-    }
-  </style>
+    </script>
 </head>
 <body>
-  <div class="container">
-    <h1>Image to Text</h1>
-    <div class="upload-section">
-      <label for="imageInput">Upload Image</label>
-      <input type="file" id="imageInput" accept="image/*" />
-    </div>
-    <div id="output" style="display:none;"></div>
-    <button class="copy-btn" style="display:none;" onclick="copyText()">Copy Text</button>
-  </div>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Free Image to Text Converter (Online OCR)</h1>
+        <p>Effortlessly extract text from images with our advanced online OCR (Optical Character Recognition) tool. This converter allows you to turn photos, documents, screenshots, and other images into editable text, saving you hours of manual typing. Whether you're digitizing notes, extracting data from a report, or capturing text from a poster, our tool gets the job done quickly and accurately.</p>
+        <p><strong>Completely Private and Secure:</strong> Your files are processed entirely within your browser and are never sent to a server.</p>
+    </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.4/dist/tesseract.min.js"></script>
-  <script>
-    const imageInput = document.getElementById('imageInput');
-    const output = document.getElementById('output');
-    const copyBtn = document.querySelector('.copy-btn');
-
-    imageInput.addEventListener('change', async () => {
-      if (imageInput.files.length === 0) return;
-
-      const file = imageInput.files[0];
-      const reader = new FileReader();
-
-      reader.onload = async () => {
-        output.style.display = 'block';
-        output.textContent = 'Processing...';
-
-        try {
-          const result = await Tesseract.recognize(reader.result, 'eng');
-          output.textContent = result.data.text;
-          copyBtn.style.display = 'inline-block';
-        } catch (err) {
-          output.textContent = 'Error processing image.';
-          console.error(err);
-        }
-      };
-
-      reader.readAsDataURL(file);
-    });
-
-    function copyText() {
-      const text = output.textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('Text copied to clipboard!');
-      });
-    }
-  </script>
-  <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
+    <div class="tool-container">
+        <div class="input-side">
+            <h2>Step 1: Upload Your Image</h2>
+            <div id="uploadArea" class="upload-area">
+                <p>Drag & drop your image here, or click to select a file.</p>
+                <img id="preview" style="display:none;" alt="Image Preview"/>
+            </div>
+            <input type="file" id="imageInput" accept="image/*" />
+            
+            <div class="control-group">
+                <h3>Step 2: Select Language</h3>
+                <select id="langSelect" class="btn secondary" style="width:100%; padding: 10px;">
+                    <option value="eng">English</option>
+                    <option value="hin">Hindi</option>
+                    <option value="spa">Spanish</option>
+                    <option value="fra">French</option>
+                    <option value="deu">German</option>
+                </select>
             </div>
             
-            <footer>
-        <p>&copy; 2025 Tools Bucket. All rights reserved.</p>
+            <div id="progress" style="display:none;">
+                <div class="progress-bar"><div id="progressBarFill"></div></div>
+                <p id="status">Starting...</p>
+            </div>
+        </div>
+        
+        <div class="output-side">
+            <h2>Step 3: Get Your Text</h2>
+            <div class="output-area">
+                <textarea id="outputText" placeholder="Extracted text will appear here..." readonly></textarea>
+                <button id="copyBtn" class="btn" style="display:none;">Copy Text</button>
+                <button id="resetBtn" class="btn secondary" style="display:none;">Start Over</button>
+            </div>
+        </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>How Our OCR Tool Works</h2>
+        <ol>
+            <li><strong>Upload Image:</strong> Drag your image file onto the upload area, or click it to select a file from your device. Supported formats include JPG, PNG, BMP, and more.</li>
+            <li><strong>Select Language:</strong> Choose the primary language present in your image from the dropdown menu for the most accurate results.</li>
+            <li><strong>Automatic Conversion:</strong> The tool will automatically start the OCR process. You can see the live progress.</li>
+            <li><strong>Copy Text:</strong> Once finished, the extracted text will appear in the text box. You can then click "Copy Text" to copy it to your clipboard.</li>
+        </ol>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const uploadArea = document.getElementById('uploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const preview = document.getElementById('preview');
+        const langSelect = document.getElementById('langSelect');
+        const progressDiv = document.getElementById('progress');
+        const progressBarFill = document.getElementById('progressBarFill');
+        const status = document.getElementById('status');
+        const outputText = document.getElementById('outputText');
+        const copyBtn = document.getElementById('copyBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        const resetUI = () => {
+            imageInput.value = '';
+            preview.style.display = 'none';
+            preview.src = '';
+            progressDiv.style.display = 'none';
+            outputText.value = '';
+            outputText.placeholder = "Extracted text will appear here...";
+            copyBtn.style.display = 'none';
+            resetBtn.style.display = 'none';
+            uploadArea.querySelector('p').style.display = 'block';
+        };
+
+        const handleFile = (file) => {
+            if (!file || !file.type.startsWith('image/')) {
+                alert('Please select a valid image file.');
+                return;
+            }
+
+            resetUI();
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                uploadArea.querySelector('p').style.display = 'none';
+                resetBtn.style.display = 'inline-block';
+                performOCR(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        };
+        
+        const performOCR = async (imageSrc) => {
+            progressDiv.style.display = 'block';
+            status.textContent = 'Initializing OCR engine...';
+            progressBarFill.style.width = '0%';
+            outputText.value = '';
+            
+            const selectedLang = langSelect.value;
+
+            try {
+                const worker = Tesseract.createWorker({
+                    logger: m => {
+                        if (m.status === 'recognizing text') {
+                            const progress = Math.min(100, m.progress * 100);
+                            progressBarFill.style.width = `${progress}%`;
+                        }
+                        status.textContent = m.status.charAt(0).toUpperCase() + m.status.slice(1);
+                    }
+                });
+                
+                await worker.load();
+                await worker.loadLanguage(selectedLang);
+                await worker.initialize(selectedLang);
+                
+                const { data: { text } } = await worker.recognize(imageSrc);
+                
+                outputText.value = text;
+                copyBtn.style.display = 'inline-block';
+                
+                await worker.terminate();
+            } catch (err) {
+                console.error(err);
+                outputText.placeholder = 'Error processing image. Please try again or with a different image.';
+            } finally {
+                progressDiv.style.display = 'none';
+            }
+        };
+
+        // Event Listeners
+        uploadArea.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        // Drag and Drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+        uploadArea.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
+        
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(outputText.value).then(() => {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            });
+        });
+        
+        resetBtn.addEventListener('click', resetUI);
+        
+        // Initial state
+        resetUI();
+    });
+  </script>
 
 </body>
 </html>
-  
-  
