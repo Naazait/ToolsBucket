@@ -1,123 +1,306 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF to Word Converter</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free PDF to Word Converter | Convert PDF to DOCX Online</title>
+    <meta name="description" content="Convert your PDF files to editable Word documents (DOCX) for free. Our online tool extracts text from your PDF and creates a Word file. Fast, secure, and no uploads required.">
+    <meta name="keywords" content="pdf to word, pdf to docx, convert pdf to word, free pdf converter, pdf to word online, extract text from pdf">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/pdf-to-word.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online PDF to Word Converter">
+    <meta property="og:description" content="Easily convert your PDF documents into editable Word files. The entire conversion happens securely in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/pdf-to-word.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/pdf-to-word-og.png">
 
-    .container {
-      max-width: 500px;
-      margin: 50px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 255, 0.1);
-      text-align: center;
-    }
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
+    <script src="https://unpkg.com/docx@7.3.0/build/index.js"></script>
+    <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 
-    h1 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
 
-    input[type="file"] {
-      display: block;
-      margin: 20px auto;
-    }
+        .tool-container { text-align: center; }
+        .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .upload-area.dragover { background-color: #e6f2ff; border-color: var(--primary-color); }
+        input[type="file"] { display: none; }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .btn:disabled { background-color: #a0a0a0; cursor: not-allowed; }
+        
+        #status { font-weight: 600; margin-top: 15px; min-height: 24px; }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free PDF to Word Converter",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to convert PDF documents into editable Word (DOCX) files by extracting text content."
     }
-
-    button:hover {
-      background-color: #0056b3;
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Is this PDF to Word converter secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, it is completely secure. The entire conversion process happens in your web browser. Your PDF file is never uploaded to a server, ensuring your data remains 100% private."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Will images and tables be converted?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This tool focuses on accurately extracting text content from the PDF. It does not convert images, complex tables, or advanced formatting. The output will be a clean Word document containing the text from your PDF, which you can then edit and format as needed."
+        }
+      }]
     }
-
-    @media (max-width: 600px) {
-      .container {
-        margin: 20px;
-        padding: 15px;
-      }
-      button {
-        width: 100%;
-      }
-    }
-  </style>
+    </script>
 </head>
 <body>
-  <div class="container">
-    <h1>PDF to Word Converter</h1>
-    <input type="file" id="pdfUpload" accept="application/pdf" />
-    <button onclick="convertToWord()">Convert to Word</button>
-    <p id="status"></p>
-  </div>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <script>
-    async function convertToWord() {
-      const fileInput = document.getElementById('pdfUpload');
-      const status = document.getElementById('status');
-      if (!fileInput.files.length) {
-        status.textContent = 'Please select a PDF file.';
-        return;
-      }
+  <main class="main-container">
+    <section class="content-section">
+        <h1>PDF to Word Converter</h1>
+        <p>Unlock the text in your PDF documents by converting them into editable Word files (DOCX). This tool is perfect for when you need to edit or reuse the text from a PDF. Our converter extracts all the text content from your file and organizes it into a new Word document, page by page. The entire process is fast, free, and happens securely in your browser.</p>
+    </section>
 
-      const file = fileInput.files[0];
+    <div class="tool-container">
+        <h2>Convert PDF to DOCX</h2>
+        <div id="uploadArea" class="upload-area">
+            <p>Drag & drop your PDF here, or click to select a file.</p>
+            <p id="fileName" style="font-weight: bold;"></p>
+        </div>
+        <input type="file" id="pdfInput" accept="application/pdf">
+        
+        <button id="convertBtn" class="btn" disabled>Convert to Word</button>
+        
+        <div id="status"></div>
+    </div>
+    
+    <section class="content-section">
+        <h2>Why Convert PDF to Word?</h2>
+        <ul>
+            <li><strong>Easy Editing:</strong> Directly edit text, fix typos, or add new content without needing a PDF editor.</li>
+            <li><strong>Reuse Content:</strong> Copy and paste text into other documents or presentations with ease.</li>
+            <li><strong>Collaboration:</strong> Share a universally editable format with colleagues who use Microsoft Word.</li>
+        </ul>
+        <p><strong>Note:</strong> This tool is designed to extract text. It does not convert images or complex layouts.</p>
+    </section>
 
-      // Placeholder: Actual conversion requires backend or external API
-      status.textContent = 'Uploading and converting file...';
-
-      // Simulate delay
-      setTimeout(() => {
-        status.textContent = 'Conversion successful! Download will start shortly.';
-
-        // Simulate download
-        const blob = new Blob(["This is a mock Word document content."], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'converted.docx';
-        a.click();
-        URL.revokeObjectURL(url);
-      }, 2000);
-    }
-  </script>
-  <!-- Footer -->
     <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
-            </div>
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
+  </main>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const pdfInput = document.getElementById('pdfInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileNameEl = document.getElementById('fileName');
+        const convertBtn = document.getElementById('convertBtn');
+        const statusEl = document.getElementById('status');
+
+        let pdfFile = null;
+
+        const setStatus = (message, type) => {
+            statusEl.textContent = message;
+            statusEl.style.color = type === 'success' ? 'var(--success-color)' : type === 'error' ? 'var(--error-color)' : 'var(--heading-color)';
+        };
+
+        const handleFile = (file) => {
+            if (!file || file.type !== 'application/pdf') {
+                alert('Please select a valid PDF file.');
+                return;
+            }
+            pdfFile = file;
+            fileNameEl.textContent = `Selected: ${file.name}`;
+            convertBtn.disabled = false;
+            setStatus('', 'info');
+        };
+
+        uploadArea.addEventListener('click', () => pdfInput.click());
+        pdfInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+        uploadArea.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
+
+        convertBtn.addEventListener('click', async () => {
+            if (!pdfFile) return;
+
+            convertBtn.disabled = true;
+            setStatus('Reading PDF file...', 'info');
+
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                try {
+                    const typedArray = new Uint8Array(event.target.result);
+                    const pdf = await pdfjsLib.getDocument(typedArray).promise;
+                    const paragraphs = [];
+
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        setStatus(`Processing Page ${i} of ${pdf.numPages}...`, 'info');
+                        const page = await pdf.getPage(i);
+                        const textContent = await page.getTextContent();
+                        const pageText = textContent.items.map(item => item.str).join(' ');
+                        
+                        paragraphs.push(new docx.Paragraph({ text: pageText }));
+                        
+                        // Add a page break after each page except the last one
+                        if (i < pdf.numPages) {
+                             paragraphs.push(new docx.Paragraph({ children: [new docx.PageBreak()] }));
+                        }
+                    }
+
+                    setStatus('Generating Word document...', 'info');
+
+                    const doc = new docx.Document({
+                        sections: [{
+                            properties: {},
+                            children: paragraphs,
+                        }],
+                    });
+
+                    const newFileName = pdfFile.name.replace(/\.pdf$/i, '.docx');
+                    docx.Packer.toBlob(doc).then(blob => {
+                        saveAs(blob, newFileName);
+                        setStatus('Conversion successful! Your download has started.', 'success');
+                    });
+
+                } catch (err) {
+                    console.error(err);
+                    setStatus("Error: Could not convert file. Ensure it is a valid, text-based PDF.", 'error');
+                } finally {
+                    convertBtn.disabled = false;
+                }
+            };
+            reader.readAsArrayBuffer(pdfFile);
+        });
+    });
+  </script>
 </body>
 </html>
-  
