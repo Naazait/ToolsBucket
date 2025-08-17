@@ -1,192 +1,331 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF Merger & Splitter</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
-      color: #333;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free PDF Merger & Splitter | Combine & Extract PDF Pages</title>
+    <meta name="description" content="A free online tool to merge multiple PDF files into one or split a single PDF into multiple documents. Secure, fast, and works entirely in your browser. No uploads required.">
+    <meta name="keywords" content="pdf merger, pdf splitter, combine pdf, merge pdf, split pdf, extract pdf pages, free pdf tool, online pdf editor">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/pdf-tools.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online PDF Merger & Splitter">
+    <meta property="og:description" content="Easily merge or split your PDF files with our secure, browser-based tool. No file uploads to a server.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/pdf-tools.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/pdf-tools-og.png">
 
-    .container {
-      max-width: 600px;
-      margin: auto;
-      padding: 2rem;
-      text-align: center;
-    }
+    <!-- pdf-lib CDN -->
+    <script src="https://unpkg.com/pdf-lib"></script>
 
-    h1 {
-      color: #007BFF;
-      margin-bottom: 1.5rem;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        
+        .tool-container { text-align: center; }
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .tab-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            font-weight: 600;
+        }
+        .tab-btn.active { background-color: var(--primary-color); color: white; }
 
-    input[type="file"], input[type="text"] {
-      display: block;
-      margin: 1rem auto;
-    }
+        .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .upload-area.dragover { background-color: #e6f2ff; border-color: var(--primary-color); }
+        input[type="file"] { display: none; }
+        #fileInfo { margin-top: 15px; font-weight: 600; }
+        #split-options { display: none; margin-top: 15px; }
 
-    .button {
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-      margin: 1rem 0.5rem 0;
-    }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .btn:disabled { background-color: #a0c8ff; cursor: not-allowed; }
+        #downloadLink { display: none; background-color: #28a745; text-decoration: none; }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 
-    .button:disabled {
-      background-color: #a6c8ff;
-      cursor: not-allowed;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free PDF Merger & Splitter",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to merge multiple PDF files into one or split a single PDF by page ranges. All processing is done securely in the browser."
     }
-
-    #downloadLink {
-      display: none;
-      margin-top: 1.5rem;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 1rem;
-      }
-
-      .button {
-        display: block;
-        margin: 1rem auto 0;
-      }
-    }
-  </style>
+    </script>
 </head>
 <body>
-  <div class="container">
-    <h1>PDF Merger & Splitter</h1>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-    <!-- Merger -->
-    <h2 style="color: #007BFF">Merge PDFs</h2>
-    <input type="file" id="mergeInput" accept="application/pdf" multiple />
-    <button class="button" id="mergeBtn" disabled>Merge PDFs</button>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Online PDF Merger & Splitter</h1>
+        <p>Manage your PDF files with ease using our secure and powerful online tools. Whether you need to combine several PDFs into a single document or extract specific pages from a large file, our merger and splitter have you covered. The entire process is done in your browser, so your files are never uploaded to a server. It's fast, free, and completely private.</p>
+    </section>
 
-    <!-- Splitter -->
-    <h2 style="color: #007BFF">Split PDF</h2>
-    <input type="file" id="splitInput" accept="application/pdf" />
-    <input type="text" id="splitPages" placeholder="e.g., 1,3-5" />
-    <button class="button" id="splitBtn" disabled>Split PDF</button>
+    <div class="tool-container">
+        <div class="tabs">
+            <button class="tab-btn active" id="mergeTab">Merge PDFs</button>
+            <button class="tab-btn" id="splitTab">Split PDF</button>
+        </div>
+        
+        <div id="uploadArea" class="upload-area">
+            <p id="upload-text">Drag & drop PDF files here, or click to select.</p>
+        </div>
+        <input type="file" id="pdfInput" accept="application/pdf" multiple />
+        <div id="fileInfo"></div>
+        
+        <div id="split-options">
+            <label for="pageRanges">Pages to extract (e.g., 1-3, 5, 8-10):</label>
+            <input type="text" id="pageRanges" placeholder="e.g., 1-3, 5, 8-10" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color);">
+        </div>
+        
+        <button id="processBtn" class="btn" disabled>Process</button>
+        <p id="status"></p>
+        <a id="downloadLink" class="btn">Download File</a>
+    </div>
+    
+    <section class="content-section">
+        <h2>About PDF Manipulation</h2>
+        <p><strong>Merging PDFs</strong> is useful when you want to combine multiple documents, like reports or chapters of a book, into a single, easy-to-share file. <strong>Splitting a PDF</strong> is helpful when you only need to extract a few important pages from a large document, reducing file size and making it easier to focus on specific content.</p>
+    </section>
 
-    <a id="downloadLink" class="button" download>Download</a>
-  </div>
-
-  <script type="module">
-    import { PDFDocument } from 'https://cdn.skypack.dev/pdf-lib';
-
-    const mergeInput = document.getElementById('mergeInput');
-    const splitInput = document.getElementById('splitInput');
-    const splitPages = document.getElementById('splitPages');
-    const mergeBtn = document.getElementById('mergeBtn');
-    const splitBtn = document.getElementById('splitBtn');
-    const downloadLink = document.getElementById('downloadLink');
-
-    let mergeFiles = [];
-    let splitFile;
-
-    mergeInput.addEventListener('change', (e) => {
-      mergeFiles = Array.from(e.target.files);
-      mergeBtn.disabled = mergeFiles.length < 2;
-    });
-
-    splitInput.addEventListener('change', (e) => {
-      splitFile = e.target.files[0];
-      splitBtn.disabled = !splitFile;
-    });
-
-    mergeBtn.addEventListener('click', async () => {
-      const mergedPdf = await PDFDocument.create();
-
-      for (const file of mergeFiles) {
-        const bytes = await file.arrayBuffer();
-        const pdf = await PDFDocument.load(bytes);
-        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-        copiedPages.forEach(page => mergedPdf.addPage(page));
-      }
-
-      const mergedBytes = await mergedPdf.save();
-      const blob = new Blob([mergedBytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-
-      downloadLink.href = url;
-      downloadLink.download = 'merged.pdf';
-      downloadLink.style.display = 'inline-block';
-    });
-
-    splitBtn.addEventListener('click', async () => {
-      const bytes = await splitFile.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(bytes);
-
-      const splitPdf = await PDFDocument.create();
-      const input = splitPages.value;
-      const pageIndices = parsePageInput(input, pdfDoc.getPageCount());
-
-      const pages = await splitPdf.copyPages(pdfDoc, pageIndices);
-      pages.forEach((page) => splitPdf.addPage(page));
-
-      const splitBytes = await splitPdf.save();
-      const blob = new Blob([splitBytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-
-      downloadLink.href = url;
-      downloadLink.download = 'split.pdf';
-      downloadLink.style.display = 'inline-block';
-    });
-
-    function parsePageInput(input, maxPages) {
-      const ranges = input.split(',');
-      const pages = new Set();
-
-      for (const range of ranges) {
-        if (range.includes('-')) {
-          const [start, end] = range.split('-').map(num => parseInt(num.trim(), 10) - 1);
-          for (let i = start; i <= end && i < maxPages; i++) {
-            pages.add(i);
-          }
-        } else {
-          const index = parseInt(range.trim(), 10) - 1;
-          if (!isNaN(index) && index < maxPages) pages.add(index);
-        }
-      }
-
-      return Array.from(pages);
-    }
-  </script>
-  <!-- Footer -->
+    <!-- === FIXED FOOTER SECTION === -->
     <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
-            </div>
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
+    <!-- === END FIXED FOOTER SECTION === -->
+  </main>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const { PDFDocument } = PDFLib;
+
+        const mergeTab = document.getElementById('mergeTab');
+        const splitTab = document.getElementById('splitTab');
+        const uploadArea = document.getElementById('uploadArea');
+        const pdfInput = document.getElementById('pdfInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const processBtn = document.getElementById('processBtn');
+        const status = document.getElementById('status');
+        const downloadLink = document.getElementById('downloadLink');
+        const splitOptions = document.getElementById('split-options');
+        const pageRangesInput = document.getElementById('pageRanges');
+        const uploadText = document.getElementById('upload-text');
+
+        let selectedFiles = [];
+        let currentMode = 'merge';
+
+        const switchMode = (mode) => {
+            currentMode = mode;
+            mergeTab.classList.toggle('active', mode === 'merge');
+            splitTab.classList.toggle('active', mode === 'split');
+            pdfInput.multiple = (mode === 'merge');
+            splitOptions.style.display = (mode === 'split') ? 'block' : 'none';
+            uploadText.textContent = (mode === 'merge') ? 'Drag & drop PDF files here, or click to select.' : 'Drag & drop a single PDF here, or click to select.';
+            resetState();
+        };
+        
+        mergeTab.addEventListener('click', () => switchMode('merge'));
+        splitTab.addEventListener('click', () => switchMode('split'));
+        
+        const resetState = () => {
+            selectedFiles = [];
+            pdfInput.value = '';
+            fileInfo.textContent = '';
+            processBtn.disabled = true;
+            status.textContent = '';
+            downloadLink.style.display = 'none';
+        };
+
+        const handleFiles = (files) => {
+            if (files.length === 0) return;
+            
+            if (currentMode === 'split' && files.length > 1) {
+                alert('Please select only one file for splitting.');
+                return;
+            }
+            
+            selectedFiles = Array.from(files);
+            fileInfo.innerHTML = selectedFiles.map(f => `<div>${f.name} (${(f.size / 1024).toFixed(2)} KB)</div>`).join('');
+            processBtn.disabled = false;
+        };
+
+        uploadArea.addEventListener('click', () => pdfInput.click());
+        pdfInput.addEventListener('change', (e) => handleFiles(e.target.files));
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+        uploadArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
+
+        processBtn.addEventListener('click', async () => {
+            if (selectedFiles.length === 0) return;
+
+            status.textContent = 'Processing... Please wait.';
+            processBtn.disabled = true;
+            downloadLink.style.display = 'none';
+
+            try {
+                let finalPdfBytes;
+                if (currentMode === 'merge') {
+                    const mergedPdf = await PDFDocument.create();
+                    for (const file of selectedFiles) {
+                        const pdfBytes = await file.arrayBuffer();
+                        const pdfDoc = await PDFDocument.load(pdfBytes);
+                        const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+                        copiedPages.forEach(page => mergedPdf.addPage(page));
+                    }
+                    finalPdfBytes = await mergedPdf.save();
+                    downloadLink.download = 'merged.pdf';
+                } else { // Split mode
+                    const pdfBytes = await selectedFiles[0].arrayBuffer();
+                    const pdfDoc = await PDFDocument.load(pdfBytes);
+                    const newPdf = await PDFDocument.create();
+                    
+                    const ranges = pageRangesInput.value.split(',').map(s => s.trim());
+                    const pagesToCopy = new Set();
+                    ranges.forEach(range => {
+                        if (range.includes('-')) {
+                            const [start, end] = range.split('-').map(Number);
+                            for (let i = start; i <= end; i++) pagesToCopy.add(i - 1);
+                        } else {
+                            if(!isNaN(Number(range))) pagesToCopy.add(Number(range) - 1);
+                        }
+                    });
+                    
+                    const validPages = Array.from(pagesToCopy).filter(p => p >= 0 && p < pdfDoc.getPageCount());
+                    if (validPages.length === 0) {
+                        throw new Error("No valid pages selected to split.");
+                    }
+                    
+                    const copiedPages = await newPdf.copyPages(pdfDoc, validPages);
+                    copiedPages.forEach(page => newPdf.addPage(page));
+                    
+                    finalPdfBytes = await newPdf.save();
+                    downloadLink.download = 'split.pdf';
+                }
+
+                const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                
+                downloadLink.href = url;
+                downloadLink.style.display = 'inline-block';
+                status.textContent = 'Processing complete!';
+
+            } catch (error) {
+                console.error(error);
+                status.textContent = `An error occurred: ${error.message}`;
+            } finally {
+                processBtn.disabled = false;
+            }
+        });
+    });
+  </script>
 </body>
 </html>
-
-  
-  
