@@ -1,144 +1,339 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Unit Converter</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #eef8ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Unit Converter | Convert Length, Temperature, Mass & More</title>
+    <meta name="description" content="A versatile and free online unit converter. Instantly convert between various units of measurement for length, temperature, mass, speed, data, and more.">
+    <meta name="keywords" content="unit converter, conversion calculator, convert units, length converter, temperature converter, mass converter, speed converter, data converter">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/unit-converter.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Unit Converter">
+    <meta property="og:description" content="Quickly and accurately convert between hundreds of units across different categories like length, temperature, and mass.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/unit-converter.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/unit-converter-og.png">
 
-    .container {
-      background: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
+        
+        .tool-container { text-align: left; }
+        .input-group { margin-bottom: 20px; }
+        label { font-weight: 600; display: block; margin-bottom: 5px; }
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .conversion-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .conversion-box { flex: 2; }
+        .swap-btn {
+            flex-shrink: 0;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--primary-color);
+            border: none;
+            background: none;
+            padding: 5px;
+        }
+        
+        /* === NEW FOOTER STYLES === */
+        footer {
+            text-align: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        footer h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+        footer li {
+            display: inline-block;
+            margin: 0 12px;
+        }
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+        }
+        footer .footer-bottom p {
+            font-size: 0.9em;
+            color: #888;
+            margin: 0;
+        }
+        /* === END NEW FOOTER STYLES === */
+    </style>
 
-    h2 {
-      color: #007bff;
-      margin-bottom: 20px;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Unit Converter",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A web-based tool to convert various units of measurement, including length, mass, temperature, speed, and data."
     }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-    }
-  </style>
+    </script>
 </head>
 <body>
-  <div class="container">
-    <h2>Length Unit Converter</h2>
-    <input type="number" id="inputValue" placeholder="Enter value" />
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-    <select id="fromUnit">
-      <option value="meters">Meters</option>
-      <option value="kilometers">Kilometers</option>
-      <option value="feet">Feet</option>
-      <option value="inches">Inches</option>
-      <option value="miles">Miles</option>
-    </select>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Unit Converter</h1>
+        <p>Our comprehensive unit converter is your all-in-one solution for quick and accurate conversions. Whether you're a student, a professional, or just need to convert a recipe, this tool can handle it. Select a measurement type like length, temperature, or mass, and instantly convert between a wide range of units. All calculations are performed in real-time, right in your browser.</p>
+    </section>
 
-    <select id="toUnit">
-      <option value="meters">Meters</option>
-      <option value="kilometers">Kilometers</option>
-      <option value="feet">Feet</option>
-      <option value="inches">Inches</option>
-      <option value="miles">Miles</option>
-    </select>
-
-    <button onclick="convertUnits()">Convert</button>
-    <div class="result" id="resultBox"></div>
-  </div>
-
-  <script>
-    function convertUnits() {
-      const value = parseFloat(document.getElementById("inputValue").value);
-      const from = document.getElementById("fromUnit").value;
-      const to = document.getElementById("toUnit").value;
-      const resultBox = document.getElementById("resultBox");
-
-      if (isNaN(value)) {
-        resultBox.textContent = "Please enter a valid number.";
-        return;
-      }
-
-      const unitsInMeters = {
-        meters: 1,
-        kilometers: 1000,
-        feet: 0.3048,
-        inches: 0.0254,
-        miles: 1609.34
-      };
-
-      const meters = value * unitsInMeters[from];
-      const converted = meters / unitsInMeters[to];
-
-      resultBox.textContent = `${value} ${from} = ${converted.toFixed(4)} ${to}`;
-    }
-  </script>
-  <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
+    <div class="tool-container">
+        <h2>Convert Units</h2>
+        <div class="input-group">
+            <label for="category">Select Measurement Type:</label>
+            <select id="category"></select>
+        </div>
+        
+        <div class="conversion-row">
+            <div class="conversion-box">
+                <label for="fromValue">From:</label>
+                <input type="number" id="fromValue" value="1">
+                <select id="fromUnit"></select>
             </div>
             
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+            <button id="swapBtn" class="swap-btn" title="Swap Units">⇄</button>
+            
+            <div class="conversion-box">
+                <label for="toValue">To:</label>
+                <input type="number" id="toValue" readonly>
+                <select id="toUnit"></select>
             </div>
         </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>Why Use a Unit Converter?</h2>
+        <ul>
+            <li><strong>Education:</strong> A great tool for students learning about different systems of measurement.</li>
+            <li><strong>Cooking & Baking:</strong> Easily convert between metric and imperial units for recipes from around the world.</li>
+            <li><strong>Travel:</strong> Quickly convert distances (kilometers to miles) or temperatures (Celsius to Fahrenheit) when abroad.</li>
+            <li><strong>Professional Use:</strong> Essential for engineers, scientists, and architects who work with precise measurements.</li>
+        </ul>
+    </section>
+
+    <!-- === NEW FOOTER HTML === -->
+    <footer id="contact">
+        <h3>Quick Links</h3>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#tools">All Tools</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
+    <!-- === END NEW FOOTER HTML === -->
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const categorySelect = document.getElementById('category');
+        const fromValueInput = document.getElementById('fromValue');
+        const fromUnitSelect = document.getElementById('fromUnit');
+        const toValueInput = document.getElementById('toValue');
+        const toUnitSelect = document.getElementById('toUnit');
+        const swapBtn = document.getElementById('swapBtn');
+        
+        const units = {
+            Length: {
+                meters: 1, kilometers: 1000, centimeters: 0.01, millimeters: 0.001,
+                miles: 1609.34, yards: 0.9144, feet: 0.3048, inches: 0.0254
+            },
+            Mass: {
+                grams: 1, kilograms: 1000, milligrams: 0.001, metric_tons: 1000000,
+                pounds: 453.592, ounces: 28.3495
+            },
+            Temperature: { // Special handling
+                celsius: 'c', fahrenheit: 'f', kelvin: 'k'
+            },
+            Speed: {
+                mps: 1, kph: 0.277778, mph: 0.44704, knots: 0.514444
+            },
+            Data: {
+                bits: 1, bytes: 8, kilobytes: 8 * 1024, megabytes: 8 * 1024 * 1024,
+                gigabytes: 8 * 1024 * 1024 * 1024, terabytes: 8 * 1024 * 1024 * 1024 * 1024
+            }
+        };
+
+        const populateCategories = () => {
+            Object.keys(units).forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+        };
+
+        const populateUnits = () => {
+            const category = categorySelect.value;
+            const unitList = Object.keys(units[category]);
+            
+            fromUnitSelect.innerHTML = '';
+            toUnitSelect.innerHTML = '';
+            
+            unitList.forEach(unit => {
+                const fromOption = document.createElement('option');
+                fromOption.value = unit;
+                fromOption.textContent = unit.charAt(0).toUpperCase() + unit.slice(1).replace(/_/g, ' ');
+                fromUnitSelect.appendChild(fromOption);
+                
+                const toOption = document.createElement('option');
+                toOption.value = unit;
+                toOption.textContent = unit.charAt(0).toUpperCase() + unit.slice(1).replace(/_/g, ' ');
+                toUnitSelect.appendChild(toOption);
+            });
+            
+            // Set default different units
+            if (unitList.length > 1) {
+                toUnitSelect.value = unitList[1];
+            }
+            convert();
+        };
+
+        const convert = () => {
+            const fromValue = parseFloat(fromValueInput.value);
+            const fromUnit = fromUnitSelect.value;
+            const toUnit = toUnitSelect.value;
+            const category = categorySelect.value;
+            
+            if (isNaN(fromValue)) {
+                toValueInput.value = '';
+                return;
+            }
+
+            let result;
+            if (category === 'Temperature') {
+                result = convertTemperature(fromValue, fromUnit, toUnit);
+            } else {
+                const baseValue = fromValue * units[category][fromUnit];
+                result = baseValue / units[category][toUnit];
+            }
+            
+            toValueInput.value = parseFloat(result.toFixed(6));
+        };
+        
+        const convertTemperature = (value, from, to) => {
+            if (from === to) return value;
+            let celsius;
+            if (from === 'fahrenheit') celsius = (value - 32) * 5 / 9;
+            else if (from === 'kelvin') celsius = value - 273.15;
+            else celsius = value;
+            
+            if (to === 'fahrenheit') return (celsius * 9 / 5) + 32;
+            if (to === 'kelvin') return celsius + 273.15;
+            return celsius; // to Celsius
+        };
+        
+        swapBtn.addEventListener('click', () => {
+            const tempUnit = fromUnitSelect.value;
+            fromUnitSelect.value = toUnitSelect.value;
+            toUnitSelect.value = tempUnit;
+            convert();
+        });
+        
+        categorySelect.addEventListener('change', populateUnits);
+        [fromValueInput, fromUnitSelect, toUnitSelect].forEach(el => {
+            el.addEventListener('input', convert);
+        });
+        
+        // Initial setup
+        populateCategories();
+        populateUnits();
+    });
+  </script>
 
 </body>
 </html>
-
-  
-  
