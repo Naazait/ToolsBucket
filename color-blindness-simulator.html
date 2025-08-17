@@ -18,7 +18,7 @@
     <meta property="og:image" content="https://yourwebsite.com/images/color-blindness-simulator-og.png">
 
     <!-- ============== STYLES & FONTS ============== -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #007BFF;
@@ -35,9 +35,40 @@
             background: var(--background-color);
             color: var(--text-color);
             display: flex;
-            justify-content: center;
+            flex-direction: column; /* Allow header and main to stack */
+            align-items: center; /* Center content horizontally */
             padding: 20px;
         }
+        
+        /* === NEW HEADER STYLES === */
+        .page-header {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--heading-color);
+        }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover {
+            background-color: #dee2e6;
+        }
+        /* === END NEW HEADER STYLES === */
+        
         .main-container { width: 100%; max-width: 1000px; }
         .content-section, .tool-container, footer {
             background-color: var(--card-background);
@@ -144,6 +175,14 @@
     </script>
 </head>
 <body>
+
+  <!-- === NEW HEADER SECTION === -->
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">ToolsBucket</div>
+  </header>
+  <!-- === END NEW HEADER SECTION === -->
+
   <main class="main-container">
     <section class="content-section">
         <h1>Color Blindness Simulator</h1>
