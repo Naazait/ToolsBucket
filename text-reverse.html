@@ -1,105 +1,273 @@
-  
-  <!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <title>Text Reversal Tool</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Text Reversal Tool | Reverse Text, Words, and Letters</title>
+    <meta name="description" content="Instantly reverse text, flip words, and more with our free online text reversal tool. Perfect for social media, coding, or just for fun. Works securely in your browser.">
+    <meta name="keywords" content="text reverser, reverse text, word reverser, flip text, backwards text generator, reverse string, online text tool">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/text-reversal-tool.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Text Reversal Tool">
+    <meta property="og:description" content="A fun and easy tool to reverse text, flip words upside down, and more. Try it now!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/text-reversal-tool.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/text-reversal-og.png">
 
-    h2 {
-      color: #007bff;
-      text-align: center;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inconsolata:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
+        
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .tool-grid { grid-template-columns: 1fr 1fr; }
+        }
+        
+        .box-title { font-weight: 600; margin-bottom: 10px; }
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-family: 'Inconsolata', monospace;
+            font-size: 1.1em;
+            resize: vertical;
+        }
 
-    #textBox {
-      width: 90%;
-      max-width: 500px;
-      min-height: 150px;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      background: #fff;
-      margin-bottom: 15px;
-      outline: none;
-      overflow-y: auto;
-      white-space: pre-wrap;
-    }
+        .actions { text-align: center; margin-top: 20px; }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .btn.secondary { background-color: #6c757d; }
+        
+        .options { margin-bottom: 20px; text-align: center; }
+        
+        footer { text-align: center; }
+        footer h3 { font-size: 1.1em; font-weight: 600; margin-bottom: 15px; }
+        footer ul { list-style: none; padding: 0; margin: 0 0 20px 0; }
+        footer li { display: inline-block; margin: 0 12px; }
+        footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        footer .footer-bottom p { font-size: 0.9em; color: #888; margin: 0; }
+    </style>
 
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-bottom: 15px;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Text Reversal Tool",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A web-based tool to reverse text, words, and individual letters, or flip text upside down."
     }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    #output {
-      font-size: 16px;
-      margin-top: 20px;
-      color: #333;
-    }
-  </style>
+    </script>
 </head>
 <body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <h2>Text Reversal Tool</h2>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Text Reversal Tool</h1>
+        <p>Have fun with your text using our versatile reversal tool. You can flip your text backwards, reverse the order of words, flip it upside down, and more. It's a great way to create unique social media posts, puzzles, or just to see your words in a new way. Simply type or paste your text and select a reversal mode to see the result instantly.</p>
+    </section>
 
-  <div id="textBox" contenteditable="true" placeholder="Paste or type text here..."></div>
-
-  <button onclick="reverseText()">Reverse Text</button>
-
-  <div id="output"></div>
-
-  <script>
-    function reverseText() {
-      var content = document.getElementById("textBox").innerText.trim();
-      
-      // Reverse the input text
-      var reversedText = content.split('').reverse().join('');
-      
-      document.getElementById("output").innerText = "Reversed Text: " + reversedText;
-    }
-  </script>
-<!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
+    <div class="tool-container">
+        <div class="options">
+            <label for="reversalType" style="font-weight: 600;">Reversal Mode:</label>
+            <select id="reversalType" class="btn secondary" style="padding: 10px;">
+                <option value="text">Reverse Text</option>
+                <option value="words">Reverse Wording</option>
+                <option value="flip">Flip Text (Upside Down)</option>
+                <option value="word-letters">Reverse Each Word's Letters</option>
+            </select>
+        </div>
+        
+        <div class="tool-grid">
+            <div class="input-side">
+                <h3 class="box-title">Input</h3>
+                <textarea id="inputBox" placeholder="Paste or type your text here..."></textarea>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+            <div class="output-side">
+                <h3 class="box-title">Output</h3>
+                <textarea id="outputBox" readonly></textarea>
             </div>
         </div>
+        
+        <div class="actions">
+            <button id="copyBtn" class="btn">Copy Output</button>
+            <button id="clearBtn" class="btn secondary">Clear All</button>
+        </div>
+    </div>
+    
+    <!-- === NEW "WHY USE" SECTION === -->
+    <section class="content-section">
+        <h2>Why Use a Text Reversal Tool?</h2>
+        <ul>
+            <li><strong>For Fun & Social Media:</strong> Create unique, eye-catching posts or messages for platforms like Twitter, Facebook, or Instagram. Typing backwards or upside down can make your content stand out.</li>
+            <li><strong>Data Processing:</strong> Quickly reverse strings of data for specific technical requirements without writing any code.</li>
+            <li><strong>Creating Puzzles:</strong> Generate simple ciphers or puzzles for games and quizzes by reversing words or entire sentences.</li>
+            <li><strong>Learning & Linguistics:</strong> Explore palindromes and the structure of words by seeing them in a different orientation.</li>
+        </ul>
+    </section>
+
+    <footer id="contact">
+        <h3>Quick Links</h3>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#tools">All Tools</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputBox = document.getElementById('inputBox');
+        const outputBox = document.getElementById('outputBox');
+        const reversalTypeSelect = document.getElementById('reversalType');
+        const copyBtn = document.getElementById('copyBtn');
+        const clearBtn = document.getElementById('clearBtn');
+
+        const flipMap = {
+            'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ı',
+            'j': 'ɾ', 'k': 'ʞ', 'l': 'l', 'm': 'ɯ', 'n': 'u', 'o': 'o', 'p': 'd', 'q': 'b', 'r': 'ɹ',
+            's': 's', 't': 'ʇ', 'u': 'n', 'v': 'ʌ', 'w': 'ʍ', 'x': 'x', 'y': 'ʎ', 'z': 'z',
+            'A': '∀', 'B': 'B', 'C': 'Ɔ', 'D': 'D', 'E': 'Ǝ', 'F': 'Ⅎ', 'G': 'פ', 'H': 'H', 'I': 'I',
+            'J': 'ſ', 'K': 'K', 'L': '˥', 'M': 'W', 'N': 'N', 'O': 'O', 'P': 'Ԁ', 'Q': 'Q', 'R': 'R',
+            'S': 'S', 'T': '┴', 'U': '∩', 'V': 'Λ', 'W': 'M', 'X': 'X', 'Y': '⅄', 'Z': 'Z',
+            '0': '0', '1': 'Ɩ', '2': 'ᄅ', '3': 'Ɛ', '4': 'ㄣ', '5': 'ϛ', '6': '9', '7': 'ㄥ', '8': '8', '9': '6',
+            '.': '˙', ',': "'", "'": ',', '"': ',,', '`': ',', '!': '¡', '?': '¿', '(': ')', ')': '(',
+            '[': ']', ']': '[', '{': '}', '}': '{', '_': '‾'
+        };
+
+        const reverseText = (text) => {
+            const mode = reversalTypeSelect.value;
+            let result = "";
+
+            switch (mode) {
+                case 'text':
+                    result = text.split('').reverse().join('');
+                    break;
+                case 'words':
+                    result = text.split(/\s+/).reverse().join(' ');
+                    break;
+                case 'flip':
+                    result = text.split('').reverse().map(char => flipMap[char] || char).join('');
+                    break;
+                case 'word-letters':
+                    result = text.split(/\s+/).map(word => word.split('').reverse().join('')).join(' ');
+                    break;
+            }
+            outputBox.value = result;
+        };
+
+        const processInput = () => reverseText(inputBox.value);
+
+        const copyOutput = () => {
+            if (outputBox.value === "") return;
+            navigator.clipboard.writeText(outputBox.value).then(() => {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => { copyBtn.textContent = originalText; }, 2000);
+            });
+        };
+
+        const clearAll = () => {
+            inputBox.value = '';
+            outputBox.value = '';
+        };
+
+        inputBox.addEventListener('input', processInput);
+        reversalTypeSelect.addEventListener('change', processInput);
+        copyBtn.addEventListener('click', copyOutput);
+        clearBtn.addEventListener('click', clearAll);
+        
+        // Initial process in case of browser auto-fill
+        processInput();
+    });
+  </script>
 
 </body>
 </html>
-
-  
-  
