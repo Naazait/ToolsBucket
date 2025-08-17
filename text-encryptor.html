@@ -1,147 +1,302 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Text Encryptor/Decryptor Tool</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Text Encryptor & Decryptor | AES Encryption Tool</title>
+    <meta name="description" content="Encrypt and decrypt text using the AES encryption standard with our free online tool. Secure your messages with a password. All operations are performed securely in your browser.">
+    <meta name="keywords" content="text encryptor, text decryptor, aes encryption, encrypt text, decrypt text online, password protect text, free encryption tool">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/text-encryptor.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online AES Text Encryptor & Decryptor">
+    <meta property="og:description" content="Securely encrypt and decrypt messages with a password using the AES standard. Fast, free, and works entirely in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/text-encryptor.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/text-encryptor-og.png">
 
-    h2 {
-      color: #007bff;
-      text-align: center;
-    }
+    <!-- Crypto-JS Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
-    #textBox {
-      width: 90%;
-      max-width: 500px;
-      min-height: 150px;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      background: #fff;
-      margin-bottom: 15px;
-      outline: none;
-      overflow-y: auto;
-      white-space: pre-wrap;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inconsolata:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .tool-grid { grid-template-columns: 1fr 1fr; }
+        }
+        
+        .box-title { font-weight: 600; margin-bottom: 10px; }
+        textarea, input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-family: 'Inconsolata', monospace;
+            font-size: 1.1em;
+        }
+        textarea { min-height: 200px; resize: vertical; }
+        
+        .actions { text-align: center; margin-top: 20px; }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .btn.secondary { background-color: #6c757d; }
+        .btn.danger { background-color: #dc3545; }
+        
+        /* === NEW FOOTER STYLES === */
+        footer {
+            text-align: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        footer h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+        footer li {
+            display: inline-block;
+            margin: 0 12px;
+        }
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+        }
+        footer .footer-bottom p {
+            font-size: 0.9em;
+            color: #888;
+            margin: 0;
+        }
+        /* === END NEW FOOTER STYLES === */
+    </style>
 
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-bottom: 15px;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Text Encryptor & Decryptor (AES)",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to encrypt and decrypt text using the AES standard. All operations are done securely in the browser."
     }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    #output {
-      font-size: 16px;
-      margin-top: 20px;
-      color: #333;
-    }
-
-    .input-label {
-      margin-bottom: 10px;
-    }
-  </style>
+    </script>
 </head>
 <body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <h2>Text Encryptor/Decryptor Tool</h2>
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Text Encryptor & Decryptor</h1>
+        <p>Secure your text and messages with our free AES encryption tool. This utility allows you to encrypt sensitive information with a password, making it unreadable to anyone without the key. You can also decrypt messages that were encrypted with this tool. All encryption and decryption processes happen locally in your browser, ensuring your data is never sent to a server.</p>
+    </section>
 
-  <div id="textBox" contenteditable="true" placeholder="Paste or type text here..."></div>
-
-  <label class="input-label" for="shift">Enter Shift Value (for Caesar Cipher):</label>
-  <input type="number" id="shift" value="3" min="1" max="25" />
-
-  <button onclick="encryptText()">Encrypt Text</button>
-  <button onclick="decryptText()">Decrypt Text</button>
-
-  <div id="output"></div>
-
-  <script>
-    function caesarCipher(str, shift) {
-      return str.split('')
-        .map(char => {
-          const charCode = char.charCodeAt(0);
-          if (char >= 'a' && char <= 'z') {
-            return String.fromCharCode(((charCode - 97 + shift) % 26) + 97);
-          } else if (char >= 'A' && char <= 'Z') {
-            return String.fromCharCode(((charCode - 65 + shift) % 26) + 65);
-          } else {
-            return char;
-          }
-        })
-        .join('');
-    }
-
-    function encryptText() {
-      const content = document.getElementById("textBox").innerText.trim();
-      const shiftValue = parseInt(document.getElementById("shift").value);
-
-      if (!content) {
-        document.getElementById("output").innerText = "Please enter text to encrypt.";
-        return;
-      }
-
-      const encryptedText = caesarCipher(content, shiftValue);
-      document.getElementById("output").innerText = "Encrypted Text: " + encryptedText;
-    }
-
-    function decryptText() {
-      const content = document.getElementById("textBox").innerText.trim();
-      const shiftValue = parseInt(document.getElementById("shift").value);
-
-      if (!content) {
-        document.getElementById("output").innerText = "Please enter text to decrypt.";
-        return;
-      }
-
-      const decryptedText = caesarCipher(content, -shiftValue);
-      document.getElementById("output").innerText = "Decrypted Text: " + decryptedText;
-    }
-  </script>
-<!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
+    <div class="tool-container">
+        <h2>AES Encryption / Decryption</h2>
+        <div class="tool-grid">
+            <div class="input-side">
+                <h3 class="box-title">Input Text</h3>
+                <textarea id="inputBox" placeholder="Enter your plain text or encrypted message here..."></textarea>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
+            <div class="output-side">
+                <h3 class="box-title">Output</h3>
+                <textarea id="outputBox" readonly placeholder="Result will appear here..."></textarea>
             </div>
         </div>
+        
+        <div style="margin-top: 20px; text-align: center;">
+            <label for="password" style="font-weight: 600;">Password / Key:</label><br>
+            <input type="password" id="password" placeholder="Enter a strong password">
+        </div>
+
+        <div class="actions">
+            <button id="encryptBtn" class="btn">Encrypt</button>
+            <button id="decryptBtn" class="btn">Decrypt</button>
+            <button id="copyInputBtn" class="btn secondary">Copy Input</button>
+            <button id="copyOutputBtn" class="btn secondary">Copy Output</button>
+            <button id="swapBtn" class="btn secondary">Swap</button>
+            <button id="clearBtn" class="btn danger">Clear All</button>
+        </div>
+    </div>
+    
+    <section class="content-section">
+        <h3>About AES Encryption</h3>
+        <p>The Advanced Encryption Standard (AES) is a symmetric encryption algorithm trusted worldwide. It is used by governments and organizations to protect classified information. This tool uses AES to turn your plain text into a scrambled, unreadable format (ciphertext) using a password you provide. The only way to turn the ciphertext back into readable text is by using the exact same password.</p>
+    </section>
+
+    <!-- === NEW FOOTER HTML === -->
+    <footer id="contact">
+        <h3>Quick Links</h3>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#tools">All Tools</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
+    <!-- === END NEW FOOTER HTML === -->
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputBox = document.getElementById('inputBox');
+        const outputBox = document.getElementById('outputBox');
+        const passwordInput = document.getElementById('password');
+        
+        const encryptBtn = document.getElementById('encryptBtn');
+        const decryptBtn = document.getElementById('decryptBtn');
+        const swapBtn = document.getElementById('swapBtn');
+        const copyInputBtn = document.getElementById('copyInputBtn');
+        const copyOutputBtn = document.getElementById('copyOutputBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        
+        encryptBtn.addEventListener('click', () => {
+            const plainText = inputBox.value;
+            const password = passwordInput.value;
+            if (!plainText || !password) {
+                alert("Please enter text and a password.");
+                return;
+            }
+            try {
+                const encrypted = CryptoJS.AES.encrypt(plainText, password).toString();
+                outputBox.value = encrypted;
+            } catch (e) {
+                outputBox.value = "Encryption failed.";
+            }
+        });
+        
+        decryptBtn.addEventListener('click', () => {
+            const cipherText = inputBox.value;
+            const password = passwordInput.value;
+            if (!cipherText || !password) {
+                alert("Please enter the text to decrypt and the password.");
+                return;
+            }
+            try {
+                const bytes = CryptoJS.AES.decrypt(cipherText, password);
+                const originalText = bytes.toString(CryptoJS.enc.Utf8);
+                if (originalText) {
+                    outputBox.value = originalText;
+                } else {
+                    outputBox.value = "Decryption failed. Check your password or encrypted text.";
+                }
+            } catch (e) {
+                outputBox.value = "Decryption failed. Invalid data or password.";
+            }
+        });
+
+        swapBtn.addEventListener('click', () => {
+            const temp = inputBox.value;
+            inputBox.value = outputBox.value;
+            outputBox.value = temp;
+        });
+
+        const copyToClipboard = (element, button) => {
+            if (!element.value) return;
+            navigator.clipboard.writeText(element.value).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = originalText; }, 2000);
+            });
+        };
+        
+        copyInputBtn.addEventListener('click', () => copyToClipboard(inputBox, copyInputBtn));
+        copyOutputBtn.addEventListener('click', () => copyToClipboard(outputBox, copyOutputBtn));
+
+        clearBtn.addEventListener('click', () => {
+            inputBox.value = '';
+            outputBox.value = '';
+            passwordInput.value = '';
+        });
+    });
+  </script>
 
 </body>
 </html>
-
-  
-  
