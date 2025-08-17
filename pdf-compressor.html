@@ -1,131 +1,319 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF Compressor</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
-      color: #333;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Advanced PDF Compressor | Reduce PDF to a Specific Size</title>
+    <meta name="description" content="An advanced online tool to compress PDF files to a required size (KB/MB). Our smart compressor automatically balances quality and file size. Secure and browser-based.">
+    <meta name="keywords" content="pdf compressor, compress pdf, reduce pdf size, optimize pdf, advanced pdf compressor, pdf compressor to 100kb, free pdf tool">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/pdf-compressor.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Advanced Free Online PDF Compressor">
+    <meta property="og:description" content="Compress your PDF files to a specific target size. Our tool automatically adjusts quality to meet your needs, all securely in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/pdf-compressor.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/pdf-compressor-og.png">
 
-    .container {
-      max-width: 500px;
-      margin: auto;
-      padding: 2rem;
-      text-align: center;
-    }
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/pdf-lib"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
-    h1 {
-      color: #007BFF;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: center;
+        }
+        @media (min-width: 768px) {
+            .tool-container { grid-template-columns: 1fr 1fr; }
+        }
 
-    input[type="file"] {
-      display: block;
-      margin: 1rem auto;
-    }
+        .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 30px;
+            cursor: pointer;
+        }
+        input[type="file"] { display: none; }
+        #fileInfo { margin-top: 15px; font-weight: 600; }
+        
+        .options-area label { display: block; margin-top: 15px; font-weight: 600; }
+        .target-size-input { display: flex; gap: 10px; align-items: center; }
+        .target-size-input input { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .target-size-input select { padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); }
 
-    .button {
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-
-    .button:disabled {
-      background-color: #a6c8ff;
-      cursor: not-allowed;
-    }
-
-    #downloadLink {
-      display: none;
-      margin-top: 1.5rem;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 1rem;
-      }
-    }
-  </style>
+        .btn {
+            background-color: var(--primary-color);
+            color: white; padding: 12px 20px; border: none;
+            border-radius: 8px; cursor: pointer; margin-top: 20px;
+            font-size: 16px; font-weight: 600;
+        }
+        .btn:disabled { background-color: #a0c8ff; cursor: not-allowed; }
+        #downloadLink { display: none; background-color: #28a745; text-decoration: none; }
+        #status { margin-top: 15px; font-weight: 600; color: var(--heading-color); }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>PDF Compressor</h1>
-    <input type="file" id="pdfInput" accept="application/pdf" />
-    <button class="button" id="compressBtn" disabled>Compress PDF</button>
-    <a id="downloadLink" class="button" download="compressed.pdf">Download Compressed PDF</a>
-  </div>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-  <script type="module">
-    import { PDFDocument } from 'https://cdn.skypack.dev/pdf-lib';
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Advanced PDF Compressor</h1>
+        <p>Reduce your PDF file size to a specific target with our advanced online compressor. This tool is perfect when you need to meet a specific file size requirement, like for online submissions or emails. Our smart algorithm automatically adjusts the compression level to get as close as possible to your target size, all while keeping the process secure within your browser.</p>
+        <p><strong>Note:</strong> This process converts PDF pages to images, so text in the final document may not be selectable.</p>
+    </section>
 
-    const pdfInput = document.getElementById('pdfInput');
-    const compressBtn = document.getElementById('compressBtn');
-    const downloadLink = document.getElementById('downloadLink');
-    let originalPDF;
-
-    pdfInput.addEventListener('change', (event) => {
-      const file = event.target.files[0];
-      if (file && file.type === 'application/pdf') {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          originalPDF = e.target.result;
-          compressBtn.disabled = false;
-        };
-        reader.readAsArrayBuffer(file);
-      } else {
-        compressBtn.disabled = true;
-      }
-    });
-
-    compressBtn.addEventListener('click', async () => {
-      const pdfDoc = await PDFDocument.load(originalPDF);
-
-      // Basic compression by copying pages to a new PDF
-      const compressedPdf = await PDFDocument.create();
-      const pages = await compressedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-      pages.forEach((page) => compressedPdf.addPage(page));
-
-      const compressedBytes = await compressedPdf.save();
-      const blob = new Blob([compressedBytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      downloadLink.href = url;
-      downloadLink.style.display = 'inline-block';
-    });
-  </script>
-  <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
+    <div class="tool-container">
+        <div class="input-side">
+            <h2>Step 1: Upload PDF File</h2>
+            <div id="uploadArea" class="upload-area">
+                <p>Drag & drop a PDF here, or click to select.</p>
+            </div>
+            <input type="file" id="pdfInput" accept="application/pdf" />
+            <div id="fileInfo"></div>
+        </div>
+        
+        <div class="output-side">
+            <h2>Step 2: Set Target Size & Compress</h2>
+            <div id="options" style="display:none;">
+                <label for="targetSize">Target File Size:</label>
+                <div class="target-size-input">
+                    <input type="number" id="targetSize" value="1">
+                    <select id="sizeUnit">
+                        <option value="MB">MB</option>
+                        <option value="KB">KB</option>
+                    </select>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
-            </div>
+            <button id="compressBtn" class="btn" disabled>Compress PDF</button>
+            <p id="status"></p>
+            <a id="downloadLink" class="btn">Download Compressed PDF</a>
+        </div>
+    </div>
+    
+    <!-- === ADDED "HOW TO" SECTION === -->
+    <section class="content-section">
+        <h2>How to Compress Your PDF</h2>
+        <ol>
+            <li><strong>Upload Your File:</strong> Drag and drop your PDF file onto the upload area, or click to select a file.</li>
+            <li><strong>Set Target Size:</strong> Enter your desired file size in KB or MB. The tool will try to get as close as possible to this size.</li>
+            <li><strong>Compress:</strong> Click the "Compress PDF" button. The tool will process your file locally in your browser.</li>
+            <li><strong>Download:</strong> Once complete, the download button will appear. Click it to save your new, smaller PDF.</li>
+        </ol>
+    </section>
+
+    <!-- === FIXED FOOTER SECTION === -->
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
+    <!-- === END FIXED FOOTER SECTION === -->
+  </main>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const { PDFDocument } = PDFLib;
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+
+        const uploadArea = document.getElementById('uploadArea');
+        const pdfInput = document.getElementById('pdfInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const compressBtn = document.getElementById('compressBtn');
+        const status = document.getElementById('status');
+        const downloadLink = document.getElementById('downloadLink');
+        const optionsDiv = document.getElementById('options');
+        const targetSizeInput = document.getElementById('targetSize');
+        const sizeUnitSelect = document.getElementById('sizeUnit');
+        
+        let selectedFile = null;
+
+        const handleFile = (file) => {
+            if (!file || file.type !== 'application/pdf') {
+                alert('Please select a valid PDF file.');
+                return;
+            }
+            selectedFile = file;
+            const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
+            fileInfo.innerHTML = `Selected: <strong>${file.name}</strong><br>Original Size: <strong>${fileSizeMB} MB</strong>`;
+            compressBtn.disabled = false;
+            optionsDiv.style.display = 'block';
+            downloadLink.style.display = 'none';
+            status.textContent = '';
+        };
+
+        uploadArea.addEventListener('click', () => pdfInput.click());
+        pdfInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+        uploadArea.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
+
+        const formatFileSize = (bytes) => {
+            if (bytes < 1024) return `${bytes} B`;
+            if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+            return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+        };
+
+        compressBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            status.textContent = 'Starting compression...';
+            compressBtn.disabled = true;
+            downloadLink.style.display = 'none';
+
+            try {
+                const targetSizeValue = parseFloat(targetSizeInput.value);
+                const targetUnit = sizeUnitSelect.value;
+                const targetBytes = targetUnit === 'MB' ? targetSizeValue * 1024 * 1024 : targetSizeValue * 1024;
+
+                if (selectedFile.size < targetBytes) {
+                    status.textContent = "File is already smaller than the target size.";
+                    compressBtn.disabled = false;
+                    return;
+                }
+
+                const fileBytes = await selectedFile.arrayBuffer();
+                const pdfToProcess = await pdfjsLib.getDocument(fileBytes).promise;
+                
+                const qualityLevels = [0.95, 0.85, 0.75, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
+                let bestBlob = null;
+                
+                for (const quality of qualityLevels) {
+                    status.textContent = `Processing at ${Math.round(quality * 100)}% quality...`;
+                    const tempPdfDoc = await PDFDocument.create();
+                    for (let i = 1; i <= pdfToProcess.numPages; i++) {
+                        const page = await pdfToProcess.getPage(i);
+                        const viewport = page.getViewport({ scale: 1.5 });
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+                        await page.render({ canvasContext: context, viewport: viewport }).promise;
+                        
+                        const jpegDataUrl = canvas.toDataURL('image/jpeg', quality);
+                        const jpegBytes = await fetch(jpegDataUrl).then(res => res.arrayBuffer());
+                        const jpegImage = await tempPdfDoc.embedJpg(jpegBytes);
+                        const newPage = tempPdfDoc.addPage([viewport.width, viewport.height]);
+                        newPage.drawImage(jpegImage, { x: 0, y: 0, width: viewport.width, height: viewport.height });
+                    }
+                    
+                    const compressedBytes = await tempPdfDoc.save();
+                    const currentBlob = new Blob([compressedBytes], { type: 'application/pdf' });
+                    bestBlob = currentBlob;
+                    
+                    if (currentBlob.size <= targetBytes) {
+                        break; // Target achieved
+                    }
+                }
+
+                const url = URL.createObjectURL(bestBlob);
+                const originalSize = selectedFile.size;
+                const newSize = bestBlob.size;
+                const savings = ((originalSize - newSize) / originalSize * 100).toFixed(1);
+                
+                downloadLink.href = url;
+                downloadLink.download = `compressed-${selectedFile.name}`;
+                downloadLink.style.display = 'inline-block';
+                status.innerHTML = `Success! Target: <strong>${formatFileSize(targetBytes)}</strong>, Achieved: <strong>${formatFileSize(newSize)}</strong>. Saved ${savings}%.`;
+
+            } catch (error) {
+                console.error(error);
+                status.textContent = 'An error occurred during compression.';
+            } finally {
+                compressBtn.disabled = false;
+            }
+        });
+    });
+  </script>
 </body>
 </html>
-
-  
