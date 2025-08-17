@@ -1,148 +1,312 @@
-  
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Time Zone Converter</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #eef8ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Time Zone Converter | Convert Time Across the World</title>
+    <meta name="description" content="An easy-to-use online time zone converter. Instantly convert the time from one city or time zone to another. Perfect for scheduling meetings, calls, and travel.">
+    <meta name="keywords" content="time zone converter, time converter, world clock, meeting planner, time difference calculator, convert time zone">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/time-zone-converter.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online Time Zone Converter">
+    <meta property="og:description" content="Quickly convert time between different cities and time zones worldwide with our simple and accurate tool.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/time-zone-converter.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/time-zone-converter-og.png">
 
-    .container {
-      background: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        
+        .tool-container { text-align: left; }
+        .input-group { margin-bottom: 20px; }
+        label { font-weight: 600; display: block; margin-bottom: 5px; }
+        input[type="datetime-local"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white; /* Ensure select has a background */
+        }
+        
+        .result-card {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e9f7ff;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .result-card .time { font-size: 1.8em; font-weight: 600; }
+        .result-card .date { font-size: 1.1em; color: #555; }
+        .result-card .zone { font-size: 0.9em; color: #777; margin-top: 5px; }
+        
+        /* === NEW FOOTER STYLES === */
+        footer {
+            text-align: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        footer h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+        footer li {
+            display: inline-block;
+            margin: 0 12px;
+        }
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+        }
+        footer .footer-bottom p {
+            font-size: 0.9em;
+            color: #888;
+            margin: 0;
+        }
+        /* === END NEW FOOTER STYLES === */
+    </style>
 
-    h2 {
-      color: #007bff;
-      margin-bottom: 20px;
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free Time Zone Converter",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A web-based tool to convert date and time between different time zones worldwide."
     }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-    }
-  </style>
+    </script>
 </head>
 <body>
-  <div class="container">
-    <h2>Time Zone Converter</h2>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
 
-    <label>Select Date & Time</label>
-    <input type="datetime-local" id="dateInput" />
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Time Zone Converter</h1>
+        <p>Effortlessly convert time between different cities and time zones around the world. Whether you're scheduling an international meeting, a call with family overseas, or planning your travels, our accurate time converter helps you find the exact time anywhere. Simply select a date and time, and our tool will handle the rest, showing you the converted time instantly.</p>
+    </section>
 
-    <label>From Time Zone</label>
-    <select id="fromZone"></select>
+    <div class="tool-container">
+        <h2>Convert Time</h2>
+        <div class="input-group">
+            <label for="dateInput">Date and Time:</label>
+            <input type="datetime-local" id="dateInput" />
+        </div>
+        
+        <div class="input-group">
+            <label for="fromZoneSelect">From Time Zone:</label>
+            <select id="fromZoneSelect"></select>
+        </div>
+        
+        <div class="input-group">
+            <label for="toZoneSelect">To Time Zone:</label>
+            <select id="toZoneSelect"></select>
+        </div>
 
-    <label>To Time Zone</label>
-    <select id="toZone"></select>
+        <div class="result-card">
+            <div id="resultTime" class="time">--:--:--</div>
+            <div id="resultDate" class="date">Select a date to see the result</div>
+            <div id="resultZone" class="zone"></div>
+        </div>
+    </div>
+    
+    <section class="content-section">
+        <h2>Why Use a Time Zone Converter?</h2>
+        <ul>
+            <li><strong>Global Meeting Scheduling:</strong> Avoid confusion and missed appointments by finding a suitable time for all participants in different countries.</li>
+            <li><strong>Travel Planning:</strong> Keep track of local times when traveling to avoid jet lag-related mishaps.</li>
+            <li><strong>Event Coordination:</strong> Ensure everyone tunes in at the right moment for international webinars, live streams, or online events.</li>
+            <li><strong>Staying Connected:</strong> Call friends and family abroad at a convenient time without waking them up in the middle of the night.</li>
+        </ul>
+    </section>
 
-    <button onclick="convertTime()">Convert</button>
-
-    <div class="result" id="outputResult"></div>
-  </div>
-
-  <script>
-    const timeZones = Intl.supportedValuesOf("timeZone");
-
-    const fromZone = document.getElementById("fromZone");
-    const toZone = document.getElementById("toZone");
-
-    timeZones.forEach(zone => {
-      const opt1 = document.createElement("option");
-      const opt2 = document.createElement("option");
-      opt1.value = opt2.value = zone;
-      opt1.textContent = opt2.textContent = zone;
-      fromZone.appendChild(opt1);
-      toZone.appendChild(opt2);
-    });
-
-    // Set default to browser time zone
-    fromZone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    toZone.value = "UTC";
-
-    function convertTime() {
-      const dateInput = document.getElementById("dateInput").value;
-      const from = fromZone.value;
-      const to = toZone.value;
-      const resultBox = document.getElementById("outputResult");
-
-      if (!dateInput) {
-        resultBox.textContent = "Please select a date and time.";
-        return;
-      }
-
-      const date = new Date(dateInput);
-      const utcDate = new Date(date.toLocaleString("en-US", { timeZone: from }));
-      const targetTime = new Date(utcDate.toLocaleString("en-US", { timeZone: to }));
-
-      resultBox.textContent = `Converted Time: ${targetTime.toLocaleString()} (${to})`;
-    }
-  </script>
-  <!-- Footer -->
+    <!-- === NEW FOOTER HTML === -->
     <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
-            </div>
+        <h3>Quick Links</h3>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#tools">All Tools</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
+    <!-- === END NEW FOOTER HTML === -->
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dateInput = document.getElementById('dateInput');
+        const fromZoneSelect = document.getElementById('fromZoneSelect');
+        const toZoneSelect = document.getElementById('toZoneSelect');
+        
+        const resultTimeEl = document.getElementById('resultTime');
+        const resultDateEl = document.getElementById('resultDate');
+        const resultZoneEl = document.getElementById('resultZone');
+        
+        // Populate the dropdowns
+        const timeZones = Intl.supportedValuesOf('timeZone');
+        timeZones.forEach(zone => {
+            const optionText = zone.replace(/_/g, ' ');
+            
+            const fromOption = document.createElement('option');
+            fromOption.value = zone;
+            fromOption.textContent = optionText;
+            fromZoneSelect.appendChild(fromOption);
+            
+            const toOption = document.createElement('option');
+            toOption.value = zone;
+            toOption.textContent = optionText;
+            toZoneSelect.appendChild(toOption);
+        });
+
+        const convertTime = () => {
+            const dateValue = dateInput.value;
+            const fromZone = fromZoneSelect.value;
+            const toZone = toZoneSelect.value;
+            
+            if (!dateValue || !fromZone || !toZone) {
+                resultTimeEl.textContent = '--:--:--';
+                resultDateEl.textContent = 'Please provide valid inputs.';
+                resultZoneEl.textContent = '';
+                return;
+            }
+            
+            // Step 1: Create a date object from the input string.
+            // This string is "local" but we need to treat it as being in the "fromZone".
+            const [datePart, timePart] = dateValue.split('T');
+            const [year, month, day] = datePart.split('-');
+            const [hour, minute] = timePart.split(':');
+
+            // Step 2: Create a formatter for the source timezone to extract its parts.
+            // This helps us build a UTC date correctly.
+            const tempDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+            const formatter = new Intl.DateTimeFormat('en-US', { timeZone: fromZone, year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+            const parts = formatter.formatToParts(tempDate).reduce((acc, part) => { acc[part.type] = part.value; return acc; }, {});
+            
+            // Step 3: Create a real Date object in UTC based on the input time interpreted in the fromZone.
+            // We find the difference in milliseconds between UTC and the source timezone.
+            const utcDate = new Date(`${parts.month}/${parts.day}/${parts.year}, ${parts.hour}:${parts.minute}:${parts.second} UTC`);
+            const fromDate = new Date(`${parts.month}/${parts.day}/${parts.year}, ${parts.hour}:${parts.minute}:${parts.second}`);
+            const offset = fromDate.getTime() - utcDate.getTime();
+            const correctTimestamp = new Date(dateValue).getTime() - offset;
+            const correctDate = new Date(correctTimestamp);
+
+            // Step 4: Now we have the correct moment in time, format it in the target timezone.
+            const targetFormatter = new Intl.DateTimeFormat('en-US', {
+                timeZone: toZone,
+                year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+            });
+
+            const targetParts = targetFormatter.formatToParts(correctDate).reduce((acc, part) => {
+                acc[part.type] = part.value; return acc;
+            }, {});
+            
+            const timeString = `${targetParts.hour}:${targetParts.minute}:${targetParts.second} ${targetParts.dayPeriod}`;
+            const dateString = `${targetParts.month} ${targetParts.day}, ${targetParts.year}`;
+
+            resultTimeEl.textContent = timeString;
+            resultDateEl.textContent = dateString;
+            resultZoneEl.textContent = toZone.replace(/_/g, ' ');
+        };
+
+        const setInitialValues = () => {
+            const now = new Date();
+            const localISOString = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+            dateInput.value = localISOString;
+
+            const browserZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            fromZoneSelect.value = browserZone;
+            toZoneSelect.value = 'UTC';
+            
+            convertTime();
+        };
+
+        [dateInput, fromZoneSelect, toZoneSelect].forEach(el => {
+            el.addEventListener('input', convertTime);
+        });
+
+        setInitialValues();
+    });
+  </script>
 
 </body>
 </html>
-
-  
-  
