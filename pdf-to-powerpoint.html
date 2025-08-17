@@ -1,111 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF to PowerPoint Converter</title>
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free PDF to PowerPoint Converter | Convert PDF to PPTX Online</title>
+    <meta name="description" content="Convert any PDF file into a high-quality PowerPoint presentation (PPTX) online for free. Each PDF page becomes a separate slide. Fast, secure, and no uploads required.">
+    <meta name="keywords" content="pdf to powerpoint, pdf to pptx, convert pdf to ppt, free pdf converter, pdf to presentation, online pdf to pptx">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/pdf-to-powerpoint.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Online PDF to PowerPoint Converter">
+    <meta property="og:description" content="Easily convert your PDF documents into PowerPoint presentations. Each page is converted into a high-quality image slide. Works securely in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/pdf-to-powerpoint.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/pdf-to-ppt-og.png">
 
-  <!-- pdf.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <script>
-    // Explicit worker setup
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
-  </script>
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.11.0/pptxgen.bundle.js"></script>
 
-  <!-- pptxgenjs -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.11.0/pptxgen.bundle.js"></script>
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --background-color: #f4faff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.1);
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .back-button:hover { background-color: #dee2e6; }
+        
+        .main-container { width: 100%; max-width: 900px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      text-align: center;
-      padding: 30px;
+        .tool-container { text-align: center; }
+        .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .upload-area.dragover { background-color: #e6f2ff; border-color: var(--primary-color); }
+        input[type="file"] { display: none; }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .btn:disabled { background-color: #a0a0a0; cursor: not-allowed; }
+        .btn.secondary { background-color: #6c757d; }
+        
+        #status { font-weight: 600; margin-top: 15px; min-height: 24px; }
+        
+        footer { text-align: center; }
+        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
+        .footer-container li { display: inline; margin: 0 10px; }
+        .footer-container a { color: var(--primary-color); text-decoration: none; }
+        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+    </style>
+
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free PDF to PowerPoint Converter",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, web-based tool to convert PDF documents into PowerPoint (PPTX) presentations, with each page becoming an image on a slide."
     }
-    .box {
-      max-width: 500px;
-      margin: auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Is it safe to convert my PDF file here?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, this tool is completely safe. Your PDF file is processed directly in your web browser using JavaScript. It is never uploaded to a server, ensuring your data remains private."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Will the text in my PowerPoint be editable?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. This converter works by taking a high-quality screenshot of each PDF page and placing it as an image onto a PowerPoint slide. The content will look identical to the PDF, but it will not be editable text in PowerPoint."
+        }
+      }]
     }
-    button {
-      background: #007bff;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    #status {
-      margin-top: 12px;
-      color: #007bff;
-    }
-  </style>
+    </script>
 </head>
 <body>
-  <div class="box">
-    <h1>PDF to PowerPoint Converter</h1>
-    <input type="file" id="pdfUpload" accept="application/pdf" />
-    <br>
-    <button onclick="convertPDFtoPPT()">Convert to PPTX</button>
-    <p id="status"></p>
-  </div>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
+
+  <main class="main-container">
+    <section class="content-section">
+        <h1>PDF to PowerPoint Converter</h1>
+        <p>Transform your PDF documents into dynamic PowerPoint presentations effortlessly. Our free online converter takes each page of your PDF and turns it into a high-quality, full-page image on a separate slide in a PPTX file. It's the perfect way to present reports, lectures, or portfolios without needing to redesign them. The entire process is secure and private, happening right in your browser.</p>
+    </section>
+
+    <div class="tool-container">
+        <h2>Upload Your PDF</h2>
+        <div id="uploadArea" class="upload-area">
+            <p>Drag & drop your PDF here, or click to select a file.</p>
+            <p id="fileName" style="font-weight: bold;"></p>
+        </div>
+        <input type="file" id="pdfInput" accept="application/pdf">
+        
+        <button id="convertBtn" class="btn" disabled>Convert to PPTX</button>
+        <button id="startOverBtn" class="btn secondary" style="display: none;">Start Over</button>
+        
+        <div id="status"></div>
+    </div>
+    
+    <section class="content-section">
+        <h2>How It Works</h2>
+        <ol>
+            <li><strong>Select PDF:</strong> Drag and drop your file or click the upload area to choose a PDF.</li>
+            <li><strong>Convert:</strong> Click the "Convert to PPTX" button. If your PDF is password-protected, you will be prompted to enter the password.</li>
+            <li><strong>Download:</strong> Your PowerPoint presentation will be generated and the download will start automatically.</li>
+        </ol>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#tools">All Tools</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
+        </div>
+    </footer>
+  </main>
 
   <script>
-    async function convertPDFtoPPT() {
-      const fileInput = document.getElementById("pdfUpload");
-      const status = document.getElementById("status");
+    document.addEventListener('DOMContentLoaded', () => {
+        const pdfInput = document.getElementById('pdfInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileNameEl = document.getElementById('fileName');
+        const convertBtn = document.getElementById('convertBtn');
+        const startOverBtn = document.getElementById('startOverBtn');
+        const statusEl = document.getElementById('status');
 
-      if (!fileInput.files.length) {
-        status.textContent = "Please select a PDF file.";
-        return;
-      }
+        let pdfFile = null;
 
-      const file = fileInput.files[0];
-      status.textContent = "Processing...";
+        const resetUI = () => {
+            pdfFile = null;
+            pdfInput.value = '';
+            fileNameEl.textContent = '';
+            convertBtn.disabled = true;
+            startOverBtn.style.display = 'none';
+            setStatus('', 'info');
+        };
 
-      const reader = new FileReader();
-      reader.onload = async function (event) {
-        try {
-          const pdfData = new Uint8Array(event.target.result);
-          const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+        const setStatus = (message, type) => {
+            statusEl.textContent = message;
+            statusEl.style.color = type === 'success' ? 'var(--success-color)' : type === 'error' ? 'var(--error-color)' : 'var(--heading-color)';
+        };
 
-          let pptx = new PptxGenJS();
+        const handleFile = (file) => {
+            resetUI();
+            if (!file || file.type !== 'application/pdf') {
+                alert('Please select a valid PDF file.');
+                return;
+            }
+            pdfFile = file;
+            fileNameEl.textContent = `Selected: ${file.name}`;
+            convertBtn.disabled = false;
+        };
 
-          for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const viewport = page.getViewport({ scale: 2 });
+        uploadArea.addEventListener('click', () => pdfInput.click());
+        pdfInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        startOverBtn.addEventListener('click', resetUI);
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+        uploadArea.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
 
-            const canvas = document.createElement("canvas");
-            const context = canvas.getContext("2d");
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
+        const processPdf = async (pdfData, password = null) => {
+            const loadingTask = pdfjsLib.getDocument({ data: pdfData, password });
+            return loadingTask.promise;
+        };
 
-            await page.render({ canvasContext: context, viewport: viewport }).promise;
+        convertBtn.addEventListener('click', async () => {
+            if (!pdfFile) return;
 
-            const imgData = canvas.toDataURL("image/png");
+            convertBtn.disabled = true;
+            setStatus('Reading PDF file...', 'info');
 
-            let slide = pptx.addSlide();
-            slide.addImage({ data: imgData, x: 0, y: 0, w: 10, h: 7.5 });
-          }
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const pdfData = new Uint8Array(event.target.result);
+                let pdf;
 
-          await pptx.writeFile({ fileName: "converted-presentation.pptx" });
-          status.textContent = "Conversion successful! PPTX downloaded.";
-        } catch (err) {
-          console.error(err);
-          status.textContent = "Error converting file. Try running from a local server.";
-        }
-      };
+                try {
+                    pdf = await processPdf(pdfData);
+                } catch (error) {
+                    if (error.name === 'PasswordException') {
+                        let password = prompt('PDF is password-protected. Please enter the password:');
+                        while (password !== null) { // Loop until user cancels
+                            try {
+                                setStatus('Attempting to open with password...', 'info');
+                                pdf = await processPdf(pdfData, password);
+                                break; // Success
+                            } catch (e) {
+                                if (e.name === 'PasswordException') {
+                                    password = prompt('Incorrect password. Please try again:');
+                                } else {
+                                    throw e; // Another error occurred
+                                }
+                            }
+                        }
+                        if (!pdf) { // User cancelled the prompt
+                             setStatus('Conversion cancelled. Password not provided.', 'error');
+                             convertBtn.disabled = false;
+                             startOverBtn.style.display = 'inline-block';
+                             return;
+                        }
+                    } else {
+                        console.error(error);
+                        setStatus("Error: Could not read the PDF. It may be corrupted.", 'error');
+                        convertBtn.disabled = false;
+                        startOverBtn.style.display = 'inline-block';
+                        return;
+                    }
+                }
+                
+                try {
+                    const pptx = new PptxGenJS();
+                    pptx.layout = 'LAYOUT_16x9';
 
-      reader.readAsArrayBuffer(file);
-    }
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        setStatus(`Processing Page ${i} of ${pdf.numPages}...`, 'info');
+                        const page = await pdf.getPage(i);
+                        
+                        // === ERROR FIX: LIMIT CANVAS SIZE ===
+                        const MAX_DIMENSION = 1920; // Max width/height for the canvas
+                        const defaultViewport = page.getViewport({ scale: 1.0 });
+                        const scale = Math.min(MAX_DIMENSION / defaultViewport.width, MAX_DIMENSION / defaultViewport.height, 2.0);
+                        const viewport = page.getViewport({ scale });
+                        
+                        const canvas = document.createElement("canvas");
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+                        const context = canvas.getContext("2d");
+
+                        await page.render({ canvasContext: context, viewport: viewport }).promise;
+                        const imgData = canvas.toDataURL("image/png");
+
+                        let slide = pptx.addSlide();
+                        slide.addImage({ data: imgData, x: 0, y: 0, w: '100%', h: '100%' });
+                    }
+                    
+                    setStatus('Generating PowerPoint file...', 'info');
+                    const newFileName = pdfFile.name.replace(/\.pdf$/i, '.pptx');
+                    await pptx.writeFile({ fileName: newFileName });
+                    
+                    setStatus('Conversion successful! Your download has started.', 'success');
+                } catch (err) {
+                    console.error("Conversion Error:", err);
+                    setStatus("An unexpected error occurred during conversion.", 'error');
+                } finally {
+                    convertBtn.disabled = false;
+                    startOverBtn.style.display = 'inline-block';
+                }
+            };
+            reader.readAsArrayBuffer(pdfFile);
+        });
+        
+        // Initial state
+        resetUI();
+    });
   </script>
 </body>
 </html>
