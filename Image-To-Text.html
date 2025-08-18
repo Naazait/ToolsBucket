@@ -21,7 +21,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
 
     <!-- ============== STYLES & FONTS ============== -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #007BFF;
@@ -38,9 +38,36 @@
             background: var(--background-color);
             color: var(--text-color);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
             padding: 20px;
         }
+
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: #000000; }
+        .back-button {
+            text-decoration: none;
+            background-color: var(--card-background);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #f0f0f0;
+        }
+
         .main-container { width: 100%; max-width: 900px; }
         .content-section, .tool-container, footer {
             background-color: var(--card-background);
@@ -52,9 +79,9 @@
         h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
         h1 { font-size: 2em; }
         h2 { font-size: 1.6em; }
-        h3 { margin-top: 20px; margin-bottom: 10px; }
+        h3 { color: var(--heading-color); margin-top: 20px; margin-bottom: 10px; }
         p, li { line-height: 1.7; }
-        ol { margin-left: 20px; }
+        ol { margin-left: 20px; padding-left: 5px; }
 
         .tool-container {
             display: grid;
@@ -72,6 +99,11 @@
             text-align: center;
             cursor: pointer;
             transition: background-color 0.3s, border-color 0.3s;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         .upload-area.dragover {
             background-color: #e6f2ff;
@@ -94,7 +126,7 @@
             background-color: var(--primary-color);
             transition: width 0.3s;
         }
-        #status { font-size: 0.9em; margin-top: 5px; color: #555; }
+        #status { font-size: 0.9em; margin-top: 5px; color: #555; height: 1.2em; }
         
         .output-area textarea {
             width: 100%;
@@ -103,7 +135,8 @@
             padding: 10px;
             border-radius: 5px;
             border: 1px solid var(--border-color);
-            font-family: monospace;
+            font-size: 1em;
+            line-height: 1.5;
         }
         
         .btn {
@@ -123,10 +156,11 @@
         .btn.secondary { background-color: #6c757d; }
         
         footer { text-align: center; }
-        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
-        .footer-container li { display: inline; margin: 0 10px; }
-        .footer-container a { color: var(--primary-color); text-decoration: none; }
-        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+        footer h3 { font-size: 1.2em; font-weight: 600; margin-bottom: 15px; }
+        footer ul { list-style: none; padding: 0; margin: 0 0 20px 0; }
+        footer li { display: inline-block; margin: 0 12px; }
+        footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        footer .footer-bottom p { font-size: 0.9em; color: #888; margin: 0; }
     </style>
 
     <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
@@ -171,6 +205,13 @@
     </script>
 </head>
 <body>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
+
   <main class="main-container">
     <section class="content-section">
         <h1>Free Image to Text Converter (Online OCR)</h1>
@@ -209,7 +250,7 @@
             <div class="output-area">
                 <textarea id="outputText" placeholder="Extracted text will appear here..." readonly></textarea>
                 <button id="copyBtn" class="btn" style="display:none;">Copy Text</button>
-                <button id="resetBtn" class="btn secondary" style="display:none;">Start Over</button>
+                <button id="resetBtn" class="btn secondary">Start Over</button>
             </div>
         </div>
     </div>
@@ -224,21 +265,19 @@
         </ol>
     </section>
 
-    <footer id="contact">
-        <div class="footer-container">
-            <h3>Quick Links</h3>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="index.html#tools">All Tools</a></li>
-                <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                <li><a href="about.html">About</a></li>
-            </ul>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2025 Tools Bucket. All rights reserved.</p>
-        </div>
-    </footer>
+    <footer>
+      <h3>Quick Links</h3>
+      <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#tools">All Tools</a></li>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+          <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="footer-bottom">
+          <p>© 2025 Tools Bucket. All rights reserved.</p>
+      </div>
+  </footer>
   </main>
 
   <script>
@@ -254,7 +293,13 @@
         const copyBtn = document.getElementById('copyBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        const resetUI = () => {
+        let worker = null;
+
+        const resetUI = async () => {
+            if (worker) {
+                await worker.terminate();
+                worker = null;
+            }
             imageInput.value = '';
             preview.style.display = 'none';
             preview.src = '';
@@ -262,7 +307,6 @@
             outputText.value = '';
             outputText.placeholder = "Extracted text will appear here...";
             copyBtn.style.display = 'none';
-            resetBtn.style.display = 'none';
             uploadArea.querySelector('p').style.display = 'block';
         };
 
@@ -271,15 +315,12 @@
                 alert('Please select a valid image file.');
                 return;
             }
-
-            resetUI();
             
             const reader = new FileReader();
             reader.onload = (e) => {
                 preview.src = e.target.result;
                 preview.style.display = 'block';
                 uploadArea.querySelector('p').style.display = 'none';
-                resetBtn.style.display = 'inline-block';
                 performOCR(e.target.result);
             };
             reader.readAsDataURL(file);
@@ -290,11 +331,12 @@
             status.textContent = 'Initializing OCR engine...';
             progressBarFill.style.width = '0%';
             outputText.value = '';
+            copyBtn.style.display = 'none';
             
             const selectedLang = langSelect.value;
 
             try {
-                const worker = Tesseract.createWorker({
+                worker = Tesseract.createWorker({
                     logger: m => {
                         if (m.status === 'recognizing text') {
                             const progress = Math.min(100, m.progress * 100);
@@ -311,14 +353,15 @@
                 const { data: { text } } = await worker.recognize(imageSrc);
                 
                 outputText.value = text;
-                copyBtn.style.display = 'inline-block';
+                if (text) {
+                    copyBtn.style.display = 'inline-block';
+                }
+                status.textContent = "Completed!";
                 
-                await worker.terminate();
             } catch (err) {
                 console.error(err);
-                outputText.placeholder = 'Error processing image. Please try again or with a different image.';
-            } finally {
-                progressDiv.style.display = 'none';
+                status.textContent = "Error processing image.";
+                outputText.placeholder = 'Could not extract text. Please try again or use a clearer image.';
             }
         };
 
