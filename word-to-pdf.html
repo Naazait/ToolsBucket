@@ -1,73 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="Favicon.png" type="image/x-icon">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Word to PDF Converter</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
+    <!-- ============== BASIC META TAGS ============== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free Online Word to PDF Converter | ToolsBucket</title>
+    <meta name="description" content="Easily convert your Word (.docx) documents to high-quality PDF files for free with our online converter. Fast, secure, and no installation required.">
+    <meta name="keywords" content="word to pdf converter, convert docx to pdf, online word to pdf, free pdf converter, docx to pdf tool, toolsbucket">
+    
+    <!-- ============== SEO & SOCIAL META TAGS ============== -->
+    <link rel="canonical" href="https://yourwebsite.com/word-to-pdf-converter.html">
+    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <meta property="og:title" content="Free Word to PDF Converter by ToolsBucket">
+    <meta property="og:description" content="Instantly convert Microsoft Word files to PDF format online. Simple, fast, and completely free.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/word-to-pdf-converter.html">
+    <!-- <meta property="og:image" content="https://yourwebsite.com/images/og-image.png"> -->
 
-    .container {
-      max-width: 500px;
-      margin: 50px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 255, 0.1);
-      text-align: center;
-    }
+    <!-- ============== STYLES & FONTS ============== -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --background-color: #eef8ff;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 123, 255, 0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .page-header {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: #000000; }
+        .back-button {
+            text-decoration: none;
+            background-color: var(--card-background);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .main-container { width: 100%; max-width: 800px; }
+        .content-section, .tool-container, footer {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1, h2 { color: var(--heading-color); margin-bottom: 15px; }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { color: var(--heading-color); margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; text-align: left; }
+        ul { margin-left: 20px; margin-top: 10px; padding: 0; list-style-position: inside; }
 
-    h1 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
+        .tool-container p { text-align: center; }
+        
+        input[type="file"] {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        input[type="file"]:hover {
+            border-color: var(--primary-color);
+        }
 
-    input[type="file"] {
-      display: block;
-      margin: 20px auto;
-    }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: var(--heading-color);
+        }
+        
+        #status {
+            margin-top: 20px;
+            font-weight: 600;
+            color: var(--heading-color);
+        }
 
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        margin: 20px;
-        padding: 15px;
-      }
-      button {
-        width: 100%;
-      }
-    }
-  </style>
+        footer { text-align: center; }
+        footer h3 { font-size: 1.2em; font-weight: 600; margin-bottom: 15px; }
+        footer ul { list-style: none; padding: 0; margin: 0 0 20px 0; }
+        footer li { display: inline-block; margin: 0 12px; }
+        footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        footer .footer-bottom p { text-align: center; font-size: 0.9em; color: #888; margin: 0; }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Word to PDF Converter</h1>
-    <input type="file" id="wordUpload" accept=".docx" />
-    <button onclick="convertToPDF()">Convert to PDF</button>
-    <p id="status"></p>
-  </div>
+  <header class="page-header">
+      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <div class="brand-name">
+          <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+      </div>
+  </header>
+
+  <main class="main-container">
+    <section class="content-section">
+        <h1>Free Word to PDF Converter</h1>
+        <p style="text-align: center;">Quickly and securely convert your Microsoft Word (.docx) documents into professional-quality PDF files. Our online tool makes it easy to preserve your document's formatting, making it viewable on any device.</p>
+    </section>
+
+    <div class="tool-container">
+        <h2>Convert DOCX to PDF in Seconds</h2>
+        <input type="file" id="wordUpload" accept=".docx" />
+        <button onclick="convertToPDF()">Convert to PDF</button>
+        <p id="status"></p>
+    </div>
+    
+    <section class="content-section">
+        <h2>Why Use Our Word to PDF Converter?</h2>
+        <p>Converting your documents from Word to PDF is essential for sharing and archiving. Here's why our tool is the perfect choice:</p>
+        <ul>
+            <li><strong>Universal Compatibility:</strong> PDFs maintain their formatting across all devices and operating systems, ensuring your document looks the same everywhere.</li>
+            <li><strong>Enhanced Security:</strong> PDF files are more secure than Word documents. They can be password-protected and are less susceptible to viruses.</li>
+            <li><strong>Completely Free:</strong> Our online converter is 100% free to use with no hidden charges or sign-ups required.</li>
+            <li><strong>No Installation Needed:</strong> Convert your files directly in your browser. There's no need to download or install any software.</li>
+            <li><strong>Privacy Focused:</strong> We respect your privacy. Your uploaded files are processed securely and are not stored on our servers.</li>
+        </ul>
+    </section>
+
+    <section class="content-section">
+        <h2>How to Convert Word to PDF</h2>
+        <p>Our converter is designed to be incredibly simple. Just follow these three easy steps:</p>
+        <ol>
+            <li><strong>Upload Your File:</strong> Click the upload area to select a .docx file from your computer.</li>
+            <li><strong>Click Convert:</strong> Press the "Convert to PDF" button to start the process.</li>
+            <li><strong>Download Your PDF:</strong> Your file will be converted and automatically downloaded to your device in just a few moments.</li>
+        </ol>
+    </section>
+  </main>
+
+  <footer>
+      <h3>Quick Links</h3>
+      <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#tools">All Tools</a></li>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+          <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="footer-bottom">
+          <p>© 2025 Tools Bucket. All rights reserved.</p>
+      </div>
+  </footer>
 
   <script>
     async function convertToPDF() {
@@ -81,66 +199,47 @@
       }
 
       const file = fileInput.files[0];
-      status.textContent = "Reading Word file...";
+      status.textContent = "Reading your Word file...";
 
       const reader = new FileReader();
       reader.onload = async function(event) {
         try {
+          status.textContent = "Extracting text...";
           // Extract text from Word (.docx)
           const arrayBuffer = event.target.result;
           const result = await mammoth.extractRawText({ arrayBuffer });
-          const text = result.value.trim() || "No readable text found.";
+          const text = result.value.trim() || "No readable text was found in the document.";
 
-          status.textContent = "Converting to PDF...";
+          status.textContent = "Creating your PDF...";
 
           // Create PDF with extracted text
           const doc = new jsPDF();
           const margin = 20;
+          const pageWidth = doc.internal.pageSize.width;
           const pageHeight = doc.internal.pageSize.height;
           let y = margin;
 
-          const lines = doc.splitTextToSize(text, 170);
+          const lines = doc.splitTextToSize(text, pageWidth - margin * 2);
 
           lines.forEach(line => {
             if (y > pageHeight - margin) {
               doc.addPage();
-              y = margin;
+              y = margin; // Reset y for the new page
             }
             doc.text(line, margin, y);
-            y += 10;
+            y += 7; // Line height
           });
 
-          doc.save("converted.pdf");
-          status.textContent = "Conversion successful! PDF downloaded.";
+          doc.save("converted-from-toolsbucket.pdf");
+          status.textContent = "Success! Your PDF has been downloaded.";
         } catch (err) {
           console.error(err);
-          status.textContent = "Error converting file. Make sure it's a valid .docx.";
+          status.textContent = "Error: Could not convert file. Please ensure it's a valid .docx file.";
         }
       };
 
       reader.readAsArrayBuffer(file);
     }
   </script>
-  <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>© 2025 Tools Bucket. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 </body>
 </html>
