@@ -9,24 +9,20 @@
     <meta name="keywords" content="gst calculator, online gst calculator, gst calculation, india gst, cgst sgst calculator, reverse gst calculator, add gst, remove gst">
     
     <!-- ============== SEO & SOCIAL META TAGS ============== -->
-    <!-- Replace with your website's full URL -->
     <link rel="canonical" href="https://yourwebsite.com/gst-calculator.html">
     <meta property="og:title" content="Online GST Calculator India | Add & Remove GST | Free Tool">
     <meta property="og:description" content="The easiest and free online GST Calculator for India. Instantly calculate GST for any amount with all official GST rates (5%, 12%, 18%, 28%).">
     <meta property="og:type" content="website">
-    <!-- Replace with your website's URL again -->
     <meta property="og:url" content="https://yourwebsite.com/gst-calculator.html">
-    <!-- Add a URL to an attractive image for social media sharing -->
     <meta property="og:image" content="https://yourwebsite.com/images/gst-calculator-og-image.png">
     
     <!-- ============== STYLES & FONTS ============== -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f4f7f9;
             --card-bg: #ffffff;
             --text-color: #333;
-            /* === COLOR CHANGE HERE === */
             --primary-color: #007BFF; /* Light Blue */
             --secondary-color: #e0e0e0;
             --shadow-color: rgba(0, 0, 0, 0.08);
@@ -39,7 +35,6 @@
             --bg-color: #1a1a2e;
             --card-bg: #2d2d44;
             --text-color: #e0e0e0;
-            /* === DARK MODE COLOR CHANGE HERE === */
             --primary-color: #33aaff; /* Vibrant Light Blue for Dark Mode */
             --secondary-color: #444;
             --shadow-color: rgba(0, 0, 0, 0.4);
@@ -60,6 +55,33 @@
             align-items: center;
             padding: 20px;
             min-height: 100vh;
+        }
+
+        .page-header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .brand-name { font-size: 1.8em; font-weight: 700; }
+        .brand-part-1 { color: var(--primary-color); }
+        .brand-part-2 { color: #000000; }
+        body.dark-mode .brand-part-2 { color: var(--text-color); }
+        .back-button {
+            text-decoration: none;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+        .back-button:hover {
+            background-color: var(--border-color);
         }
 
         .main-container {
@@ -89,7 +111,7 @@
             transition: background-color 0.3s;
         }
 
-        header {
+        .calculator-container header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -97,7 +119,7 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 20px;
         }
-        header h2 { font-size: 24px; margin: 0; }
+        .calculator-container header h2 { font-size: 24px; margin: 0; }
 
         .theme-switch .toggle-btn {
             background: var(--input-bg);
@@ -146,11 +168,15 @@
             width: 100%;
             max-width: 900px;
             text-align: center;
-            margin-top: 40px;
+            margin-top: 10px;
             padding-top: 20px;
             border-top: 1px solid var(--border-color);
-            color: var(--placeholder-color);
         }
+        footer h3 { font-size: 1.2em; font-weight: 600; margin-bottom: 15px; }
+        footer ul { list-style: none; padding: 0; margin: 0 0 20px 0; }
+        footer li { display: inline-block; margin: 0 12px; }
+        footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        footer .footer-bottom p { font-size: 0.9em; color: var(--placeholder-color); margin: 5px 0 0; }
 
         @media (max-width: 480px) {
             body { padding: 10px; }
@@ -162,7 +188,6 @@
     </style>
 
     <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
-    <!-- Schema for Software Application (Tool) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -178,8 +203,6 @@
       "description": "A free, responsive web-based tool to calculate Goods and Services Tax (GST) for India. It supports all official GST slabs and can perform both forward (add GST) and reverse (remove GST) calculations."
     }
     </script>
-    
-    <!-- Schema for FAQs -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -222,6 +245,13 @@
     </script>
 </head>
 <body>
+    <header class="page-header">
+        <a href="index.html#tools" class="back-button">← Back to Tools</a>
+        <div class="brand-name">
+            <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
+        </div>
+    </header>
+
     <main class="main-container">
         <!-- ============== ON-PAGE SEO CONTENT SECTION ============== -->
         <section class="content-section">
@@ -347,20 +377,19 @@
             <p>A reverse GST calculation is used when you have a GST-inclusive price (like a Maximum Retail Price or MRP) and you want to find out the original base price and the GST amount included in it. This is extremely useful for both buyers and sellers to understand the tax component. Our calculator can do this easily using the 'Remove GST' option.</p>
         </section>
     </main>
-    <p> This is an informational tool; please consult a tax professional for financial advice.</p>
-    
-    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#tools">All Tools</a></li>
-                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-            </div>
+    <p>This is an informational tool; please consult a tax professional for financial advice.</p>
     <footer>
-        <p>&copy; 2025 Tools Bucket. All rights reserved.</p>
+        <h3>Quick Links</h3>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#tools">All Tools</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tools Bucket. All rights reserved.</p>
+        </div>
     </footer>
     
     <script>
