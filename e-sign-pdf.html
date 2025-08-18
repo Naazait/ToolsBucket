@@ -10,7 +10,7 @@
     
     <!-- ============== SEO & SOCIAL META TAGS ============== -->
     <link rel="canonical" href="https://yourwebsite.com/esign-pdf.html">
-    <link rel="icon" href="Favicon.png" type="image/x-icon">
+    <!-- <link rel="icon" href="Favicon.png" type="image/x-icon"> -->
     <meta property="og:title" content="Free Online PDF eSigning Tool">
     <meta property="og:description" content="Easily add your signature to any PDF document. Our tool works in your browser, keeping your files secure and private.">
     <meta property="og:type" content="website">
@@ -57,10 +57,10 @@
         }
         .brand-name { font-size: 1.8em; font-weight: 700; }
         .brand-part-1 { color: var(--primary-color); }
-        .brand-part-2 { color: var(--text-color); }
+        .brand-part-2 { color: #000000; }
         .back-button {
             text-decoration: none;
-            background-color: #e9ecef;
+            background-color: var(--card-background);
             color: var(--text-color);
             padding: 8px 16px;
             border-radius: 8px;
@@ -68,7 +68,7 @@
             transition: background-color 0.3s;
             border: 1px solid var(--border-color);
         }
-        .back-button:hover { background-color: #dee2e6; }
+        .back-button:hover { background-color: #e9ecef; }
         
         .main-container { width: 100%; max-width: 1200px; }
         .content-section, .tool-container, footer {
@@ -92,7 +92,7 @@
         }
 
         .controls-side .step { margin-bottom: 20px; }
-        .controls-side h3 { border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; }
+        .controls-side h3 { border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; margin-bottom: 15px;}
         
         #signaturePad { border: 2px dashed var(--border-color); border-radius: 8px; cursor: crosshair; width: 100%; height: 150px; }
         
@@ -103,8 +103,13 @@
             overflow: auto;
             max-height: 80vh;
         }
-        #pdf-viewer { position: relative; text-align: center; }
-        #pdf-viewer canvas { margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        #pdf-viewer { position: relative; }
+        #pdf-viewer canvas { 
+            display: block;
+            margin: 0 auto 10px auto; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+            cursor: pointer;
+        }
         #signature-image {
             position: absolute;
             cursor: move;
@@ -130,7 +135,11 @@
         .btn.secondary { background-color: #6c757d; }
         
         footer { text-align: center; }
-        /* Footer styles omitted for brevity, but they are correct in previous answers */
+        footer h3 { font-size: 1.2em; font-weight: 600; margin-bottom: 15px; }
+        footer ul { list-style: none; padding: 0; margin: 0 0 20px 0; }
+        footer li { display: inline-block; margin: 0 12px; }
+        footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        footer .footer-bottom p { font-size: 0.9em; color: #888; margin: 0; }
     </style>
 </head>
 <body>
@@ -184,7 +193,17 @@
     </section>
 
     <footer id="contact">
-        <!-- Footer HTML omitted for brevity, but it is correct in previous answers -->
+        <h3>Quick Links</h3>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#tools">All Tools</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="footer-bottom">
+            <p>© 2025 ToolsBucket. All rights reserved.</p>
+        </div>
     </footer>
   </main>
 
@@ -202,8 +221,7 @@
         const signatureImage = document.getElementById('signature-image');
         
         const signaturePad = new SignaturePad(signaturePadCanvas);
-        let pdfBytes = null;
-        let pdfDoc = null; // pdf-lib document instance
+        let pdfFile = null;
 
         function resizeCanvas() {
             const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -219,11 +237,10 @@
             pdfViewer.innerHTML = '<p>Loading PDF...</p>';
             try {
                 const data = await file.arrayBuffer();
-                pdfBytes = data;
-                pdfDoc = await PDFDocument.load(pdfBytes);
+                pdfFile = data; // Store the raw buffer for pdf-lib
                 
                 const pdfjsDoc = await pdfjsLib.getDocument({ data }).promise;
-                pdfViewer.innerHTML = ''; // Clear loading message
+                pdfViewer.innerHTML = ''; 
 
                 for (let i = 1; i <= pdfjsDoc.numPages; i++) {
                     const page = await pdfjsDoc.getPage(i);
@@ -233,8 +250,7 @@
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
                     canvas.dataset.pageNumber = i;
-                    canvas.style.cursor = 'pointer';
-
+                    
                     await page.render({ canvasContext: context, viewport: viewport }).promise;
                     pdfViewer.appendChild(canvas);
 
@@ -244,22 +260,26 @@
                             return;
                         }
                         
-                        const rect = pdfViewer.getBoundingClientRect();
-                        const x = e.clientX - rect.left - 75; // 75 is half of initial width
-                        const y = e.clientY - rect.top + pdfViewer.scrollTop - 37.5; // 37.5 is half of initial height
+                        const rect = canvas.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+
+                        const sigInitialWidth = 150;
+                        const sigInitialHeight = 75;
 
                         signatureImage.style.display = 'block';
                         signatureImage.src = signaturePad.toDataURL();
-                        signatureImage.style.left = `${x}px`;
-                        signatureImage.style.top = `${y}px`;
-                        signatureImage.style.width = `150px`;
-                        signatureImage.style.height = `75px`;
-                        
-                        // Reset transform data
-                        signatureImage.dataset.x = x;
-                        signatureImage.dataset.y = y;
-                        signatureImage.style.transform = `translate(${x}px, ${y}px)`;
+                        signatureImage.style.width = `${sigInitialWidth}px`;
+                        signatureImage.style.height = `${sigInitialHeight}px`;
 
+                        const absoluteX = canvas.offsetLeft + x - (sigInitialWidth / 2);
+                        const absoluteY = canvas.offsetTop + y - (sigInitialHeight / 2);
+                        
+                        signatureImage.style.transform = `translate(${absoluteX}px, ${absoluteY}px)`;
+                        signatureImage.dataset.x = absoluteX;
+                        signatureImage.dataset.y = absoluteY;
+                        
+                        pdfViewer.appendChild(signatureImage);
                         downloadBtn.disabled = false;
                     });
                 }
@@ -281,8 +301,8 @@
         clearBtn.addEventListener("click", () => signaturePad.clear());
 
         downloadBtn.addEventListener("click", async () => {
-            if (!pdfDoc || signatureImage.style.display === 'none') {
-                alert("Please place your signature on the PDF first.");
+            if (!pdfFile || signatureImage.style.display === 'none') {
+                alert("Please upload a PDF and place your signature first.");
                 return;
             }
 
@@ -290,50 +310,44 @@
                 downloadBtn.disabled = true;
                 downloadBtn.textContent = 'Applying...';
                 
+                const pdfDoc = await PDFDocument.load(pdfFile);
                 const signatureImgPng = await pdfDoc.embedPng(signatureImage.src);
                 
-                let targetPage = -1;
+                // Find the target page
+                let targetPageNum = -1;
                 let accumulatedHeight = 0;
-                
+                const signatureTop = signatureImage.offsetTop;
                 const canvases = pdfViewer.querySelectorAll('canvas');
-                for(let i = 0; i < canvases.length; i++) {
+
+                for (let i = 0; i < canvases.length; i++) {
                     const canvas = canvases[i];
-                    if (signatureImage.offsetTop < accumulatedHeight + canvas.offsetHeight) {
-                        targetPage = i;
+                    if (signatureTop < accumulatedHeight + canvas.offsetHeight) {
+                        targetPageNum = i;
                         break;
                     }
-                    accumulatedHeight += canvas.offsetHeight + 10;
+                    accumulatedHeight += canvas.offsetHeight + 10; // 10px margin
                 }
 
-                if (targetPage === -1) throw new Error("Could not determine signature page.");
+                if (targetPageNum === -1) throw new Error("Could not determine signature page.");
+                
+                const page = pdfDoc.getPages()[targetPageNum];
+                const pageCanvas = canvases[targetPageNum];
 
-                const page = pdfDoc.getPages()[targetPage];
-                const pageCanvas = canvases[targetPage];
-                
-                const transform = new WebKitCSSMatrix(signatureImage.style.transform);
-                const sigX = transform.m41;
-                const sigY = transform.m42;
-                
+                // Calculate signature position and size relative to the PDF page
                 const scale = page.getWidth() / pageCanvas.offsetWidth;
-                const x = sigX * scale;
-                const yInViewer = sigY;
                 
-                let yOnCanvas = yInViewer;
-                if(targetPage > 0) {
-                    let prevCanvasesHeight = 0;
-                    for(let i = 0; i < targetPage; i++) {
-                         prevCanvasesHeight += canvases[i].offsetHeight + 10;
-                    }
-                    yOnCanvas -= prevCanvasesHeight;
-                }
+                const sigX = (signatureImage.offsetLeft - pageCanvas.offsetLeft) * scale;
+                const sigYOnCanvas = (signatureImage.offsetTop - pageCanvas.offsetTop) * scale;
+                const sigHeight = signatureImage.offsetHeight * scale;
                 
-                const y = page.getHeight() - (yOnCanvas * scale) - (signatureImage.offsetHeight * scale);
+                // pdf-lib's origin is bottom-left, so we need to invert the Y coordinate
+                const sigY = page.getHeight() - sigYOnCanvas - sigHeight;
 
                 page.drawImage(signatureImgPng, {
-                    x: x,
-                    y: y,
+                    x: sigX,
+                    y: sigY,
                     width: signatureImage.offsetWidth * scale,
-                    height: signatureImage.offsetHeight * scale,
+                    height: sigHeight,
                 });
 
                 const signedPdfBytes = await pdfDoc.save();
@@ -342,49 +356,59 @@
 
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = "signed_document.pdf";
+                a.download = "signed-document.pdf";
+                document.body.appendChild(a);
                 a.click();
-                
+                document.body.removeChild(a);
                 URL.revokeObjectURL(url);
 
             } catch (err) {
                 console.error("Error signing PDF: ", err);
-                alert("An error occurred. Please try placing the signature again.");
+                alert("An error occurred while applying the signature. Please try again.");
             } finally {
                 downloadBtn.disabled = false;
                 downloadBtn.textContent = 'Apply Signature & Download';
             }
         });
 
+        // Make the signature resizable and draggable
         interact('#signature-image')
             .resizable({
                 edges: { left: true, right: true, bottom: true, top: true },
                 listeners: {
                     move(event) {
-                        let { x, y } = event.target.dataset;
-                        x = parseFloat(x) || 0;
-                        y = parseFloat(y) || 0;
-                        
-                        Object.assign(event.target.style, {
-                            width: `${event.rect.width}px`,
-                            height: `${event.rect.height}px`,
-                        });
+                        const target = event.target;
+                        let x = (parseFloat(target.getAttribute('data-x')) || 0);
+                        let y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+                        target.style.width = `${event.rect.width}px`;
+                        target.style.height = `${event.rect.height}px`;
+
+                        // Update the position based on the resize
+                        x += event.deltaRect.left;
+                        y += event.deltaRect.top;
+
+                        target.style.transform = `translate(${x}px, ${y}px)`;
+                        target.setAttribute('data-x', x);
+                        target.setAttribute('data-y', y);
                     }
-                }
+                },
+                modifiers: [
+                    interact.modifiers.aspectRatio({
+                        ratio: 'preserve'
+                    })
+                ]
             })
             .draggable({
                 listeners: {
                     move(event) {
-                        let x = parseFloat(event.target.dataset.x) || 0;
-                        let y = parseFloat(event.target.dataset.y) || 0;
-
-                        x += event.dx;
-                        y += event.dy;
+                        const target = event.target;
+                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
                         
-                        event.target.style.transform = `translate(${x}px, ${y}px)`;
-                        
-                        event.target.dataset.x = x;
-                        event.target.dataset.y = y;
+                        target.style.transform = `translate(${x}px, ${y}px)`;
+                        target.setAttribute('data-x', x);
+                        target.setAttribute('data-y', y);
                     }
                 }
             });
