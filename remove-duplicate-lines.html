@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MJYDCHGD51"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-MJYDCHGD51');
-</script>
     <!-- ============== BASIC META TAGS ============== -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -18,13 +9,13 @@
     <meta name="keywords" content="remove duplicate lines, unique lines, text cleaner, list cleaner, remove duplicates online, line deduplication tool">
     
     <!-- ============== SEO & SOCIAL META TAGS ============== -->
-    <link rel="canonical" href="https://toolsbucket.online/remove-duplicate-lines.html">
+    <link rel="canonical" href="https://yourwebsite.com/remove-duplicate-lines.html">
     <link rel="icon" href="Favicon.png" type="image/x-icon">
     <meta property="og:title" content="Free Online Remove Duplicate Lines Tool">
     <meta property="og:description" content="Instantly clean up your text by removing all duplicate lines. A simple, fast, and secure tool that works in your browser.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://toolsbucket.online/remove-duplicate-lines.html">
-    <meta property="og:image" content="https://toolsbucket.online/images/remove-duplicates-og.png">
+    <meta property="og:url" content="https://yourwebsite.com/remove-duplicate-lines.html">
+    <meta property="og:image" content="https://yourwebsite.com/images/remove-duplicates-og.png">
 
     <!-- ============== STYLES & FONTS ============== -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inconsolata:wght@400&display=swap" rel="stylesheet">
@@ -81,7 +72,10 @@
         h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
         h1 { font-size: 2em; }
         h2 { font-size: 1.6em; }
-        
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p, li { line-height: 1.7; }
+        ul { margin-left: 20px; }
+
         .tool-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -149,31 +143,10 @@
       "description": "A free, web-based tool to automatically remove duplicate lines from text and lists, with options for case-sensitivity."
     }
     </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [{
-        "@type": "Question",
-        "name": "How does this tool remove duplicate lines?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The tool works by splitting your input text into individual lines. It then creates a unique set of these lines, effectively discarding any duplicates. The resulting unique lines are then joined back together and displayed in the output box."
-        }
-      }, {
-        "@type": "Question",
-        "name": "What does 'Case-sensitive' mean?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If 'Case-sensitive' is checked, the tool will treat lines with different capitalization as unique (e.g., 'Apple' and 'apple' are kept). If it's unchecked, lines will be treated as the same regardless of case (e.g., 'apple' would be removed if 'Apple' already exists)."
-        }
-      }]
-    }
-    </script>
 </head>
 <body>
   <header class="page-header">
-      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <a href="index.html" class="back-button">← Back to Tools</a>
       <div class="brand-name">
           <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
       </div>
@@ -216,6 +189,17 @@
         </div>
     </div>
     
+    <!-- === NEW "WHY USE" SECTION === -->
+    <section class="content-section">
+        <h2>Why Use a Duplicate Line Remover?</h2>
+        <ul>
+            <li><strong>Data Cleaning:</strong> Quickly clean up datasets, log files, or user inputs by removing redundant entries.</li>
+            <li><strong>List Management:</strong> Easily deduplicate email lists, keyword lists for SEO, or any other list to ensure you only have unique items.</li>
+            <li><strong>Programming & Development:</strong> Sanitize code snippets or configuration files by removing repeated lines.</li>
+            <li><strong>Accuracy:</strong> Ensures that counts and analyses based on your data are accurate and not skewed by duplicate entries.</li>
+        </ul>
+    </section>
+
     <footer id="contact">
         <h3>Quick Links</h3>
         <ul>
@@ -226,7 +210,7 @@
             <li><a href="about.html">About</a></li>
         </ul>
         <div class="footer-bottom">
-            <p>© 2025 ToolsBucket. All rights reserved.</p>
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
   </main>
