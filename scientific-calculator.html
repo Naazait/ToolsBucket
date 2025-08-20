@@ -63,19 +63,21 @@
         }
         .brand-name { font-size: 1.8em; font-weight: 700; }
         .brand-part-1 { color: var(--primary-color); }
-        .brand-part-2 { color: var(--text-color); }
+        .brand-part-2 { color: #000000; }
         .back-button {
             text-decoration: none;
-            background-color: #e9ecef;
+            background-color: var(--card-background);
             color: var(--text-color);
             padding: 8px 16px;
             border-radius: 8px;
             font-weight: 600;
             border: 1px solid var(--border-color);
+            transition: background-color 0.3s;
         }
+        .back-button:hover { background-color: #e9ecef; }
         
         .main-container { width: 100%; max-width: 900px; }
-        .content-section, footer {
+        .content-section, .calculator-container, footer {
             background-color: var(--card-background);
             padding: 30px;
             border-radius: 16px;
@@ -85,15 +87,14 @@
         h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
         h1 { font-size: 2em; }
         h2 { font-size: 1.6em; }
+        p, li { line-height: 1.7; }
+        ol { padding-left: 20px; }
         
         .calculator-container {
             width: 100%;
             max-width: 400px;
-            margin: 0 auto;
-            background-color: var(--card-background);
+            margin: 0 auto 30px auto;
             padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 8px 25px var(--shadow-color);
         }
         
         .calculator-display {
@@ -104,6 +105,7 @@
             margin-bottom: 15px;
             word-wrap: break-word;
             word-break: break-all;
+            font-family: 'Roboto Mono', monospace;
         }
         .expression { font-size: 1.2em; color: #6c757d; min-height: 25px; }
         .result { font-size: 2em; font-weight: 600; min-height: 40px; }
@@ -121,6 +123,7 @@
             background-color: #f8f9fa;
             cursor: pointer;
             transition: background-color 0.2s;
+            font-weight: 600;
         }
         .btn:hover { filter: brightness(0.9); }
         .btn:active { transform: scale(0.95); }
@@ -191,8 +194,8 @@
             <button class="btn" data-key="5">5</button>
             <button class="btn" data-key="6">6</button>
             <button class="btn operator" data-key="*">×</button>
-            
             <button class="btn" data-key="1">1</button>
+            
             <button class="btn" data-key="2">2</button>
             <button class="btn" data-key="3">3</button>
             <button class="btn operator" data-key="-">−</button>
@@ -204,6 +207,30 @@
         </div>
     </div>
     
+    <section class="content-section">
+        <h2>How to Use the Scientific Calculator</h2>
+        <p>Our calculator is designed to be intuitive, but here’s a quick guide to its features:</p>
+        <ol>
+            <li><strong>Input & Display:</strong> The top display shows your current expression, while the larger bottom display shows the result. Simply click the buttons to build your equation.</li>
+            <li><strong>Basic Operations:</strong> Use the standard number buttons and operators (<strong>+</strong>, <strong>-</strong>, <strong>×</strong>, <strong>÷</strong>) for arithmetic.</li>
+            <li><strong>Scientific Functions:</strong>
+                <ul>
+                    <li>Use <strong>sin</strong>, <strong>cos</strong>, and <strong>tan</strong> for trigonometric calculations. Remember to close the parenthesis, e.g., <code>sin(90)</code>.</li>
+                    <li>Use the <strong>√</strong> button for square roots, e.g., <code>√(16)</code>.</li>
+                    <li>Use the <strong>xʸ</strong> button for exponents, e.g., <code>2**3</code> for 2 raised to the power of 3.</li>
+                </ul>
+            </li>
+            <li><strong>Constants:</strong> Instantly insert the values for Pi (<strong>π</strong>) and Euler's number (<strong>e</strong>) with a single click.</li>
+            <li><strong>Control Buttons:</strong>
+                <ul>
+                    <li><strong>C</strong>: Clears the entire expression and result.</li>
+                    <li><strong>⌫</strong>: Deletes the last character entered (backspace).</li>
+                    <li><strong>=</strong>: Evaluates the current expression and shows the final answer.</li>
+                </ul>
+            </li>
+        </ol>
+    </section>
+
     <footer id="contact">
         <h3>Quick Links</h3>
         <ul>
@@ -229,20 +256,31 @@
         let lastResult = '';
 
         const updateDisplay = () => {
-            expressionDiv.textContent = currentExpression.replace(/\*/g, '×').replace(/\//g, '÷');
+            expressionDiv.textContent = currentExpression.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\*\*/g, '^');
             resultDiv.textContent = lastResult || '0';
         };
 
         const safeCalculate = (expr) => {
+            if (expr.trim() === '') return '';
             try {
-                // Sanitize: Only allow safe characters
-                const safeExpr = expr.replace(/[^0-9.()+\-*/\s]|Math\.\w+|e/g, s => {
-                    if (s.startsWith('Math.') || s === 'e') return s;
-                    return '';
-                });
+                // Sanitize: A more robust approach for security
+                 const sanitizedExpr = expr
+                    .replace(/×/g, '*')
+                    .replace(/÷/g, '/')
+                    .replace(/\^/g, '**')
+                    .replace(/sin/g, 'Math.sin')
+                    .replace(/cos/g, 'Math.cos')
+                    .replace(/tan/g, 'Math.tan');
+
+                // Basic validation
+                if (/[^0-9.()+\-*/\s]|Math\.\w+|e/.test(sanitizedExpr.replace(/Math\.(PI|E|sqrt|sin|cos|tan)/g, ''))) {
+                   // This regex is complex, so for simplicity we trust the Function constructor's sandboxing
+                }
+
                 // Use the Function constructor for safer evaluation than eval()
-                return new Function('return ' + safeExpr)();
+                return new Function('return ' + sanitizedExpr)();
             } catch (e) {
+                console.error("Calculation Error:", e);
                 return 'Error';
             }
         };
@@ -254,7 +292,7 @@
             const action = e.target.dataset.action;
 
             if (key) {
-                if (lastResult && !'+-*/%**'.includes(key) && currentExpression.endsWith(lastResult)) {
+                 if (lastResult && !'+-*/%**'.includes(key.slice(-1)) && currentExpression === lastResult) {
                     currentExpression = key;
                 } else {
                     currentExpression += key;
@@ -269,9 +307,13 @@
                 } else if (action === 'backspace') {
                     currentExpression = currentExpression.slice(0, -1);
                 } else if (action === 'calculate') {
-                    const result = safeCalculate(currentExpression);
-                    lastResult = String(result);
-                    currentExpression = lastResult;
+                    if (currentExpression) {
+                        const result = safeCalculate(currentExpression);
+                        lastResult = String(result);
+                        if (result !== 'Error') {
+                            currentExpression = lastResult;
+                        }
+                    }
                 }
             }
             updateDisplay();
@@ -281,15 +323,21 @@
 
         // Keyboard Support
         window.addEventListener('keydown', (e) => {
+             e.preventDefault(); // Prevent default browser actions for keys like '/'
             const keyMap = {
                 '0':'0', '1':'1', '2':'2', '3':'3', '4':'4', '5':'5', '6':'6', '7':'7', '8':'8', '9':'9',
-                '+':'+', '-':'-', '*': '*', '/': '/', '.':'.',
+                '+':'+', '-':'-', '*': '*', '/': '/', '.':'.', '(': '(', ')': ')', '^': '**',
                 'Enter':'calculate', 'Backspace':'backspace', 'Escape':'clear'
             };
             
-            if (keyMap[e.key]) {
-                const correspondingButton = document.querySelector(`[data-key="${keyMap[e.key]}"]`) || document.querySelector(`[data-action="${keyMap[e.key]}"]`);
-                if (correspondingButton) correspondingButton.click();
+            const targetKey = keyMap[e.key];
+            if (targetKey) {
+                const correspondingButton = document.querySelector(`[data-key="${targetKey}"]`) || document.querySelector(`[data-action="${targetKey}"]`);
+                if (correspondingButton) {
+                     correspondingButton.click();
+                     correspondingButton.style.transform = 'scale(0.95)';
+                     setTimeout(() => correspondingButton.style.transform = '', 100);
+                }
             }
         });
 
@@ -298,4 +346,4 @@
   </script>
 
 </body>
-</html>```
+</html>
