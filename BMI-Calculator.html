@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MJYDCHGD51"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MJYDCHGD51"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'G-MJYDCHGD51');
-</script>
+      gtag('config', 'G-MJYDCHGD51');
+    </script>
     <!-- ============== BASIC META TAGS ============== -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -20,13 +20,7 @@
     <!-- ============== SEO & SOCIAL META TAGS ============== -->
     <link rel="canonical" href="https://toolsbucket.online/bmi-calculator.html">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
-	<link rel="icon" type="image/png" sizes="64x64" href="/favicon-64x64.png">
-	<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
-	<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
-	<link rel="apple-touch-icon" sizes="180x180" href="/favicon-192x192.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 	<meta name="theme-color" content="#ffffff">
     <meta property="og:title" content="Online BMI Calculator | Check Your Body Mass Index">
     <meta property="og:description" content="Quickly calculate your BMI with our free online tool. Understand your weight category and get insights into your health.">
@@ -104,16 +98,12 @@
             margin-bottom: 30px;
         }
 
-        h1, h2 {
-            color: var(--heading-color);
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        h1 { font-size: 2.2em; }
-        h2 { font-size: 1.8em; }
-        h3 { margin-top: 20px; margin-bottom: 10px; }
+        h1, h2, h3 { color: var(--heading-color); }
+        h1 { font-size: 2.2em; margin-bottom: 15px; text-align: center; }
+        h2 { font-size: 1.8em; margin-top: 25px; margin-bottom: 15px; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; text-align: center; }
+        h3 { font-size: 1.4em; margin-top: 20px; margin-bottom: 10px; }
         p, li { line-height: 1.7; }
-        ol { margin-left: 20px; }
+        ol, ul { padding-left: 20px; }
 
         .input-group {
             margin-bottom: 15px;
@@ -180,8 +170,8 @@
 
         .result-card.visible { display: block; }
         .result-card h3 { margin-top: 0; font-size: 1.5em; }
-        .result-card p { font-size: 1.2em; }
-        .result-card .bmi-value { font-size: 2em; font-weight: 700; }
+        .result-card p { font-size: 1.2em; text-align: center;}
+        .result-card .bmi-value { font-size: 2em; font-weight: 700; color: var(--heading-color); }
         
         /* Result Color Classes */
         .underweight { border-color: var(--underweight-color); background-color: #fcf8e3; }
@@ -212,8 +202,9 @@
         }
 
         footer { text-align: center; }
-        footer ul { list-style: none; padding: 0; margin: 10px 0 20px 0; }
-        footer li { display: inline; margin: 0 10px; }
+        footer h3 { font-size: 1.2em; font-weight: 600; margin-bottom: 15px; }
+        footer ul { list-style: none; padding: 0; margin: 0 0 20px 0; }
+        footer li { display: inline-block; margin: 0 12px; }
         footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
         footer .footer-bottom { font-size: 0.9em; color: #888; }
     </style>
@@ -262,10 +253,9 @@
       }]
     }
     </script>
-	<!========Ads Section ===========>
+	<!-- Ads Section -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5037596819589415"
      crossorigin="anonymous"></script>
-    <!=========Ads Section ===========>
 </head>
 <body>
 
@@ -279,8 +269,7 @@
   <main class="main-container">
     <section class="content-section">
         <h1>Understanding Your Body Mass Index (BMI)</h1>
-        <p>Your Body Mass Index (BMI) is a simple calculation that uses your height and weight to determine if you are in a healthy weight range. It's a widely used screening tool to identify potential weight-related health problems. While BMI doesn't tell the whole story (it doesn't distinguish between fat and muscle), it's a great starting point for understanding your health.</p>
-        <p>Use our free calculator below to check your BMI instantly.</p>
+        <p>Your Body Mass Index (BMI) is a simple calculation that uses your height and weight to determine if you are in a healthy weight range. It's a widely used screening tool to identify potential weight-related health problems. While BMI doesn't tell the whole story (it doesn't distinguish between fat and muscle), it's a great starting point for understanding your health. Use our free calculator below to check your BMI instantly.</p>
     </section>
 
     <div class="calculator-container">
@@ -309,9 +298,33 @@
             </div>
         </div>
     </div>
-    <!-- ============== Ads Section ============== -->
     
-    <!-- ============== Ads Section ============== -->
+    <!-- ============== New Descriptive Section ============== -->
+    <section class="content-section">
+        <h2>A Comprehensive Guide to Our BMI Calculator</h2>
+
+        <h3>What Does This Tool Do?</h3>
+        <p>This Body Mass Index (BMI) calculator is a free health tool designed to give you a quick and easy way to assess your weight relative to your height. BMI is a widely accepted metric used by health professionals to estimate whether an adult's weight is healthy. By inputting your weight in kilograms and height in centimeters, our tool instantly calculates your BMI score using the standard formula (weight in kg / (height in m)²). The result places you into one of four main categories: Underweight, Normal Weight, Overweight, or Obesity. It's important to remember that BMI is a screening tool, not a diagnostic one. It doesn't measure body fat directly but provides a reliable starting point for understanding your overall health status.</p>
+
+        <h3>How to Use Our Free BMI Calculator</h3>
+        <p>Getting your BMI score is incredibly simple and takes only a few seconds. Follow these easy steps:</p>
+        <ol>
+            <li><strong>Enter Your Weight:</strong> In the first input field, type your current weight in kilograms (kg).</li>
+            <li><strong>Enter Your Height:</strong> In the second field, enter your height in centimeters (cm).</li>
+            <li><strong>Calculate:</strong> Click the "Calculate BMI" button.</li>
+            <li><strong>Review Your Results:</strong> Your BMI score will immediately appear in the results card below. You will see your numerical BMI value, a clear description of your weight category, and a visual indicator on a color-coded gauge showing where you fall on the BMI spectrum.</li>
+        </ol>
+
+        <h3>Benefits of Checking Your BMI</h3>
+        <p>Regularly checking your BMI can be a valuable part of managing your health. Here are some key benefits:</p>
+        <ul>
+            <li><strong>Instant Health Insight:</strong> It provides a quick snapshot of your weight status, helping you understand if you are in a healthy range.</li>
+            <li><strong>Identifies Potential Risks:</strong> A BMI score that is too high or too low can be an indicator of potential health risks, encouraging you to seek professional medical advice.</li>
+            <li><strong>Motivation for a Healthier Lifestyle:</strong> Seeing your BMI can be a powerful motivator to adopt healthier habits, such as a balanced diet and regular exercise.</li>
+            <li><strong>Completely Free and Private:</strong> Our tool is 100% free to use, and all calculations are done directly in your browser. Your data is never stored or sent to our servers, ensuring your privacy.</li>
+        </ul>
+    </section>
+    
     <section class="content-section">
         <h2>Frequently Asked Questions (FAQs)</h2>
         <h3>What is a healthy BMI?</h3>
@@ -323,10 +336,6 @@
         <h3>How can I improve my BMI?</h3>
         <p>If your BMI is outside the healthy range, lifestyle changes can help. A balanced diet, regular physical activity, and adequate sleep are key factors. If you're concerned about your BMI, speaking with a doctor or a registered dietitian can provide personalized advice.</p>
     </section>
-
-	  </====================Ads Section===================>
-	  
-	  </====================Ads section====================>
 
     <footer>
         <h3>Quick Links</h3>
@@ -375,7 +384,7 @@
             if (bmi < 18.5) {
                 category = "Underweight";
                 categoryClass = "underweight";
-                description = "You may be underweight. It's a good idea to consult a doctor to ensure you're getting enough nutrients.";
+                description = "Your BMI suggests you may be underweight. It's a good idea to consult a doctor to ensure you're getting enough nutrients.";
             } else if (bmi < 25) {
                 category = "Normal weight";
                 categoryClass = "normal";
@@ -387,7 +396,7 @@
             } else {
                 category = "Obesity";
                 categoryClass = "obese";
-                description = "Your BMI falls within the obesity range. It's highly recommended to consult a healthcare professional for guidance.";
+                description = "Your BMI falls within the obesity range. It is highly recommended to consult a healthcare professional for guidance.";
             }
             
             // Update UI
@@ -400,8 +409,8 @@
 
             // Update gauge
             // The gauge is a rough visual guide.
-            // Let's map BMI 15-40 to 0-100% of the gauge width.
-            const gaugePercent = Math.min(100, Math.max(0, ((bmi - 15) / 25) * 100));
+            // Map BMI range 15-40 to 0-100% of the gauge width for better visualization.
+            const gaugePercent = Math.min(100, Math.max(0, ((bmi - 15) / (40 - 15)) * 100));
             gaugeIndicator.style.left = `${gaugePercent}%`;
         };
         
