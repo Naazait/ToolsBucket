@@ -209,6 +209,54 @@
     <section class="content-section">
         <h1>Online Base64 Encoder & Decoder</h1>
         <p>This is a free and powerful online tool for encoding and decoding data in Base64 format. You can easily convert plain text to a Base64 string, or decode a Base64 string back to its original text. For added convenience, you can also encode local files (like images) into a Base64 data string. All operations are performed securely in your browser, with no data sent to any server.</p>
+        
+        <h2>Unravel the Power of Base64: Your Ultimate Online Encoding & Decoding Solution</h2>
+        <p>Welcome to ToolsBucket's free and intuitive **Base64 Encoder & Decoder** – your go-to online utility for seamless data transformation. Whether you're a developer, a system administrator, or simply someone needing to convert data, our tool offers a robust, secure, and lightning-fast way to handle Base64 operations directly in your browser. Say goodbye to complex command-line interfaces or questionable online services; with ToolsBucket, your data privacy is paramount, as all conversions happen client-side without ever touching our servers.</p>
+
+        <h3>What Our Base64 Encoder & Decoder Does</h3>
+        <p>Our comprehensive tool empowers you to perform two core functions:</p>
+        <ul>
+            <li><strong>Base64 Encoding:</strong> Convert any plain text, string, or even entire files (like images, PDFs, audio, or video) into their Base64 representation. This process takes binary data and translates it into an ASCII string, making it safe for transmission over systems that are primarily designed for text.</li>
+            <li><strong>Base64 Decoding:</strong> Revert a Base64 encoded string back to its original plain text or binary format. If you have a Base64 data URI (e.g., for an embedded image), our decoder can intelligently extract and allow you to download the original file.</li>
+        </ul>
+        <p>The beauty of Base64 lies in its ability to handle any type of data and present it as a sequence of printable ASCII characters. This is crucial for web applications, email systems, and many other digital infrastructures where non-textual data needs to be transported or stored safely alongside text.</p>
+
+        <h3>How to Use Our Free Online Base64 Tool</h3>
+        <p>Our Base64 Encoder & Decoder is designed for simplicity and efficiency. Follow these easy steps to get started:</p>
+        <ol>
+            <li><strong>Input Your Data:</strong> In the "Input" text area, you have two primary options:
+                <ul>
+                    <li><strong>Paste Text:</strong> Simply paste any plain text, code snippet, or a Base64 string you wish to process.</li>
+                    <li><strong>Upload a File:</strong> Click the "upload a file to encode" link. A file selection dialog will appear, allowing you to choose any local file from your device. The content of this file will be loaded into the input area as a Base64 data URI, ready for decoding or further manipulation.</li>
+                </ul>
+            </li>
+            <li><strong>Choose Your Operation:</strong>
+                <ul>
+                    <li><strong>To Encode:</strong> If your input is plain text or a file you want to convert to Base64, click the "Encode" button. The Base64 representation will instantly appear in the "Output" box.</li>
+                    <li><strong>To Decode:</strong> If your input is a Base64 string (or a data URI), click the "Decode" button. The original text or binary data will be reconstructed and displayed in the "Output" box. If it's a decodable file, a "Download Decoded File" button will appear.</li>
+                </ul>
+            </li>
+            <li><strong>Manage Your Results:</strong>
+                <ul>
+                    <li><strong>Swap:</strong> The "Swap" button is incredibly useful for iterative tasks. It exchanges the content of the Input and Output boxes, allowing you to quickly encode a decoded string or decode an encoded string without manual copying.</li>
+                    <li><strong>Copy Input/Output:</strong> Easily copy the content of either the Input or Output box to your clipboard with a single click.</li>
+                    <li><strong>Clear:</strong> The "Clear" button resets both input and output fields, preparing the tool for a new task.</li>
+                    <li><strong>Download Decoded File:</strong> When decoding a file (e.g., an image or PDF from a Base64 Data URI), this button will become active, allowing you to save the original file directly to your computer.</li>
+                </ul>
+            </li>
+        </ol>
+        <p>It's that simple! Our intuitive interface ensures a smooth and quick experience every time.</p>
+
+        <h3>Benefits of Using ToolsBucket's Base64 Encoder & Decoder</h3>
+        <ul>
+            <li><strong>Complete Privacy & Security:</strong> Unlike many other online tools, our Base64 converter operates entirely client-side. Your data is processed directly in your browser using JavaScript and is never transmitted to our servers. This ensures maximum privacy and security for your sensitive information and files.</li>
+            <li><strong>User-Friendly Interface:</strong> Designed with both beginners and seasoned professionals in mind, the clean and straightforward interface makes encoding and decoding a breeze.</li>
+            <li><strong>Fast & Efficient:</strong> Get instant results. The in-browser processing eliminates server latency, providing immediate conversions.</li>
+            <li><strong>Versatile File Support:</strong> Encode any type of local file (images, documents, archives, etc.) directly into a Base64 string. Decode Base64 data URIs back into their original file formats.</li>
+            <li><strong>Seamless Workflow:</strong> Features like "Swap," "Copy," and "Download" enhance your productivity, allowing for quick adjustments and management of your encoded/decoded data.</li>
+            <li><strong>Absolutely Free:</strong> Enjoy unlimited access to all features without any cost, registration, or hidden fees.</li>
+            <li><strong>Cross-Platform Compatibility:</strong> Being a web-based tool, it works flawlessly across all operating systems and modern browsers, including Windows, macOS, Linux, Android, and iOS.</li>
+        </ul>
     </section>
 
     <div class="tool-container">
@@ -249,7 +297,33 @@
             <li><strong>Data URIs:</strong> Embedding images or other files directly into HTML or CSS code to reduce HTTP requests. For example, `src="data:image/png;base64,..."`.</li>
             <li><strong>Email Attachments:</strong> The MIME (Multipurpose Internet Mail Extensions) standard uses Base64 to attach binary files to emails.</li>
             <li><strong>Storing Binary Data in XML/JSON:</strong> Since XML and JSON are text-based, Base64 is used to store binary data within them.</li>
+            <li><strong>Obfuscation and Transmission:</strong> While not encryption, Base64 can obscure data slightly, making it readable by humans only after decoding. It's often used when transmitting data through protocols that might corrupt binary sequences.</li>
+            <li><strong>Web Development:</strong> Embedding small images directly into stylesheets (`background-image: url('data:image/png;base64,...')`) or HTML to improve page load speed by reducing server requests.</li>
         </ul>
+
+        <h2>Frequently Asked Questions (FAQs)</h2>
+        <div class="faq-container">
+            <h3>Q: What exactly is Base64 encoding?</h3>
+            <p>A: Base64 is a method of encoding binary data (like images, audio, or any file) into an ASCII string format. It converts arbitrary sequences of bytes into a sequence of 64 distinct ASCII characters, making it safe to transmit data over systems that might otherwise corrupt non-textual data.</p>
+
+            <h3>Q: Is Base64 encoding the same as encryption?</h3>
+            <p>A: No, absolutely not. Base64 is an *encoding* scheme, not an *encryption* algorithm. Its purpose is to transform data into a text-safe format, not to secure or hide it. Any Base64 encoded string can be easily decoded back to its original form by anyone. For security, you should use proper encryption methods.</p>
+
+            <h3>Q: Why would I use Base64 encoding?</h3>
+            <p>A: Base64 is commonly used when binary data needs to be stored or transmitted through mediums that are designed to handle text. Key uses include embedding images directly into HTML or CSS (Data URIs), sending file attachments via email (MIME), storing binary data within XML or JSON documents, and transmitting data in URLs where certain characters might be problematic.</p>
+
+            <h3>Q: Is this Base64 tool secure? Does it store my data?</h3>
+            <p>A: Yes, our tool is highly secure. All encoding and decoding processes happen directly within your web browser using JavaScript. Your data is never sent to our servers or stored anywhere online, ensuring complete privacy and confidentiality. This client-side processing makes it one of the safest Base64 tools available.</p>
+
+            <h3>Q: Can I encode or decode any file type?</h3>
+            <p>A: Yes, our tool can handle any file type. When you upload a file, it's read as raw binary data, converted to Base64, and displayed as a data URI. When decoding, it converts the Base64 string back into its original binary format, and you can download the file. The file's original type (e.g., .png, .pdf, .zip) will be preserved upon download.</p>
+
+            <h3>Q: What is a Data URI?</h3>
+            <p>A: A Data URI (Uniform Resource Identifier) is a scheme that allows small files to be embedded directly within HTML, CSS, or other documents as a text string, without requiring a separate server request. It typically looks like `data:[<mediatype>][;base64],<data>`. Our tool can both generate and parse these.</p>
+
+            <h3>Q: What if I paste an invalid Base64 string for decoding?</h3>
+            <p>A: If you paste a string that is not valid Base64, our decoder will attempt to process it but will likely return an error message in the output box, indicating that it could not decode the input. Base64 strings must adhere to a specific character set and padding rules.</p>
+        </div>
     </section>
 
 	  </===================Ads Section==================>
@@ -325,7 +399,7 @@
         
         encodeBtn.addEventListener('click', () => {
             const input = inputBox.value;
-            updateOutput(toBase64(input), 'Error: Could not encode text. Check for invalid characters.');
+            updateOutput(toBase64(input), 'Error: Could not encode text. Check for invalid characters or ensure it is valid text.');
         });
         
         decodeBtn.addEventListener('click', () => {
@@ -333,18 +407,32 @@
             
             // Check if it looks like a data URI
             if (input.startsWith('data:') && input.includes(';base64,')) {
-                const base64Data = input.split(',')[1];
-                const decoded = fromBase64(base64Data);
-                updateOutput(decoded, 'Error: Invalid Base64 data in the data URI.');
-                
-                downloadLink.href = input;
-                const fileType = input.substring(input.indexOf(':') + 1, input.indexOf(';'));
-                const extension = fileType.split('/')[1] || 'bin';
-                downloadLink.download = `decoded-file.${extension}`;
-                downloadLink.style.display = 'inline-block';
+                const parts = input.split(',');
+                if (parts.length > 1) {
+                    const base64Data = parts[1];
+                    const decoded = fromBase64(base64Data);
+                    updateOutput(decoded, 'Error: Invalid Base64 data in the data URI.');
+                    
+                    downloadLink.href = input; // Data URI itself can be downloaded
+                    const fileTypeMatch = input.match(/data:([^;]+);base64,/);
+                    let extension = 'bin'; // default extension
+                    if (fileTypeMatch && fileTypeMatch[1]) {
+                        const mimeType = fileTypeMatch[1];
+                        const mimeParts = mimeType.split('/');
+                        if (mimeParts.length > 1) {
+                            extension = mimeParts[1];
+                        } else if (mimeType.includes('text')) {
+                             extension = 'txt';
+                        }
+                    }
+                    downloadLink.download = `decoded-file.${extension}`;
+                    downloadLink.style.display = 'inline-block';
+                } else {
+                    updateOutput(null, 'Error: Invalid Data URI format.');
+                }
             } else {
                 const decoded = fromBase64(input);
-                updateOutput(decoded, 'Error: Invalid Base64 string.');
+                updateOutput(decoded, 'Error: Invalid Base64 string. Please ensure it is a correctly formatted Base64 string.');
             }
         });
 
@@ -354,16 +442,18 @@
 
             const reader = new FileReader();
             reader.onload = (e) => {
-                inputBox.value = e.target.result;
-                updateOutput(e.target.result, '');
+                inputBox.value = e.target.result; // This will be the data URI
+                outputBox.value = toBase64(e.target.result); // Automatically encode the data URI
+                downloadLink.style.display = 'none'; // Hide download link for encoded output
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file); // Reads file as a data URL (Base64)
         });
 
         swapBtn.addEventListener('click', () => {
             const temp = inputBox.value;
             inputBox.value = outputBox.value;
             outputBox.value = temp;
+            downloadLink.style.display = 'none'; // Hide download link after swap, as contexts might change
         });
 
         const copyToClipboard = (element, button) => {
@@ -374,6 +464,9 @@
                 setTimeout(() => {
                     button.textContent = originalText;
                 }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy text. Please copy manually.');
             });
         };
         
