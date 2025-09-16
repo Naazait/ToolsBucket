@@ -212,39 +212,41 @@
 
   <main class="main-container">
     <section class="content-section">
-        <h1>Color Blindness Simulator</h1>
-        <p>Discover how your images, designs, and websites appear to people with different types of color vision deficiency. This accessibility tool is essential for designers, developers, and artists who want to create inclusive content that can be enjoyed by everyone. Simply upload an image and select a simulation type to see the world through a different set of eyes.</p>
+        <h1>Free Online Color Blindness Simulator: Ensure Your Designs Are Universally Accessible</h1>
+        <p>In today's digitally-driven world, accessibility is no longer an option—it's a necessity. Our free online Color Blindness Simulator is an indispensable tool designed for web developers, graphic designers, UX/UI professionals, and anyone creating visual content. This powerful web-based application allows you to accurately simulate various forms of color vision deficiency, providing a crucial perspective on how your images, designs, and digital interfaces are perceived by a significant portion of the global population. Roughly 300 million people worldwide experience some form of color blindness, making it vital to design inclusively. This simulator helps you ensure your content is not only aesthetically pleasing but also fully functional and comprehensible for everyone, regardless of their ability to distinguish specific colors.</p>
+        <p>Whether you're crafting a website, designing an app interface, developing marketing materials, or creating engaging infographics, understanding how your color choices impact accessibility is paramount. Our tool supports a comprehensive range of color vision deficiencies, including the most common types like Protanopia and Deuteranopia, as well as rarer conditions such as Tritanopia and Achromatopsia. By using this simulator, you can proactively identify potential accessibility barriers in your designs and make informed adjustments, leading to a more inclusive and user-friendly experience for all. Dive in and make your visual content truly universal!</p>
     </section>
 
     <div class="tool-container">
         <div class="controls-area">
             <div id="uploadArea" class="upload-area">
                 <p>Drag & drop an image here, or click to select a file.</p>
+                <p style="font-size: 0.9em; color: #666;">(JPG, PNG, GIF, BMP — all processing is done locally in your browser for privacy!)</p>
             </div>
             <input type="file" id="imageInput" accept="image/*">
             <br>
             <label for="colorBlindnessType"><strong>Select Simulation Type:</strong></label>
             <select id="colorBlindnessType">
                 <option value="normal">Normal Vision</option>
-                <option value="protanopia">Protanopia</option>
-                <option value="protanomaly">Protanomaly</option>
-                <option value="deuteranopia">Deuteranopia</option>
-                <option value="deuteranomaly">Deuteranomaly</option>
-                <option value="tritanopia">Tritanopia</option>
-                <option value="tritanomaly">Tritanomaly</option>
-                <option value="achromatopsia">Achromatopsia (Monochrome)</option>
+                <option value="protanopia">Protanopia (Red-blind)</option>
+                <option value="protanomaly">Protanomaly (Red-weak)</option>
+                <option value="deuteranopia">Deuteranopia (Green-blind)</option>
+                <option value="deuteranomaly">Deuteranomaly (Green-weak)</option>
+                <option value="tritanopia">Tritanopia (Blue-blind)</option>
+                <option value="tritanomaly">Tritanomaly (Blue-weak)</option>
+                <option value="achromatopsia">Achromatopsia (Complete Color Blindness)</option>
             </select>
-            <button id="downloadBtn" class="btn" style="display:none;">Download Simulation</button>
+            <button id="downloadBtn" class="btn" style="display:none;">Download Simulated Image</button>
         </div>
 
         <div class="previews">
             <div class="image-box">
                 <h3>Original Image</h3>
-                <img id="originalImage" src="" alt="Original image appears here">
+                <img id="originalImage" src="" alt="Original image appears here" style="min-height: 100px; background-color: #f0f0f0;">
             </div>
             <div class="image-box">
                 <h3>Simulated Image</h3>
-                <canvas id="simulatedCanvas"></canvas>
+                <canvas id="simulatedCanvas" style="min-height: 100px; background-color: #f0f0f0;"></canvas>
             </div>
         </div>
     </div>
@@ -254,13 +256,39 @@
   		<!=================Banner Ads Section ==================>
       
     <section class="content-section">
-        <h2>Understanding Color Blindness</h2>
+        <h2>Understanding Color Blindness and Its Impact</h2>
+        <p>Color blindness, or color vision deficiency (CVD), is a common genetic condition where individuals perceive colors differently than those with normal vision. It's rarely a complete inability to see color, but rather a reduced ability to distinguish between certain shades. Understanding these differences is crucial for creating accessible digital experiences. Our simulator covers the main types:</p>
         <ul>
-            <li><strong>Protanopia/Protanomaly:</strong> Reduced sensitivity to red light ("red-weakness"). Reds may appear dark or muted.</li>
-            <li><strong>Deuteranopia/Deuteranomaly:</strong> Reduced sensitivity to green light ("green-weakness"). This is the most common form of color blindness.</li>
-            <li><strong>Tritanopia/Tritanomaly:</strong> Reduced sensitivity to blue light ("blue-weakness"). This is a rarer condition.</li>
-            <li><strong>Achromatopsia:</strong> Complete color blindness, where everything is seen in shades of gray.</li>
+            <li><strong>Protanopia (Red-blindness) & Protanomaly (Red-weakness):</strong> Individuals with these conditions have difficulty distinguishing between red, orange, yellow, and green. Reds tend to appear darker or more muted, often blending with greens and browns.</li>
+            <li><strong>Deuteranopia (Green-blindness) & Deuteranomaly (Green-weakness):</strong> The most prevalent forms of CVD, these conditions make it challenging to differentiate between reds and greens. Greens often appear brownish or yellowish, and purples might look blue.</li>
+            <li><strong>Tritanopia (Blue-blindness) & Tritanomaly (Blue-weakness):</strong> These rarer forms affect the perception of blue and yellow. Blues may appear greenish, and yellows might seem pinkish or gray.</li>
+            <li><strong>Achromatopsia (Complete Color Blindness):</strong> This is the rarest and most severe form, where individuals see the world in shades of black, white, and gray, with no perception of color.</li>
         </ul>
+        <p>By simulating these conditions, you can test if important information conveyed through color (e.g., status indicators, charts, call-to-action buttons) remains clear and distinguishable for everyone. This proactive approach helps you meet accessibility standards and foster a truly inclusive online environment.</p>
+
+        <h2>How to Use Our Free Color Blindness Simulator</h2>
+        <p>Our online Color Blindness Simulator is designed for ease of use, requiring no downloads or complex software installations. Follow these simple steps to test your images:</p>
+        <ol>
+            <li><strong>Upload Your Image:</strong> You have two convenient options. You can either click on the "Drag & drop an image here, or click to select a file" area to open your file explorer and choose an image (JPG, PNG, GIF, BMP are supported), or simply drag and drop your image file directly into this designated upload area.</li>
+            <li><strong>Select Simulation Type:</strong> Once your image is loaded, it will appear in the "Original Image" box. Below the upload area, you'll find a dropdown menu labeled "Select Simulation Type." Click on this menu to reveal a list of various color vision deficiencies.</li>
+            <li><strong>View the Simulation:</strong> Choose the type of color blindness you wish to simulate (e.g., Protanopia, Deuteranomaly, Achromatopsia). Instantly, the "Simulated Image" canvas on the right will update, showing you how your original image would appear to someone with that specific color vision deficiency.</li>
+            <li><strong>Repeat as Needed:</strong> You can switch between different simulation types to observe the impact of various conditions on your image's colors. This allows for a comprehensive accessibility check.</li>
+            <li><strong>Download Your Simulated Image (Optional):</strong> If you wish to save the simulated image for further analysis or sharing, click the "Download Simulated Image" button. The image will be saved to your device as a PNG file.</li>
+        </ol>
+        <p>Remember, all image processing happens directly in your browser. Your images are never uploaded to our servers, ensuring your privacy and data security. This makes our tool not only effective but also incredibly safe for handling sensitive designs.</p>
+
+        <h2>Benefits of Using a Color Blindness Simulator</h2>
+        <p>Integrating a color blindness simulator into your design workflow offers numerous advantages:</p>
+        <ul>
+            <li><strong>Enhanced Accessibility:</strong> The primary benefit is creating content that is truly accessible to everyone, including the millions of people with color vision deficiencies. This expands your audience reach and promotes inclusivity.</li>
+            <li><strong>Improved User Experience (UX):</strong> When designs are accessible, they are generally more usable for everyone. Clearer distinctions between elements improve navigation, comprehension, and overall user satisfaction.</li>
+            <li><strong>Compliance with Standards:</strong> Many regulations and guidelines (like WCAG - Web Content Accessibility Guidelines) emphasize color contrast and the avoidance of using color as the sole means of conveying information. Our tool helps you meet these crucial accessibility standards.</li>
+            <li><strong>Better Design Decisions:</strong> By seeing your designs through a different lens, you gain insights that can lead to more robust and effective color palettes, iconography, and information presentation strategies.</li>
+            <li><strong>Reduced Redesign Costs:</strong> Identifying and fixing accessibility issues during the design phase is significantly more cost-effective than making changes after a product has launched.</li>
+            <li><strong>Competitive Advantage:</strong> Businesses and creators who prioritize accessibility stand out, demonstrating a commitment to their entire user base.</li>
+            <li><strong>Privacy and Security:</strong> Since all image processing occurs client-side (in your browser), your uploaded images are never stored on our servers, ensuring complete privacy and security of your creative work.</li>
+        </ul>
+        <p>Embrace inclusive design practices today with our free Color Blindness Simulator and make your digital world accessible to all!</p>
     </section>
 
 	  </===================Ads Section==================>
@@ -296,26 +324,67 @@
         const img = new Image();
         img.crossOrigin = "Anonymous";
 
-        // Color blindness simulation matrices
+        // Color blindness simulation matrices (simplified for web, based on generally accepted models)
+        // More precise matrices can be found in academic papers if needed for ultra-high fidelity
         const matrices = {
-            normal: [1, 0, 0, 0, 1, 0, 0, 0, 1],
-            protanopia: [0.567, 0.433, 0, 0.558, 0.442, 0, 0, 0.242, 0.758],
-            protanomaly: [0.817, 0.183, 0, 0.333, 0.667, 0, 0, 0.125, 0.875],
-            deuteranopia: [0.625, 0.375, 0, 0.7, 0.3, 0, 0, 0.3, 0.7],
-            deuteranomaly: [0.8, 0.2, 0, 0.258, 0.742, 0, 0, 0.142, 0.858],
-            tritanopia: [0.95, 0.05, 0, 0, 0.433, 0.567, 0, 0.475, 0.525],
-            tritanomaly: [0.967, 0.033, 0, 0, 0.733, 0.267, 0, 0.183, 0.817],
-            achromatopsia: [0.299, 0.587, 0.114, 0.299, 0.587, 0.114, 0.299, 0.587, 0.114]
+            normal: [1, 0, 0, 0, 1, 0, 0, 0, 1], // Identity matrix for normal vision
+            protanopia: [ // Red-blindness
+                0.567, 0.433, 0,
+                0.558, 0.442, 0,
+                0,     0.242, 0.758
+            ],
+            protanomaly: [ // Red-weakness
+                0.817, 0.183, 0,
+                0.333, 0.667, 0,
+                0,     0.125, 0.875
+            ],
+            deuteranopia: [ // Green-blindness
+                0.625, 0.375, 0,
+                0.7,   0.3,   0,
+                0,     0.3,   0.7
+            ],
+            deuteranomaly: [ // Green-weakness
+                0.8,   0.2,   0,
+                0.258, 0.742, 0,
+                0,     0.142, 0.858
+            ],
+            tritanopia: [ // Blue-blindness
+                0.95,  0.05,  0,
+                0,     0.433, 0.567,
+                0,     0.475, 0.525
+            ],
+            tritanomaly: [ // Blue-weakness
+                0.967, 0.033, 0,
+                0,     0.733, 0.267,
+                0,     0.183, 0.817
+            ],
+            achromatopsia: [ // Complete color blindness (grayscale)
+                0.299, 0.587, 0.114,
+                0.299, 0.587, 0.114,
+                0.299, 0.587, 0.114
+            ]
         };
 
         const applySimulation = () => {
-            if (!img.src) return;
+            if (!img.src || !img.complete) { // Ensure image is loaded
+                // Clear canvas if no image or image not loaded
+                simulatedCanvas.width = 0;
+                simulatedCanvas.height = 0;
+                ctx.clearRect(0, 0, simulatedCanvas.width, simulatedCanvas.height);
+                originalImage.src = ""; // Clear original image display
+                downloadBtn.style.display = 'none';
+                return;
+            }
 
             const matrix = matrices[colorBlindnessSelect.value];
-            simulatedCanvas.width = img.width;
-            simulatedCanvas.height = img.height;
+            
+            // Set canvas dimensions to match image
+            simulatedCanvas.width = img.naturalWidth;
+            simulatedCanvas.height = img.naturalHeight;
 
-            ctx.drawImage(img, 0, 0);
+            // Draw original image to canvas
+            ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
+            
             const imageData = ctx.getImageData(0, 0, simulatedCanvas.width, simulatedCanvas.height);
             const pixels = imageData.data;
             
@@ -324,9 +393,11 @@
                 const g = pixels[i + 1];
                 const b = pixels[i + 2];
 
-                pixels[i] = r * matrix[0] + g * matrix[1] + b * matrix[2];
-                pixels[i + 1] = r * matrix[3] + g * matrix[4] + b * matrix[5];
-                pixels[i + 2] = r * matrix[6] + g * matrix[7] + b * matrix[8];
+                // Apply matrix transformation
+                pixels[i]   = r * matrix[0] + g * matrix[1] + b * matrix[2];     // Red channel
+                pixels[i+1] = r * matrix[3] + g * matrix[4] + b * matrix[5];     // Green channel
+                pixels[i+2] = r * matrix[6] + g * matrix[7] + b * matrix[8];     // Blue channel
+                // Alpha channel (pixels[i+3]) remains unchanged
             }
             
             ctx.putImageData(imageData, 0, 0);
@@ -334,13 +405,22 @@
         };
 
         const handleFile = (file) => {
-            if (!file || !file.type.startsWith('image/')) return;
+            if (!file || !file.type.startsWith('image/')) {
+                alert('Please upload a valid image file (JPG, PNG, GIF, BMP).');
+                return;
+            }
 
             const reader = new FileReader();
             reader.onload = (e) => {
                 img.src = e.target.result;
                 originalImage.src = e.target.result;
-                img.onload = applySimulation;
+                originalImage.alt = "Original image uploaded by user"; // Update alt text
+                img.onload = applySimulation; // Apply simulation once image is loaded
+                img.onerror = () => { // Handle potential image loading errors
+                    alert("Failed to load image. Please try a different file.");
+                    originalImage.src = "";
+                    applySimulation(); // Clear canvas
+                };
             };
             reader.readAsDataURL(file);
         };
@@ -363,10 +443,17 @@
         
         downloadBtn.addEventListener('click', () => {
             const link = document.createElement('a');
-            link.download = `simulated-${colorBlindnessSelect.value}.png`;
+            link.download = `simulated-${colorBlindnessSelect.value}-${new Date().getTime()}.png`; // Unique filename
             link.href = simulatedCanvas.toDataURL('image/png');
             link.click();
         });
+
+        // Initialize state for originalImage if no src is set (e.g., on first load)
+        if (!originalImage.src) {
+            originalImage.alt = "Upload an image to see the original here.";
+            // Optionally, add a placeholder image or instruction on the original image area
+            // originalImage.src = "path/to/placeholder.png";
+        }
     });
   </script>
 
