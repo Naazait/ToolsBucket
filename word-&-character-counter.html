@@ -79,7 +79,7 @@
         }
         
         .main-container { width: 100%; max-width: 900px; }
-        .content-section, .tool-container, footer {
+        .content-section, .tool-container, footer, .faq-section { /* Added .faq-section */
             background-color: var(--card-background);
             padding: 30px;
             border-radius: 16px;
@@ -137,6 +137,45 @@
         footer li { display: inline-block; margin: 0 12px; }
         footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
         footer .footer-bottom p { font-size: 0.9em; color: #888; margin: 0; }
+
+        /* Styles for FAQ section */
+        .faq-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .faq-question {
+            font-weight: 600;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .faq-question::after {
+            content: '+';
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+        .faq-question.active::after {
+            transform: rotate(45deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding-left: 10px;
+        }
+        .faq-answer p {
+            margin-top: 10px;
+            padding-bottom: 10px;
+        }
     </style>
 
     <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
@@ -221,6 +260,106 @@
         </ul>
     </section>
 
+    <!-- NEW SEO-FRIENDLY DESCRIPTION AND FAQs START HERE -->
+    <section class="content-section">
+        <h2>About Our Free Online Word & Character Counter Tool</h2>
+        <p>In today's fast-paced digital world, precision in communication is paramount. Whether you're a student working on an essay, a professional drafting a report, a blogger crafting engaging content, or a social media manager optimizing posts, knowing the exact length of your text is crucial. Our **Free Online Word & Character Counter** is designed to provide you with instant, accurate statistics for any piece of text, empowering you to meet specific requirements, optimize your content, and communicate more effectively.</p>
+        
+        <h3>What Does This Tool Do?</h3>
+        <p>Our sophisticated yet user-friendly tool offers comprehensive text analysis at your fingertips. It goes beyond simple word counting to deliver a detailed breakdown of your text's composition. Here’s what it meticulously counts:</p>
+        <ul>
+            <li><strong>Words:</strong> Get an exact count of every word in your document, crucial for essays, articles, and content marketing.</li>
+            <li><strong>Characters:</strong> Measure the total number of characters, including spaces, which is vital for platforms with strict character limits like Twitter, SMS, or meta descriptions for SEO.</li>
+            <li><strong>Characters (No Spaces):</strong> For more specific analyses, it also counts characters excluding spaces.</li>
+            <li><strong>Sentences:</strong> Understand the structural complexity of your writing by identifying the number of complete sentences.</li>
+            <li><strong>Paragraphs:</strong> See how many distinct paragraphs your text contains, useful for assessing readability and flow.</li>
+            <li><strong>Estimated Reading Time:</strong> Based on an average reading speed of 200 words per minute, this feature helps you estimate how long it will take someone to read your text. Perfect for content planning and user engagement.</li>
+            <li><strong>Estimated Speaking Time:</strong> Ideal for public speakers and presenters, this estimates how long it would take to speak your text aloud at an average pace of 130 words per minute.</li>
+        </ul>
+        <p>This all-in-one counter eliminates the need for manual counting or cumbersome software, providing real-time data as you type or paste your content.</p>
+
+        <h3>How to Use Our Word Counter</h3>
+        <p>Using our online word and character counter is incredibly simple and intuitive. Follow these two easy steps to get immediate results:</p>
+        <ol>
+            <li><strong>Paste or Type Your Text:</strong> Locate the large text area labeled "Start typing or paste your text here..." on the page. You can either begin typing directly into this box, and the counts will update in real-time, or you can copy text from another source (like a document, email, or webpage) and paste it into the text area.</li>
+            <li><strong>View Instant Statistics:</strong> As soon as you start typing or paste your content, our tool automatically processes the text. The various statistics—Words, Characters, Sentences, Paragraphs, Reading Time, and Speaking Time—will instantly appear and update in the "Stats Panel" located just below the text area. There's no "submit" button to click; the results are live!</li>
+        </ol>
+        <p>Additionally, you'll find two convenient buttons:</p>
+        <ul>
+            <li><strong>Copy Text:</strong> Click this button to quickly copy the entire content from the text area back to your clipboard, useful if you've made edits or simply want to transfer the text elsewhere.</li>
+            <li><strong>Clear:</strong> This button allows you to instantly clear all the text from the input area and reset all the counts to zero, preparing the tool for new content.</li>
+        </ul>
+
+        <h3>Key Benefits of Our Online Word Counter</h3>
+        <p>Utilizing our free tool brings a multitude of advantages for various users:</p>
+        <ul>
+            <li><strong>Academic Success:</strong> Students can easily ensure their assignments, essays, and theses meet strict word count requirements, avoiding penalties and gaining confidence.</li>
+            <li><strong>Professional Communication:</strong> Business professionals can craft concise reports, emails, and proposals, adhering to length guidelines and enhancing clarity.</li>
+            <li><strong>Content Creation & SEO:</strong> Bloggers, copywriters, and marketers can optimize articles for readability and search engine optimization by targeting ideal word counts, improving organic rankings and user engagement.</li>
+            <li><strong>Social Media Efficiency:</strong> Social media managers can quickly check character limits for posts on platforms like Twitter, Instagram, and SMS, ensuring messages are effective and compliant.</li>
+            <li><strong>Public Speaking Confidence:</strong> Speakers can rehearse presentations with precision, using the estimated speaking time to perfectly time their speeches and avoid going over or under allotted time slots.</li>
+            <li><strong>Enhanced Readability:</strong> By analyzing sentence and paragraph counts, writers can gain insights into the complexity and flow of their text, helping them improve readability for their target audience.</li>
+            <li><strong>Completely Free & Accessible:</strong> Our tool is entirely free to use, with no sign-ups or hidden costs. It's accessible from any device with an internet connection, making it a convenient solution wherever you are.</li>
+            <li><strong>Time-Saving:</strong> Eliminate manual counting and save valuable time that can be better spent on refining your content.</li>
+            <li><strong>Improved Writing Skills:</strong> Regularly using the counter can help you develop a better sense of length and conciseness in your writing, leading to overall improvement.</li>
+        </ul>
+        <p>Our Free Online Word & Character Counter is more than just a counting tool; it's an essential companion for anyone who works with text, providing the insights you need to produce high-quality, impactful content every time.</p>
+    </section>
+
+    <section class="content-section faq-section">
+        <h2>Frequently Asked Questions (FAQs)</h2>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Q: Is this Word and Character Counter really free to use?</span>
+            </div>
+            <div class="faq-answer">
+                <p>A: Yes, absolutely! Our online Word and Character Counter is completely free for everyone to use, without any hidden charges, subscriptions, or limitations. You can use it as often as you like for all your text analysis needs.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Q: Does the character count include spaces?</span>
+            </div>
+            <div class="faq-answer">
+                <p>A: Yes, by default, our character counter includes spaces as part of the total character count. This is a standard practice and particularly important for platforms that count all characters, including spaces, towards a limit (e.g., Twitter, SMS).</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Q: How accurate are the reading and speaking time estimates?</span>
+            </div>
+            <div class="faq-answer">
+                <p>A: The reading and speaking time estimates are based on industry-standard average rates (200 words per minute for reading and 130 words per minute for speaking). While these are good general estimates, actual times may vary slightly depending on the individual's speed, the complexity of the text, and external factors. They provide an excellent guideline for planning.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Q: Can I use this tool on my mobile device?</span>
+            </div>
+            <div class="faq-answer">
+                <p>A: Absolutely! Our Word and Character Counter is a web-based tool designed to be fully responsive and compatible with all modern browsers and devices, including desktops, laptops, tablets, and smartphones. Enjoy seamless counting on the go!</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Q: Is there a limit to how much text I can paste into the counter?</span>
+            </div>
+            <div class="faq-answer">
+                <p>A: While there isn't a strict hard limit imposed by our tool, very exceptionally large texts (e.g., hundreds of thousands of words) might experience a slight delay in processing, depending on your device and internet connection. For most practical purposes, it handles large documents with ease.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Q: Does this tool save or store my text?</span>
+            </div>
+            <div class="faq-answer">
+                <p>A: No, absolutely not. Your privacy is paramount. All text processing is done locally within your browser, and your input is neither stored on our servers nor transmitted to us. Once you close the page or clear the text, your content is gone.</p>
+            </div>
+        </div>
+    </section>
+    <!-- NEW SEO-FRIENDLY DESCRIPTION AND FAQs END HERE -->
+
+
 	  </===================Ads Section==================>
 >
 	</====================Ads Section=================>
@@ -304,6 +443,28 @@
         
         // Initial call
         updateCounts();
+
+        // FAQ functionality
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    question.classList.remove('active');
+                } else {
+                    // Close all other open answers
+                    faqQuestions.forEach(q => {
+                        if (q !== question && q.classList.contains('active')) {
+                            q.classList.remove('active');
+                            q.nextElementSibling.style.maxHeight = null;
+                        }
+                    });
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    question.classList.add('active');
+                }
+            });
+        });
     });
   </script>
 
