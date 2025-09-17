@@ -81,7 +81,7 @@
         .back-button:hover { background-color: #dee2e6; }
         
         .main-container { width: 100%; max-width: 900px; }
-        .content-section, .tool-container, footer {
+        .content-section, .tool-container, footer, .faq-section { /* Added .faq-section */
             background-color: var(--card-background);
             padding: 30px;
             border-radius: 16px;
@@ -127,6 +127,39 @@
             word-break: break-word;
         }
         .results-table th { background-color: #f2f2f2; width: 150px; }
+
+        .faq-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .faq-question {
+            font-weight: 600;
+            color: var(--heading-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-question::after {
+            content: '▼';
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        .faq-question.active::after {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            margin-top: 10px;
+            padding-left: 15px;
+            color: var(--text-color);
+            display: none; /* Hidden by default */
+        }
         
         footer { text-align: center; }
         .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
@@ -165,6 +198,27 @@
           "@type": "Answer",
           "text": "Open Graph (OG) tags are a specific type of meta tag that control how a URL is displayed when shared on social media platforms like Facebook, Twitter, and LinkedIn. They allow you to specify the title, description, and image that appear in a social media post."
         }
+      }, {
+        "@type": "Question",
+        "name": "How does the Meta Tag Analyzer help with SEO?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our Meta Tag Analyzer provides a clear, organized overview of your website's critical meta tags, allowing you to quickly identify areas for improvement. By checking your title, description, and Open Graph tags, you can ensure they are optimized for search engine visibility and engaging social media sharing, leading to better rankings and click-through rates."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this Meta Tag Analyzer free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our Meta Tag Analyzer is completely free to use. You can analyze any website URL as many times as you need without any cost or registration."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I check Open Graph tags for social media with this tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely! Our tool specifically extracts and displays Open Graph (OG) tags, which are crucial for controlling how your content appears when shared on platforms like Facebook, Twitter (via Twitter Cards), LinkedIn, and others. This helps you optimize your social media presence effectively."
+        }
       }]
     }
     </script>
@@ -183,32 +237,34 @@
 
   <main class="main-container">
     <section class="content-section">
-        <h1>Meta Tag Analyzer</h1>
-        <p>Get a deep dive into the on-page SEO of any website with our free Meta Tag Analyzer. This tool extracts crucial metadata, including the title, meta description, Open Graph tags for social media, and more. See a live preview of how the page appears in Google search results and get a clear, organized view of all its important tags. It's an essential tool for SEO professionals, web developers, and content creators.</p>
+        <h1>Free Meta Tag Analyzer & Checker Tool</h1>
+        <p>Welcome to the ultimate **Free Meta Tag Analyzer** by ToolsBucket, your go-to online utility for in-depth website meta tag analysis. In the competitive world of search engine optimization (SEO) and social media marketing, understanding and optimizing your meta tags is paramount. Our powerful tool provides a quick, comprehensive, and accurate way to inspect the hidden metadata of any webpage, giving you the insights needed to boost your online visibility and performance. Whether you're an SEO professional, a web developer, a content creator, or a small business owner, this analyzer is designed to simplify your on-page SEO audits and enhance your digital strategy.</p>
+        
+        <p>Beyond just basic meta descriptions and title tags, our analyzer delves into a wide array of crucial elements, including Open Graph (OG) tags that dictate how your content appears on social media platforms like Facebook and Twitter. With a clear, organized display and an intuitive Google SERP preview, you can visualize exactly how search engines and social networks interpret your content before it even goes live or after a significant update. Leverage this free tool to identify missing tags, correct errors, and fine-tune your metadata for maximum impact.</p>
     </section>
 
     <div class="tool-container">
-        <h2>Analyze Website</h2>
+        <h2>Analyze Website Meta Tags Instantly</h2>
         <div class="input-group">
-            <input type="text" id="urlInput" placeholder="Enter a website URL, e.g., https://google.com">
+            <input type="text" id="urlInput" placeholder="Enter a website URL, e.g., https://example.com">
             <button id="analyzeButton" class="btn">Analyze</button>
         </div>
         <p id="status"></p>
 
         <div id="resultsContainer">
-            <h3>Google Search Preview</h3>
+            <h3>Google Search Result Preview</h3>
             <div class="serp-preview">
                 <div class="serp-url" id="serpUrl"></div>
                 <h3 style="margin:0;"><a class="serp-title" id="serpTitle" href="#" target="_blank"></a></h3>
                 <p class="serp-description" id="serpDescription"></p>
             </div>
 
-            <h3>Meta Tags Found</h3>
+            <h3>Standard Meta Tags Found</h3>
             <table class="results-table">
                 <tbody id="metaTagsBody"></tbody>
             </table>
 
-            <h3>Open Graph Tags</h3>
+            <h3>Open Graph & Social Media Tags</h3>
             <table class="results-table">
                 <tbody id="ogTagsBody"></tbody>
             </table>
@@ -220,13 +276,67 @@
   		<!=================Banner Ads Section ==================>
       
     <section class="content-section">
-        <h2>Understanding Meta Tags</h2>
-        <p>Meta tags are invisible tags that provide data about your page to search engines and website visitors. While much of this data is not directly visible on the page itself, it plays a critical role in how your site is understood and displayed by search engines and social media platforms. Optimizing these tags is a fundamental part of on-page SEO.</p>
+        <h2>How to Use Our Free Meta Tag Analyzer</h2>
+        <p>Using the ToolsBucket Meta Tag Analyzer is incredibly straightforward. Follow these simple steps to get an instant, comprehensive report on any webpage's meta tags:</p>
+        <ol>
+            <li><strong>Enter the URL:</strong> Locate the input field labeled "Enter a website URL" above.</li>
+            <li><strong>Input Your Webpage Address:</strong> Type or paste the complete URL of the webpage you wish to analyze (e.g., `https://www.yourwebsite.com/your-page`).</li>
+            <li><strong>Click "Analyze":</strong> Hit the "Analyze" button or press Enter on your keyboard.</li>
+            <li><strong>View Results:</strong> Our tool will quickly fetch the data and display a detailed breakdown of all found meta tags, including title, description, keywords (if present), and all Open Graph (OG) tags. You'll also see a realistic Google Search Result Preview, allowing you to visualize your page's appearance in SERPs.</li>
+        </ol>
+        <p>It's that easy! In a matter of seconds, you'll have a clear, actionable overview of your webpage's metadata, empowering you to make informed decisions for better SEO and social media engagement.</p>
+
+        <h2>Benefits of Using a Meta Tag Checker</h2>
+        <p>Optimizing your meta tags is a foundational aspect of successful SEO. Our Meta Tag Analyzer offers numerous benefits:</p>
+        <ul>
+            <li><strong>Improve Search Engine Rankings:</strong> Ensure your title tags and meta descriptions are compelling and keyword-rich to attract clicks from search results.</li>
+            <li><strong>Enhance Click-Through Rate (CTR):</strong> A well-crafted title and description in the SERP preview can significantly increase the likelihood of users clicking on your link.</li>
+            <li><strong>Boost Social Media Engagement:</strong> Correctly configured Open Graph tags mean your content looks professional and inviting when shared on platforms like Facebook, Twitter, and LinkedIn, driving more shares and traffic.</li>
+            <li><strong>Identify and Fix Errors:</strong> Quickly spot missing or incorrectly implemented meta tags that could be hindering your SEO performance or social media presentation.</li>
+            <li><strong>Competitive Analysis:</strong> Analyze competitor pages to understand their meta tag strategies and identify opportunities for your own content.</li>
+            <li><strong>Streamline On-Page SEO Audits:</strong> Get a comprehensive overview of critical on-page elements without manually sifting through code, saving valuable time and effort.</li>
+            <li><strong>Stay Up-to-Date:</strong> Regularly check your meta tags, especially after content updates or website redesigns, to ensure they remain optimized and relevant.</li>
+            <li><strong>User Experience:</strong> Accurate meta descriptions help users quickly understand what your page is about, improving their overall experience and reducing bounce rates.</li>
+        </ul>
+        <p>By providing a clear and concise report, our tool empowers you to take control of your website's digital footprint and ensure it makes the best possible first impression on both search engines and potential visitors.</p>
     </section>
 
 	  </===================Ads Section==================>
 	
 	</====================Ads Section=================>
+
+    <section class="content-section faq-section">
+        <h2>Frequently Asked Questions (FAQs)</h2>
+        <div class="faq-item">
+            <div class="faq-question">What exactly are meta tags?</div>
+            <div class="faq-answer">Meta tags are snippets of text that describe a page's content, but they don't appear on the page itself; they only exist in the page's source code. They are "meta" because they provide metadata (data about data) about your webpage. Key meta tags include the title tag, meta description, and Open Graph tags, which tell search engines and social media platforms what your page is about.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Why are meta tags important for SEO?</div>
+            <div class="faq-answer">Meta tags are crucial for SEO because they communicate important information about your webpage to search engines. The title tag is a significant ranking factor, and both the title and meta description influence click-through rates (CTR) from search results. Well-optimized meta tags help search engines understand your content better and present it attractively to users, driving more relevant traffic to your site.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">What's the difference between a title tag and a meta description?</div>
+            <div class="faq-answer">The **title tag** (`<title>`) defines the title of your document and is displayed in the browser tab and as the main headline in search engine results. It's one of the most important on-page SEO elements. The **meta description** (`<meta name="description">`) provides a concise summary of your webpage's content. While not a direct ranking factor, a compelling meta description significantly impacts CTR in search results.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">What are Open Graph (OG) tags and why do I need them?</div>
+            <div class="faq-answer">Open Graph (OG) tags are a protocol developed by Facebook that allows web developers to control how their content appears when shared on social media platforms. Tags like `og:title`, `og:description`, and `og:image` define the title, description, and thumbnail image that appear in a social media post. They are essential for ensuring your content looks professional, engaging, and consistent across various social networks, leading to better social sharing performance.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Does this tool analyze Twitter Card meta tags as well?</div>
+            <div class="faq-answer">Yes, while Twitter Cards are a specific type of meta tag for Twitter, they often mirror or are derived from Open Graph tags. Our tool extracts all meta tags found, including those starting with `og:` which Twitter often uses as a fallback, and sometimes specific `twitter:` tags if they are present on the page. This gives you a complete picture for social media optimization.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Can I use this tool to check my competitors' meta tags?</div>
+            <div class="faq-answer">Absolutely! Our Meta Tag Analyzer is perfect for competitive analysis. Simply enter the URL of a competitor's page, and you can see exactly how they've optimized their titles, descriptions, and social media sharing elements. This can provide valuable insights for refining your own SEO and content strategies.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">What should I do if a meta tag is "Not found"?</div>
+            <div class="faq-answer">If a crucial meta tag like "title" or "description" is listed as "Not found," it means that tag is missing from your webpage's HTML. This is a significant SEO issue that you should address immediately. Add a `<title>` tag and a `<meta name="description" content="...">` tag within the `<head>` section of your HTML to improve search engine understanding and visibility. Similarly, if `og:` tags are missing, your social shares won't look as good as they could.</div>
+        </div>
+    </section>
+
     <!-- === FIXED FOOTER SECTION === -->
     <footer id="contact">
         <div class="footer-container">
@@ -288,8 +398,8 @@
                     content: tag.getAttribute('content')
                 })).filter(tag => tag.name && tag.content); // Filter out tags without name or content
                 
-                const generalTags = allMetaTags.filter(t => !t.name.startsWith('og:'));
-                const ogTags = allMetaTags.filter(t => t.name.startsWith('og:'));
+                const generalTags = allMetaTags.filter(t => !t.name.startsWith('og:') && !t.name.startsWith('twitter:'));
+                const ogAndTwitterTags = allMetaTags.filter(t => t.name.startsWith('og:') || t.name.startsWith('twitter:'));
 
                 // --- Display Data ---
                 // SERP Preview
@@ -305,14 +415,14 @@
                 }
 
                 document.getElementById('metaTagsBody').innerHTML = createTableRows(generalTags);
-                document.getElementById('ogTagsBody').innerHTML = createTableRows(ogTags);
+                document.getElementById('ogTagsBody').innerHTML = createTableRows(ogAndTwitterTags);
 
                 status.textContent = '';
                 resultsContainer.style.display = 'block';
 
             } catch (error) {
                 console.error(error);
-                status.textContent = `Error: Could not analyze the URL. It might be down or blocking requests.`;
+                status.textContent = `Error: Could not analyze the URL. It might be down or blocking requests. Please ensure the URL is correct and publicly accessible.`;
             } finally {
                 analyzeButton.disabled = false;
             }
@@ -321,6 +431,19 @@
         analyzeButton.addEventListener('click', analyze);
         urlInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') analyze();
+        });
+
+        // FAQ Toggle Logic
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                question.classList.toggle('active');
+                if (answer.style.display === 'block') {
+                    answer.style.display = 'none';
+                } else {
+                    answer.style.display = 'block';
+                }
+            });
         });
     });
   </script>
