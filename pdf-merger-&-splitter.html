@@ -91,9 +91,10 @@
             box-shadow: 0 8px 25px var(--shadow-color);
             margin-bottom: 30px;
         }
-        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1, h2, h3 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
         h1 { font-size: 2em; }
         h2 { font-size: 1.6em; }
+        h3 { font-size: 1.3em; margin-top: 25px; }
         
         .tool-container { text-align: center; }
         .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
@@ -138,6 +139,26 @@
         .footer-container li { display: inline; margin: 0 10px; }
         .footer-container a { color: var(--primary-color); text-decoration: none; }
         .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+
+        .faq-section {
+            text-align: left;
+        }
+        .faq-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .faq-section li {
+            margin-bottom: 15px;
+        }
+        .faq-section h4 {
+            color: var(--text-color);
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+        .faq-section p {
+            margin-left: 15px;
+            line-height: 1.6;
+        }
     </style>
 
     <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
@@ -167,8 +188,51 @@
 
   <main class="main-container">
     <section class="content-section">
-        <h1>Online PDF Merger & Splitter</h1>
-        <p>Manage your PDF files with ease using our secure and powerful online tools. Whether you need to combine several PDFs into a single document or extract specific pages from a large file, our merger and splitter have you covered. The entire process is done in your browser, so your files are never uploaded to a server. It's fast, free, and completely private.</p>
+        <h1>Free Online PDF Merger & Splitter: Combine & Extract Pages Securely</h1>
+        <p>Welcome to ToolsBucket's free online PDF Merger & Splitter, your ultimate solution for managing PDF documents directly in your web browser. This powerful and intuitive tool allows you to effortlessly combine multiple PDF files into a single, cohesive document or precisely extract specific pages from a larger PDF. Designed with user privacy and security at its core, all PDF processing happens locally on your device, meaning your sensitive files are never uploaded to any server. Enjoy a fast, reliable, and completely private experience for all your PDF manipulation needs.</p>
+
+        <h2>What Our PDF Tool Does</h2>
+        <p>Our comprehensive PDF tool offers two primary functions: merging and splitting. The **PDF Merger** allows you to take any number of individual PDF documents and combine them into one unified file. This is incredibly useful for consolidating reports, chapters of a book, or various related documents into a single, easy-to-manage PDF. The order in which you select your files will be the order in which they appear in the final merged document, giving you full control over the structure.</p>
+        <p>The **PDF Splitter**, on the other hand, enables you to extract specific pages or page ranges from a single PDF document. Whether you need a few critical pages from a lengthy contract, a particular section of a research paper, or just want to break down a large file into smaller, more manageable parts, our splitter provides the precision you need. You can define exact pages (e.g., '5'), continuous ranges (e.g., '1-10'), or even a combination of both (e.g., '1-3, 7, 12-15'). This ensures you only keep the content that matters most.</p>
+
+        <h2>How to Use Our Free PDF Merger & Splitter</h2>
+
+        <h3>Using the PDF Merger:</h3>
+        <ol>
+            <li><strong>Select the "Merge PDFs" Tab:</strong> Ensure the "Merge PDFs" tab is active.</li>
+            <li><strong>Add Your PDF Files:</strong> Click on the "Drag & drop PDF files here, or click to select" area, or simply drag and drop your PDF documents onto it. You can select multiple files at once. The files will be processed in the order you select them.</li>
+            <li><strong>Verify Files:</strong> Once selected, the names and sizes of your chosen PDF files will appear in the "File Info" section.</li>
+            <li><strong>Initiate Merge:</strong> Click the "Process" button. Our tool will quickly combine your PDFs.</li>
+            <li><strong>Download Your Merged PDF:</strong> A "Download File" button will appear. Click it to save your newly merged PDF document to your device. The file will be named 'merged.pdf'.</li>
+        </ol>
+
+        <h3>Using the PDF Splitter:</h3>
+        <ol>
+            <li><strong>Select the "Split PDF" Tab:</strong> Click on the "Split PDF" tab to activate the splitting mode.</li>
+            <li><strong>Add Your PDF File:</strong> Click on the "Drag & drop a single PDF here, or click to select" area, or drag and drop **one** PDF document onto it. Remember, only a single file can be processed for splitting at a time.</li>
+            <li><strong>Define Page Ranges:</strong> In the "Pages to extract" input field, enter the page numbers or ranges you wish to extract.
+                <ul>
+                    <li>For single pages, enter the page number (e.g., `5`).</li>
+                    <li>For a range of pages, use a hyphen (e.g., `1-3`).</li>
+                    <li>For multiple pages or ranges, separate them with commas (e.g., `1-3, 5, 8-10`).</li>
+                </ul>
+                Please note that page numbers are 1-indexed (e.g., '1' for the first page).</li>
+            <li><strong>Initiate Split:</strong> Click the "Process" button. The tool will then extract the specified pages.</li>
+            <li><strong>Download Your Split PDF:</strong> A "Download File" button will appear. Click it to save your extracted PDF document to your device. The file will be named 'split.pdf'.</li>
+        </ol>
+        <p>Throughout the process, a status message will keep you informed of the tool's progress.</p>
+
+        <h2>Benefits of Using Our Online PDF Tools</h2>
+        <ul>
+            <li><strong>Uncompromised Privacy:</strong> Your documents never leave your browser. All merging and splitting operations are performed client-side, ensuring your sensitive information remains completely private and secure. No uploads, no servers, no data breaches.</li>
+            <li><strong>Completely Free:</strong> Enjoy full access to all features of our PDF Merger and Splitter without any hidden costs, subscriptions, or limitations.</li>
+            <li><strong>Fast and Efficient:</strong> Leveraging modern browser technologies, our tool processes your PDFs quickly, saving you valuable time.</li>
+            <li><strong>User-Friendly Interface:</strong> Designed for simplicity, our intuitive interface makes it easy for anyone to merge or split PDFs, regardless of technical expertise.</li>
+            <li><strong>No Software Installation:</strong> Access and use our tools instantly from any device with a web browser. There's no need to download or install any additional software.</li>
+            <li><strong>Cross-Platform Compatibility:</strong> Works seamlessly across Windows, macOS, Linux, ChromeOS, and mobile devices, as long as you have a modern web browser.</li>
+            <li><strong>No Watermarks:</strong> Your output PDFs will be clean and professional, free from any distracting watermarks or branding.</li>
+            <li><strong>Streamlined Document Management:</strong> Easily organize, consolidate, and tailor your PDF files to meet your exact needs for presentations, archiving, or sharing.</li>
+        </ul>
     </section>
 
     <div class="tool-container">
@@ -200,6 +264,44 @@
     <section class="content-section">
         <h2>About PDF Manipulation</h2>
         <p><strong>Merging PDFs</strong> is useful when you want to combine multiple documents, like reports or chapters of a book, into a single, easy-to-share file. <strong>Splitting a PDF</strong> is helpful when you only need to extract a few important pages from a large document, reducing file size and making it easier to focus on specific content.</p>
+    </section>
+
+    <section class="content-section faq-section">
+        <h3>Frequently Asked Questions (FAQs)</h3>
+        <ul>
+            <li>
+                <h4>Is this PDF Merger and Splitter truly free?</h4>
+                <p>Yes, absolutely! Our online PDF Merger & Splitter is completely free to use. There are no hidden fees, subscriptions, or limitations on the number or size of files you can process.</p>
+            </li>
+            <li>
+                <h4>Are my PDF files safe and private?</h4>
+                <p>Your privacy and security are our top priority. All PDF processing (merging and splitting) is done locally within your web browser. Your files are never uploaded to our servers or any third-party servers, ensuring your sensitive data remains entirely on your device.</p>
+            </li>
+            <li>
+                <h4>Do I need to download any software?</h4>
+                <p>No software download or installation is required. Our tool is entirely web-based, allowing you to access and use it directly from your browser on any operating system (Windows, macOS, Linux, ChromeOS, Android, iOS).</p>
+            </li>
+            <li>
+                <h4>What is the maximum file size I can merge or split?</h4>
+                <p>Since the processing is done in your browser, the main limitation is your device's available memory (RAM) and processing power. For most modern computers, you can comfortably work with large PDF files, often up to several hundred megabytes, without issues. Extremely large files with thousands of pages might take longer or require more resources.</p>
+            </li>
+            <li>
+                <h4>In what order will my files be merged?</h4>
+                <p>When merging PDFs, the files will be combined in the order in which you select them from your file explorer, or the order in which you drag and drop them into the upload area. Ensure you select them in your desired sequence for the final document.</p>
+            </li>
+            <li>
+                <h4>Can I split a PDF into multiple new PDFs?</h4>
+                <p>Our current splitting functionality extracts specified pages into a *single* new PDF document. If you need to create multiple separate PDFs from different page ranges of the original, you would perform the splitting operation multiple times with different page range inputs for each desired output file.</p>
+            </li>
+            <li>
+                <h4>What happens if my browser crashes during processing?</h4>
+                <p>As all operations are client-side, if your browser crashes, the process would stop, and you would need to restart. However, your original files would remain untouched on your device, and no data would have been sent off your computer.</p>
+            </li>
+            <li>
+                <h4>Is there a limit to how many files I can merge?</h4>
+                <p>While there isn't a strict hard-coded limit, the practical limit depends on your browser's capabilities and your device's resources (RAM). For typical use, merging dozens of smaller PDFs should not be an issue. For very large numbers of files or extremely large files, your browser might slow down or become unresponsive.</p>
+            </li>
+        </ul>
     </section>
 
 	  </===================Ads Section==================>
@@ -263,6 +365,7 @@
             processBtn.disabled = true;
             status.textContent = '';
             downloadLink.style.display = 'none';
+            pageRangesInput.value = ''; // Clear page ranges for split mode
         };
 
         const handleFiles = (files) => {
@@ -293,7 +396,10 @@
         uploadArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
 
         processBtn.addEventListener('click', async () => {
-            if (selectedFiles.length === 0) return;
+            if (selectedFiles.length === 0) {
+                status.textContent = 'Please select PDF files first.';
+                return;
+            }
 
             status.textContent = 'Processing... Please wait.';
             processBtn.disabled = true;
@@ -316,20 +422,32 @@
                     const pdfDoc = await PDFDocument.load(pdfBytes);
                     const newPdf = await PDFDocument.create();
                     
-                    const ranges = pageRangesInput.value.split(',').map(s => s.trim());
+                    const ranges = pageRangesInput.value.split(',').map(s => s.trim()).filter(s => s !== '');
                     const pagesToCopy = new Set();
+
+                    if (ranges.length === 0) {
+                        throw new Error("Please enter page numbers or ranges to split.");
+                    }
+
                     ranges.forEach(range => {
                         if (range.includes('-')) {
                             const [start, end] = range.split('-').map(Number);
+                            if (isNaN(start) || isNaN(end) || start <= 0 || end <= 0 || start > end) {
+                                throw new Error(`Invalid page range: ${range}`);
+                            }
                             for (let i = start; i <= end; i++) pagesToCopy.add(i - 1);
                         } else {
-                            if(!isNaN(Number(range))) pagesToCopy.add(Number(range) - 1);
+                            const pageNum = Number(range);
+                            if (isNaN(pageNum) || pageNum <= 0) {
+                                throw new Error(`Invalid page number: ${range}`);
+                            }
+                            pagesToCopy.add(pageNum - 1);
                         }
                     });
                     
                     const validPages = Array.from(pagesToCopy).filter(p => p >= 0 && p < pdfDoc.getPageCount());
                     if (validPages.length === 0) {
-                        throw new Error("No valid pages selected to split.");
+                        throw new Error("No valid pages found in the specified ranges. Please check your input.");
                     }
                     
                     const copiedPages = await newPdf.copyPages(pdfDoc, validPages);
@@ -344,7 +462,7 @@
                 
                 downloadLink.href = url;
                 downloadLink.style.display = 'inline-block';
-                status.textContent = 'Processing complete!';
+                status.textContent = 'Processing complete! Your file is ready for download.';
 
             } catch (error) {
                 console.error(error);
@@ -353,6 +471,9 @@
                 processBtn.disabled = false;
             }
         });
+
+        // Initialize with merge mode active
+        switchMode('merge');
     });
   </script>
 </body>
