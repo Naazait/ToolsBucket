@@ -91,9 +91,10 @@
             box-shadow: 0 8px 25px var(--shadow-color);
             margin-bottom: 30px;
         }
-        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
+        h1, h2, h3 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
         h1 { font-size: 2em; }
         h2 { font-size: 1.6em; }
+        h3 { font-size: 1.3em; }
         
         .tool-container {
             display: grid;
@@ -115,8 +116,8 @@
         #fileInfo { margin-top: 15px; font-weight: 600; }
         
         .options-area label { display: block; margin-top: 15px; font-weight: 600; }
-        .target-size-input { display: flex; gap: 10px; align-items: center; }
-        .target-size-input input { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .target-size-input { display: flex; gap: 10px; align-items: center; justify-content: center; }
+        .target-size-input input { flex: 0 1 100px; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); text-align: right; }
         .target-size-input select { padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); }
 
         .btn {
@@ -124,6 +125,7 @@
             color: white; padding: 12px 20px; border: none;
             border-radius: 8px; cursor: pointer; margin-top: 20px;
             font-size: 16px; font-weight: 600;
+            display: inline-block; /* For download link */
         }
         .btn:disabled { background-color: #a0c8ff; cursor: not-allowed; }
         #downloadLink { display: none; background-color: #28a745; text-decoration: none; }
@@ -134,6 +136,56 @@
         .footer-container li { display: inline; margin: 0 10px; }
         .footer-container a { color: var(--primary-color); text-decoration: none; }
         .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+
+        .content-section p, .content-section ol, .content-section ul {
+            text-align: left;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .content-section ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+        .content-section ol {
+            list-style: decimal;
+            padding-left: 20px;
+        }
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .faq-item h3 {
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        .faq-item h3::after {
+            content: '+';
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+        .faq-item.active h3::after {
+            transform: rotate(45deg);
+        }
+        .faq-item-content {
+            display: none;
+            padding-left: 15px;
+            margin-top: -5px; /* Adjust spacing */
+            line-height: 1.6;
+        }
+        .faq-item.active .faq-item-content {
+            display: block;
+        }
     </style>
 	<!========Ads Section ===========>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5037596819589415"
@@ -150,9 +202,10 @@
 
   <main class="main-container">
     <section class="content-section">
-        <h1>Advanced PDF Compressor</h1>
-        <p>Reduce your PDF file size to a specific target with our advanced online compressor. This tool is perfect when you need to meet a specific file size requirement, like for online submissions or emails. Our smart algorithm automatically adjusts the compression level to get as close as possible to your target size, all while keeping the process secure within your browser.</p>
-        <p><strong>Note:</strong> This process converts PDF pages to images, so text in the final document may not be selectable.</p>
+        <h1>Advanced PDF Compressor: Reduce PDF Size to Your Exact Needs</h1>
+        <p>Welcome to ToolsBucket's **Advanced PDF Compressor**, your go-to online solution for precisely reducing the size of your PDF documents. Whether you need to meet stringent file size limits for email attachments, online submission forms, or simply want to save storage space, our tool offers a smart and efficient way to achieve your desired PDF file size in kilobytes (KB) or megabytes (MB). Forget the guesswork of traditional compressors; ours is designed to hit your target size as closely as possible, automatically balancing document quality with drastic file reduction. All this is performed securely within your browser, ensuring your documents never leave your device.</p>
+        <p>The core technology behind our advanced compressor involves converting each page of your PDF into an optimized image and then re-packaging these images into a new, smaller PDF. This unique approach allows us to have granular control over the final file size. While this method is incredibly effective for compression, it's important to note that text within the final compressed PDF may no longer be selectable as it will be part of an image. This makes it ideal for documents where file size is paramount, and text selection is not a primary requirement, such as reports, presentations, or scanned documents.</p>
+        <p>Experience a seamless, secure, and precise PDF compression process. Our intuitive interface makes it easy for anyone to use, from students and professionals to everyday users. Achieve smaller file sizes without compromising the visual integrity of your document. With ToolsBucket, powerful PDF management is always just a few clicks away.</p>
     </section>
 
     <div class="tool-container">
@@ -170,7 +223,7 @@
             <div id="options" style="display:none;">
                 <label for="targetSize">Target File Size:</label>
                 <div class="target-size-input">
-                    <input type="number" id="targetSize" value="1">
+                    <input type="number" id="targetSize" value="1" min="0.1" step="0.1">
                     <select id="sizeUnit">
                         <option value="MB">MB</option>
                         <option value="KB">KB</option>
@@ -189,13 +242,84 @@
       
     <!-- === ADDED "HOW TO" SECTION === -->
     <section class="content-section">
-        <h2>How to Compress Your PDF</h2>
+        <h2>How to Compress Your PDF to a Specific Size</h2>
+        <p>Using our Advanced PDF Compressor is straightforward and requires no prior technical expertise. Follow these simple steps to reduce your PDF file size:</p>
         <ol>
-            <li><strong>Upload Your File:</strong> Drag and drop your PDF file onto the upload area, or click to select a file.</li>
-            <li><strong>Set Target Size:</strong> Enter your desired file size in KB or MB. The tool will try to get as close as possible to this size.</li>
-            <li><strong>Compress:</strong> Click the "Compress PDF" button. The tool will process your file locally in your browser.</li>
-            <li><strong>Download:</strong> Once complete, the download button will appear. Click it to save your new, smaller PDF.</li>
+            <li><strong>Upload Your File:</strong> Begin by uploading the PDF document you wish to compress. You can do this by dragging and dropping your file directly onto the designated "Upload Area" or by clicking the area to open your file explorer and select the PDF. The tool will then display your file's name and original size.</li>
+            <li><strong>Set Your Target Size:</strong> Once your PDF is uploaded, a section for setting the target file size will appear. Here, you can enter your desired file size in the input field. Choose your preferred unit (kilobytes "KB" or megabytes "MB") from the dropdown menu. Our smart algorithm will then aim to get as close as possible to this specified size.</li>
+            <li><strong>Initiate Compression:</strong> After setting your target size, simply click the "Compress PDF" button. Our tool will begin processing your file. This happens entirely within your web browser, ensuring your data remains private and secure. A status message will keep you informed of the compression progress.</li>
+            <li><strong>Download Your Compressed PDF:</strong> Once the compression is complete, a "Download Compressed PDF" button will appear. Click this button to save your newly optimized, smaller PDF to your device. The status message will also show you the achieved size and the percentage of savings.</li>
         </ol>
+        <p>That's it! In just a few easy steps, you can significantly reduce your PDF file size to meet any requirement, making your documents more manageable for sharing, uploading, and storage.</p>
+    </section>
+
+    <section class="content-section">
+        <h2>Benefits of Using Our Advanced PDF Compressor</h2>
+        <p>Our online PDF compressor offers a multitude of advantages, making it an indispensable tool for anyone who frequently works with PDF documents:</p>
+        <ul>
+            <li><strong>Precise Size Control:</strong> Unlike generic compressors, our tool allows you to specify a target file size. This is incredibly useful for adhering to strict upload limits for applications, academic submissions, or government portals.</li>
+            <li><strong>Browser-Based Security:</strong> Your documents are processed locally within your web browser. This means your sensitive information never leaves your device or gets uploaded to external servers, guaranteeing maximum privacy and security.</li>
+            <li><strong>Optimized for Sharing:</strong> Smaller PDF files are much easier and faster to email, upload, and share across various platforms, saving you and your recipients time and bandwidth.</li>
+            <li><strong>Saves Storage Space:</strong> By reducing the file size of your PDFs, you can free up valuable storage space on your computer, cloud drives, and mobile devices.</li>
+            <li><strong>Maintains Visual Quality:</strong> Our advanced algorithm works to balance file size reduction with visual fidelity. While text becomes unselectable (as pages are converted to images), the visual appearance of your document remains clear and readable.</li>
+            <li><strong>Completely Free and Accessible:</strong> Enjoy all the powerful features of our compressor without any cost or subscription. It's an online tool, meaning it's accessible from any operating system and device with an internet connection – no software installation required.</li>
+            <li><strong>User-Friendly Interface:</strong> The tool is designed with simplicity in mind. Its intuitive layout ensures that even first-time users can navigate and compress PDFs effortlessly.</li>
+        </ul>
+        <p>Streamline your document workflow and overcome file size limitations with ToolsBucket's Advanced PDF Compressor. It's the smart choice for efficient and secure PDF management.</p>
+    </section>
+
+    <section class="content-section">
+        <h2>Frequently Asked Questions (FAQs)</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <h3>What does "Advanced PDF Compressor" mean?</h3>
+                <div class="faq-item-content">
+                    <p>Our "Advanced PDF Compressor" stands out because it allows you to specify a *target file size* (e.g., 500KB, 2MB). Instead of just offering general compression levels, it intelligently works to get your PDF as close as possible to the exact size you need by optimizing the image quality of each page, which are then re-packaged into a new PDF.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3>Is my PDF secure when I use this tool?</h3>
+                <div class="faq-item-content">
+                    <p>Absolutely. Your privacy and security are our top priority. The entire compression process happens locally within your web browser. Your PDF file is never uploaded to our servers, meaning your data remains entirely on your device and is never stored or accessed by us.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3>Will the text in my compressed PDF be selectable?</h3>
+                <div class="faq-item-content">
+                    <p>No, the text in the final compressed PDF will generally not be selectable. This is because our compression method converts each page of your PDF into an optimized image to achieve the target file size. The resulting PDF is essentially a collection of images, which are visually clear but do not retain selectable text or embedded fonts.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3>What happens if the tool cannot reach my exact target size?</h3>
+                <div class="faq-item-content">
+                    <p>While our tool strives for precision, achieving an *exact* target size down to the byte can sometimes be challenging due to the nature of image compression and PDF structure. Our algorithm will compress the file as much as possible, using various quality levels, to get as close as it can to your specified target size without making the file larger than necessary. If your original file is already smaller than your target, it will simply tell you so and not compress further.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3>Is there a limit to the file size I can upload?</h3>
+                <div class="faq-item-content">
+                    <p>Since the processing occurs in your browser, the main limitation is your device's memory and processing power. Extremely large PDFs (e.g., hundreds of MBs or thousands of pages) might take longer or could potentially encounter browser memory limits. However, for most common PDF sizes, the tool works efficiently.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3>Can I compress multiple PDFs at once?</h3>
+                <div class="faq-item-content">
+                    <p>Currently, our Advanced PDF Compressor processes one PDF file at a time to ensure optimal performance and precise control over each document's target size. You can easily compress multiple files by processing them sequentially.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3>What if my PDF already has a very small file size?</h3>
+                <div class="faq-item-content">
+                    <p>If your uploaded PDF is already smaller than the target size you've set, the tool will inform you that further compression is not needed to meet your goal. It will not attempt to compress a file if it's already below the target.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3>What is the maximum compression ratio I can expect?</h3>
+                <div class="faq-item-content">
+                    <p>The compression ratio depends heavily on the content of your PDF. PDFs with many images, graphics, or complex formatting will generally see greater reduction. Simple text-only PDFs might have less room for drastic compression. Our tool prioritizes hitting your target size, which can result in significant reductions if necessary.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
 	  </===================Ads Section==================>
@@ -285,23 +409,35 @@
                 const targetBytes = targetUnit === 'MB' ? targetSizeValue * 1024 * 1024 : targetSizeValue * 1024;
 
                 if (selectedFile.size < targetBytes) {
-                    status.textContent = "File is already smaller than the target size.";
+                    status.textContent = `File is already smaller than the target size (${formatFileSize(targetBytes)}).`;
                     compressBtn.disabled = false;
                     return;
                 }
 
                 const fileBytes = await selectedFile.arrayBuffer();
-                const pdfToProcess = await pdfjsLib.getDocument(fileBytes).promise;
+                const pdfToProcess = await pdfjsLib.getDocument({data: fileBytes}).promise; // Use data property
+
+                // Determine an initial scale for rendering
+                // We'll aim for a default resolution, could be adjusted later for more aggressive compression
+                const initialPage = await pdfToProcess.getPage(1);
+                const initialViewport = initialPage.getViewport({ scale: 1 });
+                const baseScale = Math.min(1.5, 1000 / Math.max(initialViewport.width, initialViewport.height)); // Max dimension 1000px, but up to 1.5 scale
+
+
+                // Quality levels from high to low for images (JPEG)
+                // We'll iterate through these to find the best fit
+                const qualityLevels = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
                 
-                const qualityLevels = [0.95, 0.85, 0.75, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
                 let bestBlob = null;
+                let lastValidBlob = null;
                 
                 for (const quality of qualityLevels) {
                     status.textContent = `Processing at ${Math.round(quality * 100)}% quality...`;
                     const tempPdfDoc = await PDFDocument.create();
+                    
                     for (let i = 1; i <= pdfToProcess.numPages; i++) {
                         const page = await pdfToProcess.getPage(i);
-                        const viewport = page.getViewport({ scale: 1.5 });
+                        const viewport = page.getViewport({ scale: baseScale });
                         const canvas = document.createElement('canvas');
                         const context = canvas.getContext('2d');
                         canvas.width = viewport.width;
@@ -317,11 +453,23 @@
                     
                     const compressedBytes = await tempPdfDoc.save();
                     const currentBlob = new Blob([compressedBytes], { type: 'application/pdf' });
-                    bestBlob = currentBlob;
                     
+                    // Always keep track of the last successfully generated blob
+                    lastValidBlob = currentBlob; 
+
+                    // If we've hit or gone below the target, this is our best candidate
                     if (currentBlob.size <= targetBytes) {
-                        break; // Target achieved
+                        bestBlob = currentBlob;
+                        break; 
                     }
+                }
+
+                // If target wasn't met even at lowest quality, use the lowest quality result
+                if (!bestBlob && lastValidBlob) {
+                    bestBlob = lastValidBlob;
+                    status.textContent += " Could not reach target size, providing best possible compression.";
+                } else if (!bestBlob) {
+                    throw new Error("Failed to compress PDF."); // Should not happen if lastValidBlob is always set
                 }
 
                 const url = URL.createObjectURL(bestBlob);
@@ -335,11 +483,19 @@
                 status.innerHTML = `Success! Target: <strong>${formatFileSize(targetBytes)}</strong>, Achieved: <strong>${formatFileSize(newSize)}</strong>. Saved ${savings}%.`;
 
             } catch (error) {
-                console.error(error);
-                status.textContent = 'An error occurred during compression.';
+                console.error("Compression error:", error);
+                status.textContent = 'An error occurred during compression. Please try again.';
             } finally {
                 compressBtn.disabled = false;
             }
+        });
+
+        // FAQ Toggle Logic
+        document.querySelectorAll('.faq-item h3').forEach(header => {
+            header.addEventListener('click', () => {
+                const faqItem = header.closest('.faq-item');
+                faqItem.classList.toggle('active');
+            });
         });
     });
   </script>
