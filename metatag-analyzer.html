@@ -357,7 +357,7 @@
   </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
         const urlInput = document.getElementById('urlInput');
         const analyzeButton = document.getElementById('analyzeButton');
         const status = document.getElementById('status');
@@ -392,14 +392,35 @@
 
                 const title = getTagContent('title');
                 const description = getMetaContent('name', 'description');
+                const keywords = getMetaContent('name', 'keywords');
+
+                // Collect all relevant meta tags (name and property)
+                const allMetaElements = Array.from(doc.querySelectorAll('meta[name], meta[property]'));
                 
-                const allMetaTags = Array.from(doc.querySelectorAll('meta')).map(tag => ({
-                    name: tag.getAttribute('name') || tag.getAttribute('property'),
-                    content: tag.getAttribute('content')
-                })).filter(tag => tag.name && tag.content); // Filter out tags without name or content
-                
-                const generalTags = allMetaTags.filter(t => !t.name.startsWith('og:') && !t.name.startsWith('twitter:'));
-                const ogAndTwitterTags = allMetaTags.filter(t => t.name.startsWith('og:') || t.name.startsWith('twitter:'));
+                const standardMetaTags = [];
+                const ogAndTwitterTags = [];
+
+                // Add primary tags
+                if (title !== 'Not found') standardMetaTags.push({ name: 'title', content: title });
+                if (description !== 'Not found') standardMetaTags.push({ name: 'description', content: description });
+                if (keywords !== 'Not found') standardMetaTags.push({ name: 'keywords', content: keywords });
+
+                allMetaElements.forEach(tag => {
+                    const name = tag.getAttribute('name') || tag.getAttribute('property');
+                    const content = tag.getAttribute('content');
+
+                    if (name && content) {
+                        if (name.startsWith('og:') || name.startsWith('twitter:')) {
+                            ogAndTwitterTags.push({ name, content });
+                        } else {
+                            // Avoid adding duplicate title, description, keywords if already added
+                            const isDuplicate = standardMetaTags.some(t => t.name === name);
+                            if (!isDuplicate) {
+                                standardMetaTags.push({ name, content });
+                            }
+                        }
+                    }
+                });
 
                 // --- Display Data ---
                 // SERP Preview
@@ -414,7 +435,7 @@
                     return tags.map(tag => `<tr><th>${tag.name}</th><td>${tag.content}</td></tr>`).join('');
                 }
 
-                document.getElementById('metaTagsBody').innerHTML = createTableRows(generalTags);
+                document.getElementById('metaTagsBody').innerHTML = createTableRows(standardMetaTags);
                 document.getElementById('ogTagsBody').innerHTML = createTableRows(ogAndTwitterTags);
 
                 status.textContent = '';
@@ -422,7 +443,7 @@
 
             } catch (error) {
                 console.error(error);
-                status.textContent = `Error: Could not analyze the URL. It might be down or blocking requests. Please ensure the URL is correct and publicly accessible.`;
+                status.textContent = `Error: Could not analyze the URL. It might be down or blocking requests, or you're trying to analyze a non-public URL. Please ensure the URL is correct and publicly accessible.`;
             } finally {
                 analyzeButton.disabled = false;
             }
