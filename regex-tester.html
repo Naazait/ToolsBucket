@@ -47,6 +47,7 @@
             --shadow-color: rgba(0, 123, 255, 0.1);
             --highlight-bg: #ffe066;
             --error-bg: #f8d7da;
+            --error-color: #dc3545; /* Defined error color for consistency */
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -88,11 +89,11 @@
             box-shadow: 0 8px 25px var(--shadow-color);
             margin-bottom: 30px;
         }
-        h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
-        h1 { font-size: 2em; }
-        h2 { font-size: 1.6em; }
+        h1, h2, h3 { color: var(--heading-color); margin-bottom: 15px; }
+        h1 { font-size: 2em; text-align: center; }
+        h2 { font-size: 1.6em; text-align: center; }
         
-        .regex-input-container { display: flex; align-items: center; gap: 10px; }
+        .regex-input-container { display: flex; align-items: center; gap: 10px; margin-bottom: 15px;}
         #regexInput {
             flex-grow: 1;
             font-family: 'Inconsolata', monospace;
@@ -103,8 +104,26 @@
         }
         #regexInput.error { border-color: var(--error-color); }
         .flags { display: flex; gap: 10px; }
-        .flag-toggle { background-color: #f0f0f0; border: 1px solid var(--border-color); border-radius: 5px; padding: 5px 10px; cursor: pointer; }
-        .flag-toggle.active { background-color: var(--primary-color); color: white; }
+        .flag-toggle { 
+            background-color: #f0f0f0; 
+            border: 1px solid var(--border-color); 
+            border-radius: 5px; 
+            padding: 5px 10px; 
+            cursor: pointer; 
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+        }
+        .flag-toggle:hover {
+            background-color: #e0e0e0;
+        }
+        .flag-toggle.active { 
+            background-color: var(--primary-color); 
+            color: white; 
+            border-color: var(--primary-color);
+        }
+        .flag-toggle.active:hover {
+            background-color: #0056b3;
+        }
 
         .text-area-container { position: relative; margin-top: 15px; }
         #textInput, #highlightOverlay {
@@ -118,12 +137,58 @@
             line-height: 1.5;
             white-space: pre-wrap;
             word-wrap: break-word;
+            overflow: auto; /* Ensure scrollbars appear for both */
         }
-        #textInput { background: transparent; z-index: 2; color: inherit; resize: vertical; }
-        #highlightOverlay { position: absolute; top: 0; left: 0; z-index: 1; color: transparent; pointer-events: none; }
-        #highlightOverlay mark { background-color: var(--highlight-bg); color: transparent; border-radius: 2px;}
+        #textInput { 
+            background: transparent; 
+            z-index: 2; 
+            color: inherit; 
+            resize: vertical; 
+            position: relative; /* Make it positionable for z-index */
+        }
+        #highlightOverlay { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            z-index: 1; 
+            color: transparent; 
+            pointer-events: none; 
+            background-color: #fcfcfc; /* Slightly different background for overlay */
+        }
+        #highlightOverlay mark { 
+            background-color: var(--highlight-bg); 
+            color: transparent; 
+            border-radius: 2px;
+            padding: 0 1px; /* Small padding to make highlight visible */
+        }
 
-        #matchInfo { margin-top: 15px; background-color: #f9f9f9; padding: 15px; border-radius: 8px; max-height: 200px; overflow-y: auto; }
+        #matchInfo { 
+            margin-top: 20px; 
+            background-color: #f9f9f9; 
+            padding: 15px; 
+            border-radius: 8px; 
+            max-height: 300px; 
+            overflow-y: auto; 
+            border: 1px solid #eee;
+        }
+        #matchInfo h3 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: var(--primary-color);
+        }
+        #matchInfo p {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        #matchInfo ul {
+            margin-left: 20px;
+            list-style: disc;
+            margin-bottom: 10px;
+        }
+        #matchInfo li {
+            margin-bottom: 4px;
+            font-size: 0.95em;
+        }
         
         footer { text-align: center; }
         footer h3 {
@@ -147,11 +212,62 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 1em;
+            transition: color 0.2s ease-in-out;
+        }
+        footer a:hover {
+            color: #0056b3;
         }
         footer .footer-bottom p {
             font-size: 0.9em;
             color: #888;
             margin: 0;
+        }
+
+        .seo-description h2, .seo-description h3 {
+            text-align: left; /* Align headings left in descriptive sections */
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: var(--heading-color);
+        }
+        .seo-description p, .seo-description ul {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .seo-description ul {
+            margin-left: 25px;
+            list-style-type: disc;
+        }
+        .seo-description li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .brand-name {
+                font-size: 1.5em;
+            }
+            .regex-input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .flags {
+                justify-content: center;
+                margin-top: 10px;
+            }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            .content-section, .tool-container, footer {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            footer li {
+                display: block;
+                margin: 8px 0;
+            }
         }
     </style>
 
@@ -184,6 +300,34 @@
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "'g' stands for Global search, which finds all matches instead of stopping after the first one. 'i' stands for Case-Insensitive search, which ignores differences between uppercase and lowercase letters. 'm' stands for Multiline mode, which allows the start (^) and end ($) anchors to match the start and end of individual lines, not just the whole string."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this regex tester free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our Online Regex Tester is completely free to use, with no hidden costs or subscriptions. Enjoy unlimited testing and debugging of your regular expressions right in your browser."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data safe when using this tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All regex testing and processing are performed entirely within your web browser. Your text and patterns are never sent to our servers, ensuring complete privacy and security of your data."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I use this tool for different regex flavors?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our regex tester is primarily based on JavaScript's regular expression engine. While many common patterns and syntaxes are universal, there might be slight differences in advanced features compared to other regex flavors like PCRE (Perl Compatible Regular Expressions), Python, or Ruby. It's a great tool for general testing and learning, but always verify complex patterns in your target environment."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What are regex groups and how do I use them?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Regex groups (captured groups) are parts of a regular expression enclosed in parentheses `()`. They allow you to capture specific portions of a match. For example, in `(\d{3})-(\d{3})-(\d{4})`, the first group captures the area code, the second the middle three digits, and the third the last four. Our tool displays these captured groups in the match information section, helping you understand how your pattern extracts specific data."
         }
       }]
     }
@@ -228,22 +372,105 @@
     </div>
 
     <!=================Banner Ads Section ==================>
-        
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-5037596819589415"
+             data-ad-slot="YOUR_AD_SLOT_ID_1"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
   		<!=================Banner Ads Section ==================>
       
     <!-- === MOVED HOW-TO SECTION === -->
-    <section class="content-section">
-        <h2>How to Use This Regex Tester</h2>
+    <section class="content-section seo-description">
+        <h2>Unleash the Power of Regular Expressions with Our Free Online Tester</h2>
+        <p>Welcome to ToolsBucket's premier **Online Regex Tester**, your ultimate companion for mastering and debugging regular expressions. Whether you're a seasoned developer, a data analyst, or just starting your journey into text pattern matching, our tool provides an intuitive and efficient environment to experiment, validate, and understand your regex patterns. Forget the tedious trial-and-error process; our tester offers real-time feedback, ensuring you can craft perfect regex strings with speed and confidence. This web-based utility is designed to be fast, secure, and incredibly user-friendly, processing all data locally within your browser for maximum privacy.</p>
+
+        <h3>What Our Regex Tester Does</h3>
+        <p>Our powerful **Regex Tester** acts as a virtual sandbox for your regular expressions. It allows you to:</p>
+        <ul>
+            <li><strong>Validate Regex Patterns:</strong> Instantly check if your regular expression is syntactically correct and functioning as intended.</li>
+            <li><strong>Real-time Matching and Highlighting:</strong> As you type your regex pattern and test string, our tool provides immediate visual feedback. All matching parts of your text are highlighted, making it easy to see exactly what your pattern is capturing.</li>
+            <li><strong>Detailed Match Information:</strong> Go beyond simple highlights. For each successful match, our tester provides comprehensive details including:
+                <ul>
+                    <li>The full matched string.</li>
+                    <li>The starting index of the match within your text.</li>
+                    <li>Any captured groups (sub-matches within parentheses), allowing you to pinpoint specific data extractions like phone numbers, email components, or dates.</li>
+                </ul>
+            </li>
+            <li><strong>Flag Control:</strong> Easily toggle common regex flags like 'Global' (g), 'Case-Insensitive' (i), and 'Multiline' (m) to observe their impact on your pattern's behavior.</li>
+            <li><strong>Error Detection:</strong> If your regex pattern is invalid, the tool will immediately alert you to the error, helping you correct syntax mistakes quickly.</li>
+        </ul>
+
+        <h3>How to Effectively Use This Online Regex Tool</h3>
+        <p>Using our **Free Online Regex Tester** is straightforward and designed for a seamless user experience:</p>
         <ol>
-            <li><strong>Enter Your Regular Expression:</strong> Type your regex pattern into the top input field. You can use the 'g' (global), 'i' (case-insensitive), and 'm' (multiline) flags by clicking on them.</li>
-            <li><strong>Provide the Test String:</strong> In the larger text area below, type or paste the text you want to test your expression against.</li>
-            <li><strong>See Instant Results:</strong> As you type, any matching text will be highlighted in real-time. Below the text area, you will find detailed information about each match, including its index and any captured groups.</li>
+            <li><strong>Input Your Regular Expression:</strong> Begin by typing or pasting your regular expression pattern into the dedicated "Enter your regex here..." input field at the top of the tool. You'll notice that the moment you start typing a valid pattern, the tool is ready to go.</li>
+            <li><strong>Select Your Flags:</strong> To the right of the regex input, you'll find three clickable buttons: 'g' (Global), 'i' (Case-Insensitive), and 'm' (Multiline). Click to activate or deactivate them. An active flag will appear highlighted. The 'g' flag is active by default to ensure all occurrences are found.</li>
+            <li><strong>Provide Your Test String:</strong> In the larger "Enter your test string here..." text area, paste or type the text you wish to test your regex pattern against. This could be a snippet of code, a log file, an article, or any string of characters.</li>
+            <li><strong>Observe Instant Results:</strong> As you modify either your regex or your test string, the results will update in real-time.
+                <ul>
+                    <li><strong>Visual Highlighting:</strong> All parts of your test string that match your regular expression will be instantly highlighted directly within the text area.</li>
+                    <li><strong>Detailed Match Panel:</strong> Below the text area, the "Match Info" section will populate with a list of all found matches. Each entry will show the matched text, its position (index), and if your regex uses capturing groups, it will list the contents of each group.</li>
+                </ul>
+            <li><strong>Debug and Refine:</strong> If your regex isn't yielding the desired results or shows an error, use the immediate feedback to adjust your pattern. Experiment with different characters, quantifiers, and groups until your regex perfectly captures your target text.</li>
         </ol>
+
+        <h3>Benefits of Using Our Regex Tester</h3>
+        <p>Choosing ToolsBucket's **Online Regex Tester** offers numerous advantages:</p>
+        <ul>
+            <li><strong>Increased Productivity:</strong> Rapidly test and debug complex patterns without the need for repetitive code compilation or external libraries.</li>
+            <li><strong>Enhanced Learning:</strong> Visually understand how regular expressions work, how different components affect matches, and how flags modify behavior. It's an excellent educational resource for beginners.</li>
+            <li><strong>Accuracy and Reliability:</strong> Ensure your regex patterns are precise and capture exactly what you intend, reducing errors in data processing, validation, and search operations.</li>
+            <li><strong>Cross-Platform Accessibility:</strong> Being a web-based tool, it's accessible from any operating system (Windows, macOS, Linux) and browser, requiring no installation.</li>
+            <li><strong>Data Privacy and Security:</strong> Your data remains entirely within your browser. We don't store or transmit your regex patterns or test strings, guaranteeing your information stays private.</li>
+            <li><strong>Supports Common Regex Features:</strong> From basic character matching to advanced features like lookaheads, lookbehinds, and backreferences, our tester handles a wide array of regex functionalities.</li>
+        </ul>
+
+        <h3>Frequently Asked Questions (FAQs)</h3>
+        <div class="faq-section">
+            <h3 style="text-align: left;">What are regular expressions (regex)?</h3>
+            <p>A regular expression (often shortened to regex or regexp) is a powerful sequence of characters that defines a search pattern. It's a fundamental tool in computing used for pattern matching within strings, such as "find and replace" operations, data validation, parsing text, and web scraping. Regex allows you to describe complex text patterns concisely and efficiently.</p>
+
+            <h3 style="text-align: left;">What do the 'g', 'i', and 'm' flags do in regex?</h3>
+            <ul>
+                <li><strong>'g' (Global):</strong> This flag ensures that the regex finds all possible matches in the input string, rather than stopping after the first match. It's essential for operations where you need to extract every occurrence of a pattern.</li>
+                <li><strong>'i' (Case-Insensitive):</strong> When this flag is active, the regex engine will ignore the difference between uppercase and lowercase letters during matching. For example, `/apple/i` would match "apple", "Apple", "APPLE", etc.</li>
+                <li><strong>'m' (Multiline):</strong> In multiline mode, the `^` (caret) and `$` (dollar sign) anchors match the start and end of *each line* within the string, respectively, in addition to matching the start and end of the entire string. Without 'm', `^` only matches the very beginning of the whole text, and `$` only matches the very end.</li>
+            </ul>
+
+            <h3 style="text-align: left;">Is this regex tester free to use?</h3>
+            <p>Absolutely! Our Online Regex Tester is completely free to use, with no hidden costs, subscriptions, or limitations on usage. We believe in providing accessible and high-quality tools for everyone.</p>
+
+            <h3 style="text-align: left;">Is my data safe when using this tool?</h3>
+            <p>Your privacy and security are paramount. All regular expression testing and processing on this platform are performed locally within your web browser. This means your input text and regex patterns are never sent to our servers, ensuring complete confidentiality and data security.</p>
+
+            <h3 style="text-align: left;">Can I use this tool for different regex flavors (e.g., PCRE, Python, Ruby)?</h3>
+            <p>Our regex tester is built on JavaScript's native regular expression engine. While JavaScript regex shares a significant portion of its syntax and functionality with other regex "flavors" like PCRE (Perl Compatible Regular Expressions), Python, Java, or Ruby, there can be subtle differences in advanced features (e.g., specific lookarounds, atomic groups, or comments). This tool is excellent for general regex development and learning, but for highly specific, complex patterns, it's always recommended to do a final verification in your target programming environment.</p>
+
+            <h3 style="text-align: left;">What are regex groups and how do I use them?</h3>
+            <p>Regex groups, also known as capturing groups, are created by enclosing a part of your regular expression in parentheses `()`. They serve two main purposes:
+                <ol>
+                    <li><strong>Grouping:</strong> To apply quantifiers or alternation to a sequence of characters (e.g., `(ab)+` matches "ab", "abab", etc.).</li>
+                    <li><strong>Capturing:</strong> To extract specific sub-portions of a matched string. For instance, if your regex is `(\d{4})-(\d{2})-(\d{2})` for a date format like "2023-10-26", the first group `(\d{4})` would capture "2023", the second `(\d{2})` would capture "10", and the third `(\d{2})` would capture "26". Our tool clearly displays these captured groups in the match information, making data extraction intuitive.</p>
+                </ol>
+            </p>
+        </div>
     </section>
     <!-- === END MOVED HOW-TO SECTION === -->
 
 	  </===================Ads Section==================>
-	
+	    <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-5037596819589415"
+             data-ad-slot="YOUR_AD_SLOT_ID_2"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
 	</====================Ads Section=================>
     <footer id="contact">
         <h3>Quick Links</h3>
@@ -279,8 +506,9 @@
             });
 
             if (!pattern) {
-                highlightOverlay.innerHTML = escapeHtml(text) + '\n';
+                highlightOverlay.innerHTML = escapeHtml(text); // No newline needed if content is already pre-wrap
                 matchInfo.innerHTML = '<p>Enter a regular expression to see matches.</p>';
+                regexInput.classList.remove('error'); // Clear error state if regex is empty
                 return;
             }
 
@@ -288,19 +516,43 @@
                 const regex = new RegExp(pattern, activeFlags);
                 regexInput.classList.remove('error');
                 
-                const highlightedText = text.replace(regex, match => `<mark>${escapeHtml(match)}</mark>`);
-                highlightOverlay.innerHTML = highlightedText + '\n';
+                // Use a temporary div to correctly render the highlighted text and maintain line breaks
+                let tempDiv = document.createElement('div');
+                tempDiv.style.whiteSpace = 'pre-wrap';
+                tempDiv.style.wordWrap = 'break-word';
+                tempDiv.innerHTML = text.replace(regex, match => `<mark>${escapeHtml(match)}</mark>`);
+                highlightOverlay.innerHTML = tempDiv.innerHTML;
                 
                 const matches = [...text.matchAll(regex)];
                 if (matches.length > 0) {
                     let infoHtml = `<h3>${matches.length} Match${matches.length > 1 ? 'es' : ''} Found</h3>`;
                     matches.forEach((match, index) => {
-                        infoHtml += `<p><strong>Match ${index + 1}:</strong> "${escapeHtml(match[0])}" at index ${match.index}</p>`;
-                        if (match.groups) {
+                        infoHtml += `<p><strong>Match ${index + 1}:</strong> "<span class="match-text">${escapeHtml(match[0])}</span>" at index ${match.index}</p>`;
+                        
+                        // Display groups only if they exist and are captured
+                        const hasNamedGroups = match.groups && Object.keys(match.groups).some(key => match.groups[key] !== undefined);
+                        const hasIndexedGroups = match.length > 1 && Array.from({length: match.length - 1}, (_, i) => match[i+1]).some(group => group !== undefined);
+
+                        if (hasNamedGroups || hasIndexedGroups) {
                             infoHtml += '<ul>';
-                            for (const [key, value] of Object.entries(match.groups)) {
-                                if (value) {
-                                    infoHtml += `<li><strong>${key}:</strong> "${escapeHtml(value)}"</li>`;
+                            // Add named groups first
+                            if (match.groups) {
+                                for (const [key, value] of Object.entries(match.groups)) {
+                                    if (value !== undefined) { // Only show defined named groups
+                                        infoHtml += `<li><strong>Group "${key}":</strong> "${escapeHtml(value)}"</li>`;
+                                    }
+                                }
+                            }
+                            // Then add indexed groups (if they aren't also named groups, or just general indexed ones)
+                            // A simple way to avoid duplicates if named groups also have numeric indices:
+                            // Check if the current indexed group is already listed as a named group
+                            for (let i = 1; i < match.length; i++) {
+                                if (match[i] !== undefined) {
+                                    // Check if this indexed group also has a named counterpart that was already displayed
+                                    const isNamedAndDisplayed = match.groups && Object.values(match.groups).includes(match[i]) && Object.keys(match.groups).indexOf(String(i)) === -1; // Basic check, could be more robust
+                                    if (!isNamedAndDisplayed) {
+                                        infoHtml += `<li><strong>Group ${i}:</strong> "${escapeHtml(match[i])}"</li>`;
+                                    }
                                 }
                             }
                             infoHtml += '</ul>';
@@ -313,16 +565,18 @@
                 
             } catch (e) {
                 regexInput.classList.add('error');
-                highlightOverlay.innerHTML = escapeHtml(text) + '\n';
+                highlightOverlay.innerHTML = escapeHtml(text);
                 matchInfo.innerHTML = `<p style="color:var(--error-color);"><strong>Invalid Regex:</strong> ${escapeHtml(e.message)}</p>`;
             }
         };
 
         const escapeHtml = (str) => {
-            return str.replace(/[&<>"']/g, (match) => {
-                const escape = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-                return escape[match];
-            });
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         };
         
         const syncScroll = () => {
@@ -330,11 +584,12 @@
             highlightOverlay.scrollLeft = textInput.scrollLeft;
         };
         
-        textInput.addEventListener('scroll', syncScroll);
+        // Use input event for textInput to capture all changes
         textInput.addEventListener('input', () => {
             testRegex();
-            syncScroll();
+            syncScroll(); // Ensure scroll syncs after any input
         });
+        textInput.addEventListener('scroll', syncScroll); // Sync on scroll as well
 
         flags.forEach(flag => {
             flag.addEventListener('click', () => {
@@ -345,7 +600,7 @@
         
         regexInput.addEventListener('input', testRegex);
 
-        // Initial test
+        // Initial test on load
         testRegex();
     });
   </script>
