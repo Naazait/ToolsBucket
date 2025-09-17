@@ -79,7 +79,7 @@
         }
         
         .main-container { width: 100%; max-width: 900px; }
-        .content-section, .tool-container, footer {
+        .content-section, .tool-container, footer, .faq-section {
             background-color: var(--card-background);
             padding: 30px;
             border-radius: 16px;
@@ -136,6 +136,50 @@
         footer li { display: inline-block; margin: 0 12px; }
         footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
         footer .footer-bottom p { font-size: 0.9em; color: #888; margin: 0; }
+
+        /* FAQ specific styles */
+        .faq-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .faq-question {
+            font-weight: 600;
+            color: var(--heading-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .faq-question::after {
+            content: '+';
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+        .faq-question.active::after {
+            content: '-';
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding-left: 10px;
+            color: var(--text-color);
+        }
+        .faq-answer p {
+            padding-top: 10px;
+            margin-bottom: 0;
+        }
+        .faq-question.active + .faq-answer {
+            max-height: 200px; /* Adjust as needed for content */
+            transition: max-height 0.3s ease-in;
+        }
     </style>
 
     <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
@@ -165,8 +209,18 @@
 
   <main class="main-container">
     <section class="content-section">
-        <h1>Text Reversal Tool</h1>
-        <p>Have fun with your text using our versatile reversal tool. You can flip your text backwards, reverse the order of words, flip it upside down, and more. It's a great way to create unique social media posts, puzzles, or just to see your words in a new way. Simply type or paste your text and select a reversal mode to see the result instantly.</p>
+        <h1>Text Reversal Tool: Instantly Flip, Reverse, and Invert Your Text Online</h1>
+        <p>Unlock new creative possibilities and tackle various textual tasks with our free, versatile Text Reversal Tool. Whether you're looking to reverse an entire sentence, flip the order of words, transform your text upside down for a quirky social media post, or even reverse individual letters within each word, our online utility makes it effortless. Designed for speed, accuracy, and ease of use, this browser-based tool works instantly, providing you with reversed text without any software downloads or complex procedures. It's the perfect companion for anyone needing to manipulate text for fun, coding, puzzles, or unique digital content.</p>
+
+        <h2>What Our Text Reversal Tool Does</h2>
+        <p>Our comprehensive Text Reversal Tool offers multiple modes of text transformation, catering to a wide range of needs. Instead of just a single 'reverse' function, we provide specific options to give you granular control over how your text is modified:</p>
+        <ul>
+            <li><strong>Reverse Text:</strong> This is the classic reversal. Your entire input string is flipped character by character. For example, "Hello World" becomes "dlroW olleH". This is ideal for creating backward messages, simple ciphers, or just having a bit of fun.</li>
+            <li><strong>Reverse Wording:</strong> This mode changes the order of words in your sentence while keeping the individual words intact. "Hello World" transforms into "World Hello". Perfect for rephrasing sentences or adding a twist to your written content.</li>
+            <li><strong>Flip Text (Upside Down):</strong> Go beyond simple reversal! This unique feature converts your text into an upside-down version using special Unicode characters. "Hello World" becomes "ɥǝןןo Mopןp". This is a fantastic option for creating attention-grabbing social media posts, memes, or visually distinct messages that stand out from the crowd.</li>
+            <li><strong>Reverse Each Word's Letters:</strong> In this mode, the order of words remains the same, but the letters within each individual word are reversed. So, "Hello World" turns into "olleH dlroW". This can be useful for specific linguistic exercises, coding challenges, or generating intriguing text patterns.</li>
+        </ul>
+        <p>Our tool processes your text securely in your browser, ensuring your data remains private and is never sent to a server. This makes it a fast and reliable choice for all your text manipulation needs.</p>
     </section>
 
     <div class="tool-container">
@@ -203,13 +257,105 @@
       
     <!-- === NEW "WHY USE" SECTION === -->
     <section class="content-section">
-        <h2>Why Use a Text Reversal Tool?</h2>
+        <h2>How to Use Our Free Text Reversal Tool</h2>
+        <p>Using our online Text Reversal Tool is incredibly simple and intuitive. Follow these three easy steps to transform your text:</p>
+        <ol>
+            <li><strong>Input Your Text:</strong> Locate the "Input" textarea on the left side of the tool. You can either type your text directly into this box or paste it from another source (e.g., a document, a webpage, or a chat application). As soon as you start typing or paste content, the tool will begin processing.</li>
+            <li><strong>Select Reversal Mode:</strong> Above the input and output boxes, you'll find a dropdown menu labeled "Reversal Mode." Click on this menu to choose your desired transformation. Options include "Reverse Text," "Reverse Wording," "Flip Text (Upside Down)," and "Reverse Each Word's Letters." Select the mode that best suits your needs.</li>
+            <li><strong>View & Copy Output:</strong> The "Output" textarea on the right will instantly display the transformed text based on your selected reversal mode. Once you're satisfied with the result, click the "Copy Output" button to copy the reversed text to your clipboard. You can then paste it wherever you need – social media, email, documents, or code. If you wish to start fresh, simply click the "Clear All" button.</li>
+        </ol>
+        <p>It's that straightforward! Experiment with different modes and texts to discover all the fun and practical applications of this versatile tool.</p>
+
+        <h2>Benefits of Using Our Online Text Reverser</h2>
+        <p>Our Free Text Reversal Tool offers a multitude of benefits for both casual users and professionals:</p>
         <ul>
-            <li><strong>For Fun & Social Media:</strong> Create unique, eye-catching posts or messages for platforms like Twitter, Facebook, or Instagram. Typing backwards or upside down can make your content stand out.</li>
-            <li><strong>Data Processing:</strong> Quickly reverse strings of data for specific technical requirements without writing any code.</li>
-            <li><strong>Creating Puzzles:</strong> Generate simple ciphers or puzzles for games and quizzes by reversing words or entire sentences.</li>
-            <li><strong>Learning & Linguistics:</strong> Explore palindromes and the structure of words by seeing them in a different orientation.</li>
+            <li><strong>Instant & Free:</strong> Get immediate results without any cost. There's no need to register, download software, or pay for subscriptions. It's accessible to everyone, anytime.</li>
+            <li><strong>User-Friendly Interface:</strong> Designed with simplicity in mind, our tool features a clean and intuitive interface that anyone can navigate easily, regardless of technical skill.</li>
+            <li><strong>Multiple Reversal Options:</strong> Unlike basic tools, we offer four distinct reversal modes, providing greater flexibility and catering to diverse requirements – from full text reversal to unique upside-down transformations.</li>
+            <li><strong>Enhance Social Media Presence:</strong> Stand out on platforms like Instagram, Twitter, and Facebook with quirky, reversed, or flipped text. Grab attention and make your posts more engaging.</li>
+            <li><strong>Boost Creativity & Fun:</strong> Use it for creating word puzzles, secret messages, or just to play around with language. It's a great way to spark creativity and entertain yourself or others.</li>
+            <li><strong>Practical for Developers & Testers:</strong> Quickly reverse strings for data manipulation, testing algorithms, or preparing unique test cases without writing custom scripts.</li>
+            <li><strong>Educational & Linguistic Exploration:</strong> Ideal for students or language enthusiasts studying text patterns, palindromes, or the structure of different languages.</li>
+            <li><strong>Browser-Based & Secure:</strong> No installation required; access it from any device with an internet connection. Plus, your data is processed client-side (in your browser), ensuring maximum privacy and security.</li>
+            <li><strong>SEO & Marketing Edge:</strong> Create unique textual elements for website content, meta descriptions (use with caution), or marketing campaigns to catch the eye.</li>
         </ul>
+        <p>Whether you're a student, a developer, a social media enthusiast, or just someone looking for a fun text utility, our Text Reversal Tool is an invaluable addition to your digital toolkit.</p>
+    </section>
+
+    <section class="content-section faq-section">
+        <h2>Frequently Asked Questions (FAQs)</h2>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                What is text reversal?
+            </div>
+            <div class="faq-answer">
+                <p>Text reversal is the process of reordering characters, words, or sentences in a backward sequence. For example, reversing "Hello" gives "olleH". Our tool offers various types of reversal, including character-by-character, word order, and even flipping text upside down.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Is this tool truly free to use?
+            </div>
+            <div class="faq-answer">
+                <p>Yes, absolutely! Our Text Reversal Tool is 100% free with no hidden costs, subscriptions, or limitations on usage. You can use it as often as you like for any purpose.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Is my text secure when I use this tool?
+            </div>
+            <div class="faq-answer">
+                <p>Yes, your text is completely secure. All processing happens directly in your web browser. Your input text is never sent to our servers, ensuring your privacy and data security.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                What's the difference between "Reverse Text" and "Reverse Wording"?
+            </div>
+            <div class="faq-answer">
+                <p><strong>Reverse Text</strong> reverses every single character in the entire input string (e.g., "Hi there" becomes "ereht iH"). <strong>Reverse Wording</strong> reverses the order of the words themselves, but keeps the letters within each word in their original order (e.g., "Hi there" becomes "there Hi").</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                How does the "Flip Text (Upside Down)" option work?
+            </div>
+            <div class="faq-answer">
+                <p>This option uses special Unicode characters that visually resemble their upside-down counterparts. When you select this mode, the tool finds the corresponding flipped character for each letter/number in your text and reverses the overall order to create an upside-down effect.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Can I use this tool on my mobile phone?
+            </div>
+            <div class="faq-answer">
+                <p>Yes! Our website is fully responsive and optimized for mobile devices. You can easily access and use the Text Reversal Tool on your smartphone or tablet, just as you would on a desktop computer.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Are there any limitations on the amount of text I can reverse?
+            </div>
+            <div class="faq-answer">
+                <p>While there are no strict limits imposed by our tool, extremely large amounts of text (e.g., thousands of paragraphs) might take a moment longer to process in your browser, and could potentially impact browser performance depending on your device. For most practical uses, it handles text effortlessly.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                What are some fun uses for a text reversal tool?
+            </div>
+            <div class="faq-answer">
+                <p>You can use it to create funny social media posts, design unique text art, make simple coded messages for friends, develop word puzzles, or even just for practicing typing backward! The "Flip Text" option is particularly popular for visually distinct messages.</p>
+            </div>
+        </div>
     </section>
 
 	  </===================Ads Section==================>
@@ -237,6 +383,7 @@
         const reversalTypeSelect = document.getElementById('reversalType');
         const copyBtn = document.getElementById('copyBtn');
         const clearBtn = document.getElementById('clearBtn');
+        const faqQuestions = document.querySelectorAll('.faq-question');
 
         const flipMap = {
             'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ı',
@@ -247,7 +394,7 @@
             'S': 'S', 'T': '┴', 'U': '∩', 'V': 'Λ', 'W': 'M', 'X': 'X', 'Y': '⅄', 'Z': 'Z',
             '0': '0', '1': 'Ɩ', '2': 'ᄅ', '3': 'Ɛ', '4': 'ㄣ', '5': 'ϛ', '6': '9', '7': 'ㄥ', '8': '8', '9': '6',
             '.': '˙', ',': "'", "'": ',', '"': ',,', '`': ',', '!': '¡', '?': '¿', '(': ')', ')': '(',
-            '[': ']', ']': '[', '{': '}', '}': '{', '_': '‾'
+            '[': ']', ']': '[', '{': '}', '}': '{', '_': '‾', '&': '⅋'
         };
 
         const reverseText = (text) => {
@@ -262,6 +409,7 @@
                     result = text.split(/\s+/).reverse().join(' ');
                     break;
                 case 'flip':
+                    // Map characters to their flipped versions, then reverse the whole string
                     result = text.split('').reverse().map(char => flipMap[char] || char).join('');
                     break;
                 case 'word-letters':
@@ -285,6 +433,7 @@
         const clearAll = () => {
             inputBox.value = '';
             outputBox.value = '';
+            processInput(); // Re-process to clear output if any default text was there
         };
 
         inputBox.addEventListener('input', processInput);
@@ -292,7 +441,20 @@
         copyBtn.addEventListener('click', copyOutput);
         clearBtn.addEventListener('click', clearAll);
         
-        // Initial process in case of browser auto-fill
+        // FAQ Accordion functionality
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                question.classList.toggle('active');
+                if (question.classList.contains('active')) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                } else {
+                    answer.style.maxHeight = "0";
+                }
+            });
+        });
+
+        // Initial process in case of browser auto-fill or empty start
         processInput();
     });
   </script>
