@@ -40,15 +40,11 @@
   <meta name="twitter:description" content="A collection of free, fast, and secure online utilities for PDFs, images, text, and web development.">
   <meta name="twitter:image" content="https://toolsbucket.online/ToolsBucket_banner.jpg"> <!-- Replace with your image URL -->
 
-    <!-- Libraries -->
-    <script src="https://unpkg.com/pdf-lib"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
-    <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
-
+    <!-- External Libraries - Corrected and versioned for stability -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <!-- ============== STYLES & FONTS ============== -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Dancing+Script&display=swap" rel="stylesheet">
     <style>
@@ -152,14 +148,43 @@
         #download-section { display: none; }
         #status { min-height: 24px; font-weight: 600; margin-top: 10px;}
         
-        footer { text-align: center; }
-        footer h3 { font-size: 1.2em; font-weight: 600; margin-bottom: 15px; }
-        footer ul { list-style: none; padding: 0; margin: 0 0 20px 0; }
-        footer li { display: inline-block; margin: 0 12px; }
-        footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
-        footer .footer-bottom p { font-size: 0.9em; color: #888; margin: 0; }
+        /* === NEW FOOTER STYLES === */
+        footer {
+            text-align: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        footer h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+        footer li {
+            display: inline-block;
+            margin: 0 12px;
+        }
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+        }
+        footer .footer-bottom p {
+            font-size: 0.9em;
+            color: #888;
+            margin: 0;
+        }
+        /* === END NEW FOOTER STYLES === */
     </style>
-	<!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -171,21 +196,17 @@
       "description": "A free, secure, client-side tool to add electronic signatures to PDF documents. Supports drawing, typing, and uploading signatures."
     }
     </script>
-	<!========Ads Section ===========>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5037596819589415"
-     crossorigin="anonymous"></script>
-    <!=========Ads Section ===========>
 </head>
 <body>
   <header class="page-header">
-      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <a href="index.html" class="back-button">← Back to Tools</a>
       <div class="brand-name">
           <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
       </div>
   </header>
 
   <main class="main-container">
-   <section class="content-section">
+    <section class="content-section">
         <h2>About Our Free eSign PDF Tool</h2>
 
         <h3>What Does This Tool Do?</h3>
@@ -222,9 +243,64 @@
         <h3>What happens to my document after I sign it?</h3>
         <p>After you sign your document, you are provided with a download link for the newly signed PDF. Your original file and the signed version remain on your device and are never stored by us. Once you close the browser tab, all data is gone.</p>
     </section>
-	  </===================Ads Section==================>
-	
-	</====================Ads Section=================>
+
+    <div class="tool-container">
+        <!-- Step 1: Upload -->
+        <div id="upload-section">
+            <h2>Sign Your PDF Document</h2>
+            <div id="uploadArea" class="upload-area">
+                <p>Drag & drop your PDF here, or click to select a file.</p>
+                <p id="fileName" style="font-weight: bold;"></p>
+            </div>
+            <input type="file" id="pdfInput" accept="application/pdf">
+        </div>
+
+        <!-- Step 2: Signing Workspace -->
+        <div id="signing-section">
+            <h2>Place Your Signature</h2>
+            <div id="pdf-viewer"></div>
+            <p>Click "Add Signature" to create your signature, then drag it onto the document.</p>
+            <button id="addSignatureBtn" class="btn">Add Signature</button>
+            <button id="finalizeBtn" class="btn" style="background-color: var(--success-color);">Apply & Continue</button>
+        </div>
+
+        <!-- Step 3: Download -->
+        <div id="download-section">
+             <h2>Download Your Signed PDF</h2>
+             <p>Your signed document is ready for download.</p>
+             <button id="downloadBtn" class="btn">Download Signed PDF</button>
+             <button id="startOverBtn" class="btn secondary">Start Over</button>
+        </div>
+        
+        <div id="status"></div>
+    </div>
+    
+    <!-- Signature Modal -->
+    <div id="signature-modal">
+        <div class="modal-content">
+            <h3>Create Your Signature</h3>
+            <div class="tabs">
+                <button class="tab-button active" data-tab="draw-tab">Draw</button>
+                <button class="tab-button" data-tab="type-tab">Type</button>
+                <button class="tab-button" data-tab="upload-tab">Upload</button>
+            </div>
+            <div id="draw-tab" class="tab-content active">
+                <canvas id="signature-canvas" width="460" height="200"></canvas>
+                <button id="clear-signature" class="btn secondary">Clear</button>
+            </div>
+            <div id="type-tab" class="tab-content">
+                <input type="text" id="type-signature-input" placeholder="Type your name">
+            </div>
+            <div id="upload-tab" class="tab-content">
+                <label for="upload-signature-input" class="btn secondary">Choose Image (PNG/JPG)</label>
+                <input type="file" id="upload-signature-input" accept="image/png, image/jpeg">
+                <img id="signature-preview" style="max-width: 100%; max-height: 100px; margin-top: 10px; display: none;" alt="Signature Preview"/>
+            </div>
+            <button id="apply-signature" class="btn" style="margin-top:20px;">Apply Signature</button>
+        </div>
+    </div>
+
+    <!-- === NEW FOOTER HTML === -->
     <footer id="contact">
         <h3>Quick Links</h3>
         <ul>
@@ -238,6 +314,7 @@
             <p>© 2025 ToolsBucket. All rights reserved.</p>
         </div>
     </footer>
+    <!-- === END NEW FOOTER HTML === -->
   </main>
 
   <script>
@@ -473,5 +550,6 @@
         });
     });
   </script>
+
 </body>
 </html>
