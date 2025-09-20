@@ -40,15 +40,17 @@
   <meta name="twitter:description" content="A collection of free, fast, and secure online utilities for PDFs, images, text, and web development.">
   <meta name="twitter:image" content="https://toolsbucket.online/ToolsBucket_banner.jpg"> <!-- Replace with your image URL -->
 
-    <!-- External Libraries - Corrected and versioned for stability -->
-    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-
+    <!-- Libraries -->
+    <script src="https://unpkg.com/pdf-lib"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 
     <!-- ============== STYLES & FONTS ============== -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Dancing+Script&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #007BFF;
@@ -58,6 +60,8 @@
             --heading-color: #0056b3;
             --border-color: #ddd;
             --shadow-color: rgba(0, 123, 255, 0.1);
+            --success-color: #28a745;
+            --error-color: #dc3545;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -72,7 +76,7 @@
         
         .page-header {
             width: 100%;
-            max-width: 1200px;
+            max-width: 900px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -80,20 +84,18 @@
         }
         .brand-name { font-size: 1.8em; font-weight: 700; }
         .brand-part-1 { color: var(--primary-color); }
-        .brand-part-2 { color: #000000; }
+        .brand-part-2 { color: var(--text-color); }
         .back-button {
             text-decoration: none;
-            background-color: var(--card-background);
+            background-color: #e9ecef;
             color: var(--text-color);
             padding: 8px 16px;
             border-radius: 8px;
             font-weight: 600;
-            transition: background-color 0.3s;
             border: 1px solid var(--border-color);
         }
-        .back-button:hover { background-color: #e9ecef; }
         
-        .main-container { width: 100%; max-width: 1200px; }
+        .main-container { width: 100%; max-width: 900px; }
         .content-section, .tool-container, footer {
             background-color: var(--card-background);
             padding: 30px;
@@ -104,58 +106,51 @@
         h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
         h1 { font-size: 2em; }
         h2 { font-size: 1.6em; }
-        
-        .tool-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-        @media (min-width: 992px) {
-            .tool-container { grid-template-columns: 350px 1fr; }
-        }
+        h3 { margin-top: 20px; margin-bottom: 10px; text-align: left; }
+        p, li { line-height: 1.7; text-align: left; }
+        ul { margin-left: 20px; }
 
-        .controls-side .step { margin-bottom: 20px; }
-        .controls-side h3 { border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; margin-bottom: 15px;}
-        
-        #signaturePad { border: 2px dashed var(--border-color); border-radius: 8px; cursor: crosshair; width: 100%; height: 150px; }
-        
-        .workspace-side {
-            background-color: #f0f0f0;
-            padding: 15px;
-            border-radius: 8px;
-            overflow: auto;
-            max-height: 80vh;
-        }
-        #pdf-viewer { position: relative; }
-        #pdf-viewer canvas { 
-            display: block;
-            margin: 0 auto 10px auto; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+        .tool-container { text-align: center; }
+        #upload-section .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 40px;
             cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
         }
-        #signature-image {
-            position: absolute;
-            cursor: move;
-            display: none;
-            user-select: none;
-            border: 2px dashed var(--primary-color);
-            touch-action: none; /* For interact.js */
-        }
+        #upload-section .upload-area.dragover { background-color: #e6f2ff; border-color: var(--primary-color); }
+        input[type="file"] { display: none; }
         
         .btn {
             background-color: var(--primary-color);
             color: white;
-            padding: 10px 15px;
+            padding: 12px 25px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            width: auto;
-            margin: 5px;
-            font-size: 16px;
+            margin-top: 15px;
+            font-size: 1em;
             font-weight: 600;
         }
-        .btn:disabled { background-color: #a0c8ff; cursor: not-allowed; }
         .btn.secondary { background-color: #6c757d; }
+        
+        #signing-section { display: none; }
+        #pdf-viewer { border: 1px solid var(--border-color); max-height: 500px; overflow-y: auto; position: relative; }
+        #pdf-viewer canvas { max-width: 100%; display: block; margin: 10px auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #draggable-signature { position: absolute; cursor: move; border: 1px dashed var(--primary-color); z-index: 100; }
+
+        #signature-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: #fff; margin: 10% auto; padding: 20px; border-radius: 10px; max-width: 500px; }
+        .tabs { border-bottom: 1px solid var(--border-color); margin-bottom: 15px; }
+        .tab-button { background: none; border: none; padding: 10px 15px; cursor: pointer; font-size: 1em; }
+        .tab-button.active { border-bottom: 3px solid var(--primary-color); font-weight: 600; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        #draw-tab canvas { border: 1px solid var(--border-color); cursor: crosshair; }
+        #type-tab input { width: 100%; padding: 10px; font-size: 1.5em; font-family: 'Dancing Script', cursive; }
+        
+        #download-section { display: none; }
+        #status { min-height: 24px; font-weight: 600; margin-top: 10px;}
         
         footer { text-align: center; }
         footer h3 { font-size: 1.2em; font-weight: 600; margin-bottom: 15px; }
@@ -164,6 +159,18 @@
         footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
         footer .footer-bottom p { font-size: 0.9em; color: #888; margin: 0; }
     </style>
+	<!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free eSign PDF Tool",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A free, secure, client-side tool to add electronic signatures to PDF documents. Supports drawing, typing, and uploading signatures."
+    }
+    </script>
 	<!========Ads Section ===========>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5037596819589415"
      crossorigin="anonymous"></script>
@@ -178,119 +185,42 @@
   </header>
 
   <main class="main-container">
-    <section class="content-section">
-        <h1>Free Online PDF eSign Tool</h1>
-        <p>Sign your PDF documents with ease using our secure and intuitive eSign tool. Whether you need to sign a contract, an application form, or any other document, our tool allows you to upload a PDF, draw your signature, and place it exactly where you need it. The best part? Everything happens directly in your browser, ensuring your files are never uploaded to a server. It's the fast, free, and private way to sign documents online.</p>
-    </section>
+   <section class="content-section">
+        <h2>About Our Free eSign PDF Tool</h2>
 
-    <div class="tool-container">
-        <div class="controls-side">
-            <div class="step">
-                <h3>Step 1: Upload PDF</h3>
-                <input type="file" id="pdfInput" accept="application/pdf" />
-            </div>
-            <div class="step">
-                <h3>Step 2: Draw Signature</h3>
-                <canvas id="signaturePad"></canvas>
-                <button id="clearBtn" class="btn secondary">Clear</button>
-            </div>
-            <div class="step">
-                <h3>Step 3: Place & Download</h3>
-                <p>After signing, click on the PDF preview to place your signature. You can then drag and resize it.</p>
-                <button id="downloadBtn" class="btn" disabled>Apply Signature & Download</button>
-            </div>
-        </div>
-        
-        <div class="workspace-side">
-            <div id="pdf-viewer">
-                <p>Upload a PDF to get started</p>
-            </div>
-            <img id="signature-image" alt="Your signature">
-        </div>
-    </div>
+        <h3>What Does This Tool Do?</h3>
+        <p>Our eSign PDF tool is a secure, browser-based application that allows you to add a legally binding electronic signature to any PDF document. In a world that is increasingly digital, the need to sign contracts, agreements, and forms remotely has become essential. This tool eliminates the cumbersome process of printing, signing by hand, and scanning. Instead, you can create a digital version of your signature in one of three ways: by drawing it with your mouse or finger, typing it out and choosing a handwritten font, or uploading a high-quality image of your signature. Once created, you can place this signature anywhere on your PDF document, resize it, and download the final, signed file instantly. The entire process is designed to be fast, intuitive, and, most importantly, completely private, as your files are never uploaded to a server.</p>
 
-    <!=================Banner Ads Section ==================>
-       
-  		<!=================Banner Ads Section ==================>
-      
-    <section class="content-section">
-        <h2>How to Sign Your PDF</h2>
+        <h3>How to Sign Your PDF Online</h3>
         <ol>
-            <li><strong>Upload Your PDF:</strong> Click the "Choose File" button to select a PDF from your device.</li>
-            <li><strong>Draw Your Signature:</strong> Use your mouse or trackpad to draw your signature in the box provided. Click "Clear" to start over.</li>
-            <li><strong>Place Your Signature:</strong> Click anywhere on the PDF preview where you want to add your signature. You can then drag it to the perfect position and resize it by dragging its corners.</li>
-            <li><strong>Download:</strong> Click the "Apply Signature & Download" button to save your newly signed PDF.</li>
-        </ol>
-    </section>
-
-	  <section class="content-section">
-        <h2>Unlocking Efficiency: Your Free Online PDF eSign Tool</h2>
-        <p>In today's fast-paced digital world, the need for quick, secure, and efficient document handling is paramount. Our Free Online PDF eSign Tool is designed to meet this demand, offering a seamless solution for anyone looking to sign PDF documents electronically without the hassle of printing, signing, and scanning. This innovative browser-based application empowers you to apply your unique digital signature to any PDF, ensuring authenticity and saving valuable time and resources. Whether you're a business professional, a student, or simply managing personal documents, our eSign tool simplifies your workflow and keeps your information private.</p>
-
-        <h3>What Our eSign PDF Tool Does</h3>
-        <p>Our eSign PDF tool provides a comprehensive platform for electronically signing your PDF documents directly within your web browser. The core functionality revolves around three simple steps: uploading your PDF, creating a custom signature, and securely placing it onto your document. Unlike many other online tools, we prioritize your privacy and data security above all else. This means your files are processed client-side – they are never uploaded to our servers, ensuring that your sensitive information remains entirely on your device. This commitment to privacy makes our tool a trustworthy choice for all your eSigning needs.</p>
-        <p>You can effortlessly draw your signature using a mouse, trackpad, or even a touchscreen device. Once created, this signature can be inserted onto any page of your uploaded PDF. The tool offers intuitive controls, allowing you to drag, reposition, and resize your signature to fit perfectly within your document's layout. After finalizing the placement, a single click downloads the modified PDF directly to your computer, complete with your embedded signature. It’s a complete solution for digital signing, eliminating the need for any third-party software installations.</p>
-
-        <h3>How to Use Our Free PDF Signer</h3>
-        <p>Signing your PDF document with our tool is incredibly straightforward. Follow these simple steps to experience the ease of digital signing:</p>
-        <ol>
-            <li><strong>Step 1: Upload Your PDF Document.</strong> Begin by clicking the "Choose File" button located in the "Step 1: Upload PDF" section. A file explorer window will open, allowing you to select the PDF document from your local device that you wish to sign. Our tool supports standard PDF formats, ensuring compatibility with most documents. Once selected, your PDF will quickly render in the preview area, ready for signing.</li>
-            <li><strong>Step 2: Draw Your Electronic Signature.</strong> Move to the "Step 2: Draw Signature" section. Here, you'll find a dedicated canvas labeled "signaturePad." Use your mouse, trackpad, or finger (if on a touch-enabled device) to draw your signature as naturally as you would on paper. Take your time to get it right; if you make a mistake or wish to refine your signature, simply click the "Clear" button to erase and start fresh.</li>
-            <li><strong>Step 3: Place and Adjust Your Signature.</strong> After you've drawn your signature, it's time to place it on your PDF. Click anywhere on the rendered PDF preview where you want your signature to initially appear. Your drawn signature will instantly pop up on the document. Our tool then allows for complete customization: you can click and drag the signature image to precisely position it, and use the corner handles to resize it to your desired dimensions without distorting the aspect ratio.</li>
-            <li><strong>Step 4: Apply and Download Your Signed PDF.</strong> Once you are satisfied with the placement and size of your signature, click the "Apply Signature & Download" button. Our tool will then embed your signature into the PDF document. A new, signed PDF file will be automatically downloaded to your device, typically appearing in your browser's default downloads folder. The original PDF remains untouched, and you now have a digitally signed copy ready for sharing or archival.</li>
+            <li><strong>Upload Your PDF:</strong> Begin by dragging your PDF file into the upload box, or simply click the box to select the file from your computer or mobile device.</li>
+            <li><strong>Create Your Signature:</strong> Once the document is displayed, click the "Add Signature" button. A pop-up will appear where you can choose to draw your signature, type it, or upload an image.</li>
+            <li><strong>Place and Adjust Signature:</strong> After creating your signature, it will appear on your document. Click and drag the signature to move it to the correct location. You can also resize it by dragging its corners.</li>
+            <li><strong>Apply and Download:</strong> When you are satisfied with the placement, click the "Apply & Continue" button. You will then be prompted to download your newly signed, secure PDF.</li>
         </ol>
 
-        <h3>Benefits of Using Our Online eSign Tool</h3>
-        <p>Choosing our Free Online PDF eSign Tool offers a multitude of advantages for both individuals and businesses:</p>
+        <h3>Benefits of Using an Online Signature Tool</h3>
         <ul>
-            <li><strong>Absolute Privacy & Security:</strong> This is our strongest commitment. All PDF processing and signature embedding occurs entirely within your web browser. Your sensitive documents never leave your device and are never transmitted to our servers. This client-side processing guarantees maximum privacy and peace of mind, making it ideal for confidential documents.</li>
-            <li><strong>Completely Free to Use:</strong> Our tool is 100% free, with no hidden costs, subscriptions, or limitations on the number of documents you can sign. Enjoy full functionality without financial commitment.</li>
-            <li><strong>No Software Installation Required:</strong> As a web-based application, there's no need to download or install any software. Access it directly from your browser, saving valuable disk space and avoiding potential software compatibility issues.</li>
-            <li><strong>User-Friendly Interface:</strong> Designed with simplicity in mind, our intuitive interface makes the eSigning process accessible to everyone, regardless of technical proficiency. The step-by-step approach guides you through each stage effortlessly.</li>
-            <li><strong>Time and Cost Efficiency:</strong> Eliminate the traditional method of printing, signing, scanning, and emailing documents. Our tool streamlines the process, saving you time, paper, ink, and scanner maintenance costs.</li>
-            <li><strong>Portability and Accessibility:</strong> Sign documents from anywhere, at any time, on any device with an internet connection and a modern web browser. This flexibility is crucial for remote work and on-the-go professionals.</li>
-            <li><strong>Eco-Friendly Solution:</strong> By reducing the need for printing, you contribute to a more sustainable environment, cutting down on paper waste and energy consumption.</li>
-            <li><strong>Real-time Signature Placement:</strong> See your signature appear on the PDF instantly and adjust its position and size in real-time, ensuring precise and professional results every time.</li>
+            <li><strong>Speed and Efficiency:</strong> Sign and send documents in minutes from anywhere in the world, without needing a printer or scanner.</li>
+            <li><strong>Legally Binding:</strong> Electronic signatures created with this tool are legally recognized in many jurisdictions, making them valid for contracts, invoices, and official forms.</li>
+            <li><strong>Enhanced Security:</strong> Your documents are processed locally in your browser and are never uploaded, ensuring maximum confidentiality and privacy.</li>
+            <li><strong>Cost-Effective and Eco-Friendly:</strong> Save money on paper, ink, and postage while contributing to a greener environment by reducing paper waste.</li>
         </ul>
+    </section>
 
-        <h3>Frequently Asked Questions (FAQs)</h3>
-        <p>Here are some common questions about our Free Online PDF eSign Tool:</p>
-        <div class="faq-item">
-            <h4>Q: Is this tool truly free?</h4>
-            <p>A: Yes, absolutely! Our eSign PDF tool is completely free to use, with no hidden costs, subscriptions, or premium features. You can sign as many documents as you need without any limitations.</p>
-        </div>
-        <div class="faq-item">
-            <h4>Q: Are my documents safe and private?</h4>
-            <p>A: Your privacy is our top priority. All document processing, including the rendering of your PDF and the application of your signature, occurs directly within your web browser. Your files are never uploaded to our servers, ensuring that your sensitive information remains entirely on your device. This client-side processing provides maximum security and confidentiality.</p>
-        </div>
-        <div class="faq-item">
-            <h4>Q: Do I need to install any software?</h4>
-            <p>A: No, you do not. Our tool is entirely web-based, meaning you can access and use it directly from any modern web browser (like Chrome, Firefox, Edge, Safari) without the need to download or install any additional software or plugins.</p>
-        </div>
-        <div class="faq-item">
-            <h4>Q: Can I use this tool on my mobile device?</h4>
-            <p>A: Yes! Our eSign PDF tool is designed to be responsive and works seamlessly across various devices, including desktops, laptops, tablets, and smartphones. You can draw your signature using your finger on a touchscreen device.</p>
-        </div>
-        <div class="faq-item">
-            <h4>Q: What if I make a mistake while drawing my signature?</h4>
-            <p>A: No problem at all! Simply click the "Clear" button below the signature pad. This will erase your current drawing, allowing you to start over and draw your signature again until you are satisfied.</p>
-        </div>
-        <div class="faq-item">
-            <h4>Q: Can I resize or move my signature after placing it?</h4>
-            <p>A: Yes, absolutely. Once you've clicked on the PDF preview to place your signature, it will appear with a dashed border. You can then click and drag the signature image to reposition it anywhere on the page. To resize, simply drag any of the corners of the signature image, and it will scale proportionally.</p>
-        </div>
-        <div class="faq-item">
-            <h4>Q: What PDF versions are supported?</h4>
-            <p>A: Our tool utilizes robust PDF.js and pdf-lib libraries, which support a wide range of PDF versions and features, from basic documents to more complex ones. If you encounter an issue with a specific PDF, it might be corrupted or password-protected.</p>
-        </div>
-        <div class="faq-item">
-            <h4>Q: What happens to my original PDF file?</h4>
-            <p>A: Your original PDF file remains unchanged on your device. When you click "Apply Signature & Download," a new PDF file with the embedded signature is created and downloaded, leaving your original document intact.</p>
-        </div>
-        <div class="faq-item">
-            <h4>Q: Is an electronic signature legally binding?</h4>
-            <p>A: The legal enforceability of electronic signatures varies by jurisdiction and the specific context of the document. In many countries, including the United States (ESIGN Act) and the European Union (eIDAS Regulation), simple electronic signatures are legally recognized. However, for highly sensitive legal documents, you may want to consult with a legal professional to ensure compliance with specific regulations.</p>
-        </div>
+    <section class="content-section">
+        <h2>Frequently Asked Questions (FAQs)</h2>
+        <h3>Is it secure to sign my documents with this tool?</h3>
+        <p>Yes, absolutely. This tool is built for privacy. All processing, including file uploading, signature creation, and document signing, happens directly in your web browser. Your documents are never uploaded to a server, ensuring they remain confidential.</p>
+
+        <h3>Are electronic signatures legally binding?</h3>
+        <p>Electronic signatures are legally recognized in many countries around the world, including the United States (ESIGN Act) and the European Union (eIDAS Regulation). Signatures created with this tool are a valid form of electronic signature. However, for highly sensitive documents, you should consult with a legal professional to ensure you meet all specific requirements.</p>
+
+        <h3>Can I use this on my mobile phone?</h3>
+        <p>Yes, our eSign tool is fully responsive and works on any device with a modern web browser, including mobile phones and tablets. You can easily draw your signature with your finger or a stylus.</p>
+        
+        <h3>What happens to my document after I sign it?</h3>
+        <p>After you sign your document, you are provided with a download link for the newly signed PDF. Your original file and the signed version remain on your device and are never stored by us. Once you close the browser tab, all data is gone.</p>
     </section>
 	  </===================Ads Section==================>
 	
@@ -312,282 +242,236 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-    const { PDFDocument } = PDFLib;
-    const pdfjsLib = window['pdfjs-dist/build/pdf'];
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+        const { PDFDocument } = PDFLib;
 
-    const pdfInput = document.getElementById("pdfInput");
-    const signaturePadCanvas = document.getElementById("signaturePad");
-    const pdfViewer = document.getElementById("pdf-viewer");
-    const clearBtn = document.getElementById("clearBtn");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const signatureImage = document.getElementById('signature-image');
-    
-    const signaturePad = new SignaturePad(signaturePadCanvas);
-    let pdfFile = null;
-    let currentPdfDoc = null; // Store pdfjsDoc for easy page access
-    let signaturePageInfo = null; // To store { pageNumber, x, y, width, height } relative to PDF.js canvas
+        // Global state
+        let pdfFileBytes = null;
+        let originalFileName = '';
+        let signature = { dataUrl: null, type: null };
+        let signaturePosition = null;
+        let pdfPageDimensions = [];
 
-    function resizeCanvas() {
-        const ratio = Math.max(window.devicePixelRatio || 1, 1);
-        signaturePadCanvas.width = signaturePadCanvas.offsetWidth * ratio;
-        signaturePadCanvas.height = signaturePadCanvas.offsetHeight * ratio;
-        signaturePadCanvas.getContext("2d").scale(ratio, ratio);
-        signaturePad.clear();
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
+        // DOM Elements
+        const uploadSection = document.getElementById('upload-section');
+        const signingSection = document.getElementById('signing-section');
+        const downloadSection = document.getElementById('download-section');
+        const pdfInput = document.getElementById('pdfInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileNameEl = document.getElementById('fileName');
+        const pdfViewer = document.getElementById('pdf-viewer');
+        const addSignatureBtn = document.getElementById('addSignatureBtn');
+        const finalizeBtn = document.getElementById('finalizeBtn');
+        const signatureModal = document.getElementById('signature-modal');
+        const signatureCanvas = document.getElementById('signature-canvas');
+        const typeInput = document.getElementById('type-signature-input');
+        const uploadSignatureInput = document.getElementById('upload-signature-input');
+        const signaturePreview = document.getElementById('signature-preview');
+        const applySignatureBtn = document.getElementById('apply-signature');
+        const clearSignatureBtn = document.getElementById('clear-signature');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const startOverBtn = document.getElementById('startOverBtn');
+        const statusEl = document.getElementById('status');
+        
+        const signaturePad = new SignaturePad(signatureCanvas);
+        
+        const setStatus = (message, type) => {
+            statusEl.textContent = message;
+            statusEl.style.color = type === 'success' ? 'var(--success-color)' : type === 'error' ? 'var(--error-color)' : 'var(--heading-color)';
+        };
 
-    const renderPdf = async (file) => {
-        pdfViewer.innerHTML = '<p>Loading PDF...</p>';
-        try {
-            const data = await file.arrayBuffer();
-            pdfFile = data; // Store the raw buffer for pdf-lib
-            
-            const pdfjsDoc = await pdfjsLib.getDocument({ data }).promise;
-            currentPdfDoc = pdfjsDoc; // Store the pdfjsDoc
-            pdfViewer.innerHTML = ''; 
+        const resetAll = () => {
+            pdfFileBytes = null; originalFileName = ''; signature = { dataUrl: null, type: null };
+            signaturePosition = null; pdfPageDimensions = []; pdfInput.value = '';
+            fileNameEl.textContent = ''; pdfViewer.innerHTML = '';
+            uploadSection.style.display = 'block'; signingSection.style.display = 'none';
+            downloadSection.style.display = 'none'; setStatus('', 'info');
+        };
 
-            for (let i = 1; i <= pdfjsDoc.numPages; i++) {
-                const page = await pdfjsDoc.getPage(i);
-                const viewport = page.getViewport({ scale: 1.5 }); // Use a consistent scale for rendering
+        const handleFile = (file) => {
+            if (!file || file.type !== 'application/pdf') return alert('Please select a valid PDF file.');
+            originalFileName = file.name; fileNameEl.textContent = `Selected: ${originalFileName}`;
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                pdfFileBytes = new Uint8Array(e.target.result);
+                await renderPdf(pdfFileBytes);
+                uploadSection.style.display = 'none'; signingSection.style.display = 'block';
+            };
+            reader.readAsArrayBuffer(file);
+        };
+
+        uploadArea.addEventListener('click', () => pdfInput.click());
+        pdfInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        startOverBtn.addEventListener('click', resetAll);
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => uploadArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }));
+        ['dragenter', 'dragover'].forEach(eventName => uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover')));
+        ['dragleave', 'drop'].forEach(eventName => uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover')));
+        uploadArea.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
+        
+        const renderPdf = async (data) => {
+            const pdf = await pdfjsLib.getDocument(data).promise;
+            pdfViewer.innerHTML = ''; pdfPageDimensions = [];
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const originalViewport = page.getViewport({ scale: 1.0 });
+                pdfPageDimensions.push({ width: originalViewport.width, height: originalViewport.height });
+                const viewport = page.getViewport({ scale: 1.5 });
                 const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
                 canvas.dataset.pageNumber = i;
-				canvas.classList.add('pdf-page-canvas'); // Add this line
-                
+                canvas.height = viewport.height; canvas.width = viewport.width;
+                const context = canvas.getContext('2d');
                 await page.render({ canvasContext: context, viewport: viewport }).promise;
                 pdfViewer.appendChild(canvas);
-
-                canvas.addEventListener('click', (e) => {
-                    if (signaturePad.isEmpty()) {
-                        alert('Please draw your signature first.');
-                        return;
-                    }
-                    
-                    const rect = canvas.getBoundingClientRect();
-                    // Click coordinates relative to the clicked canvas
-                    const xRelativeToCanvas = e.clientX - rect.left;
-                    const yRelativeToCanvas = e.clientY - rect.top;
-
-                    const sigInitialWidth = 150;
-                    const sigInitialHeight = 75;
-
-                    signatureImage.style.display = 'block';
-                    signatureImage.src = signaturePad.toDataURL();
-                    signatureImage.style.width = `${sigInitialWidth}px`;
-                    signatureImage.style.height = `${sigInitialHeight}px`;
-
-                    // Position signature image relative to pdfViewer (its parent)
-                    // Center the signature where clicked
-                    const absoluteX = canvas.offsetLeft + xRelativeToCanvas - (sigInitialWidth / 2);
-                    const absoluteY = canvas.offsetTop + yRelativeToCanvas - (sigInitialHeight / 2);
-                    
-                    signatureImage.style.transform = `translate(${absoluteX}px, ${absoluteY}px)`;
-                    signatureImage.setAttribute('data-x', absoluteX);
-                    signatureImage.setAttribute('data-y', absoluteY);
-                    
-                    // Store initial placement info
-                    signaturePageInfo = {
-                        pageNumber: parseInt(canvas.dataset.pageNumber),
-                        // These will be updated by interact.js during drag/resize
-                        x: xRelativeToCanvas - (sigInitialWidth / 2), 
-                        y: yRelativeToCanvas - (sigInitialHeight / 2),
-                        width: sigInitialWidth,
-                        height: sigInitialHeight,
-                        canvas: canvas // Reference to the canvas it was placed on
-                    };
-
-                    pdfViewer.appendChild(signatureImage);
-                    downloadBtn.disabled = false;
-                });
             }
-        } catch (error) {
-            console.error("Failed to load PDF:", error);
-            pdfViewer.innerHTML = '<p>Error: Could not load the PDF file. It might be corrupted or protected.</p>';
-        }
-    };
+        };
 
-    pdfInput.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if (file && file.type === "application/pdf") {
-            renderPdf(file);
-            signatureImage.style.display = 'none'; // Hide existing signature on new PDF load
-            signaturePageInfo = null; // Clear old signature info
-            downloadBtn.disabled = true;
-        } else {
-            alert("Please upload a valid PDF file.");
-        }
-    });
-
-    clearBtn.addEventListener("click", () => signaturePad.clear());
-
-    downloadBtn.addEventListener("click", async () => {
-        if (!pdfFile || !signaturePageInfo || signatureImage.style.display === 'none') {
-            alert("Please upload a PDF and place your signature first.");
-            return;
-        }
-
-        try {
-            downloadBtn.disabled = true;
-            downloadBtn.textContent = 'Applying...';
-            
-            const pdfDoc = await PDFDocument.load(pdfFile);
-            const signatureImgPng = await pdfDoc.embedPng(signatureImage.src);
-            
-            const targetPagePdfLib = pdfDoc.getPages()[signaturePageInfo.pageNumber - 1]; // pdf-lib is 0-indexed
-            const originalPdfjsPage = await currentPdfDoc.getPage(signaturePageInfo.pageNumber);
-            const originalPdfjsViewport = originalPdfjsPage.getViewport({ scale: 1.5 }); // Use same scale as rendering
-            
-            // Calculate scale factor from rendered canvas to actual PDF page size
-            const scaleX = targetPagePdfLib.getWidth() / signaturePageInfo.canvas.offsetWidth;
-            const scaleY = targetPagePdfLib.getHeight() / signaturePageInfo.canvas.offsetHeight;
-            
-            // Get current transform values from signatureImage
-            const transformMatrix = new WebKitCSSMatrix(window.getComputedStyle(signatureImage).transform);
-            const currentSigX = transformMatrix.m41; // translate X
-            const currentSigY = transformMatrix.m42; // translate Y
-            
-            // Calculate signature's top-left corner relative to its *target PDF.js canvas*
-            // signatureImage.offsetLeft/Top are relative to pdfViewer.
-            // signaturePageInfo.canvas.offsetLeft/Top are relative to pdfViewer.
-            const sigXRelativeToCanvas = currentSigX - signaturePageInfo.canvas.offsetLeft;
-            const sigYRelativeToCanvas = currentSigY - signaturePageInfo.canvas.offsetTop;
-
-            // Apply the scale to convert from display pixels to PDF points
-            const sigWidthPdf = signatureImage.offsetWidth * scaleX;
-            const sigHeightPdf = signatureImage.offsetHeight * scaleY; // Use scaleY for height
-
-            const sigX = sigXRelativeToCanvas * scaleX;
-            // pdf-lib's origin is bottom-left, so we need to invert the Y coordinate
-            // Y position relative to the bottom of the PDF page
-            const sigY = targetPagePdfLib.getHeight() - (sigYRelativeToCanvas * scaleY) - sigHeightPdf;
-
-            page.drawImage(signatureImgPng, {
-                x: sigX,
-                y: sigY,
-                width: sigWidthPdf,
-                height: sigHeightPdf,
+        addSignatureBtn.addEventListener('click', () => {
+            signaturePad.clear(); typeInput.value = ''; uploadSignatureInput.value = '';
+            signaturePreview.style.display = 'none'; signaturePreview.src = '';
+            signature = { dataUrl: null, type: null }; signatureModal.style.display = 'block';
+        });
+        
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelector('.tab-button.active').classList.remove('active');
+                document.querySelector('.tab-content.active').classList.remove('active');
+                button.classList.add('active');
+                document.getElementById(button.dataset.tab).classList.add('active');
             });
+        });
+        
+        clearSignatureBtn.addEventListener('click', () => signaturePad.clear());
+        
+        uploadSignatureInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file || (!file.type.startsWith('image/png') && !file.type.startsWith('image/jpeg'))) {
+                alert('Please upload a valid PNG or JPG image.');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                signature.dataUrl = event.target.result; 
+                signature.type = file.type;
+                signaturePreview.src = event.target.result;
+                signaturePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        });
 
-            const signedPdfBytes = await pdfDoc.save();
-            const blob = new Blob([signedPdfBytes], { type: "application/pdf" });
-            const url = URL.createObjectURL(blob);
-
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "signed-document.pdf";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-        } catch (err) {
-            console.error("Error signing PDF: ", err);
-            // Use a more user-friendly modal or error display
-            alert("An error occurred while applying the signature. Please try again. Details: " + err.message);
-        } finally {
-            downloadBtn.disabled = false;
-            downloadBtn.textContent = 'Apply Signature & Download';
-        }
-    });
-
-    // Make the signature resizable and draggable
-    interact('#signature-image')
-        .resizable({
-            edges: { left: true, right: true, bottom: true, top: true },
-            listeners: {
-                move(event) {
-                    const target = event.target;
-                    let x = (parseFloat(target.getAttribute('data-x')) || 0);
-                    let y = (parseFloat(target.getAttribute('data-y')) || 0);
-
-                    target.style.width = `${event.rect.width}px`;
-                    target.style.height = `${event.rect.height}px`;
-
-                    // Update the position based on the resize
-                    x += event.deltaRect.left;
-                    y += event.deltaRect.top;
-
-                    target.style.transform = `translate(${x}px, ${y}px)`;
-                    target.setAttribute('data-x', x);
-                    target.setAttribute('data-y', y);
-
-                    // Update signaturePageInfo with current dimensions
-                    if (signaturePageInfo) {
-                        signaturePageInfo.width = event.rect.width;
-                        signaturePageInfo.height = event.rect.height;
-                    }
-                }
-            },
-            modifiers: [
-                interact.modifiers.aspectRatio({
-                    ratio: 'preserve'
-                }),
-                // Optionally add restrictRect to keep it within the canvas
-                // interact.modifiers.restrictRect({
-                //     restriction: 'parent' // This would restrict to pdfViewer, not specific canvas
-                // })
-            ]
-        })
-        .draggable({
-            listeners: {
-                move(event) {
-                    const target = event.target;
-                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-                    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                    
-                    target.style.transform = `translate(${x}px, ${y}px)`;
-                    target.setAttribute('data-x', x);
-                    target.setAttribute('data-y', y);
-                },
-                // Add an end listener to update signaturePageInfo after drag
-                end(event) {
-                    if (signaturePageInfo) {
-                        const target = event.target;
-                        const currentSigX = (parseFloat(target.getAttribute('data-x')) || 0);
-                        const currentSigY = (parseFloat(target.getAttribute('data-y')) || 0);
-
-                        // Recalculate signature's position relative to its canvas
-                        signaturePageInfo.x = currentSigX - signaturePageInfo.canvas.offsetLeft;
-                        signaturePageInfo.y = currentSigY - signaturePageInfo.canvas.offsetTop;
-
-                        // Check if the signature has been dragged off its original page
-                        // This is a more complex check, but critical for multi-page PDFs
-                        const canvases = pdfViewer.querySelectorAll('.pdf-page-canvas');
-                        let newTargetCanvas = null;
-                        for (const canvas of canvases) {
-                            const rect = canvas.getBoundingClientRect();
-                            const sigRect = target.getBoundingClientRect();
-                            
-                            // Check for significant overlap or if signature center is on new canvas
-                            if (sigRect.left < rect.right && sigRect.right > rect.left &&
-                                sigRect.top < rect.bottom && sigRect.bottom > rect.top) {
-                                
-                                // Simple check: if the signature's top-left is within this canvas
-                                if (currentSigX >= canvas.offsetLeft && currentSigX <= (canvas.offsetLeft + canvas.offsetWidth) &&
-                                    currentSigY >= canvas.offsetTop && currentSigY <= (canvas.offsetTop + canvas.offsetHeight)) {
-                                    newTargetCanvas = canvas;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (newTargetCanvas && newTargetCanvas !== signaturePageInfo.canvas) {
-                            console.log(`Signature moved from page ${signaturePageInfo.pageNumber} to page ${newTargetCanvas.dataset.pageNumber}`);
-                            signaturePageInfo.canvas = newTargetCanvas;
-                            signaturePageInfo.pageNumber = parseInt(newTargetCanvas.dataset.pageNumber);
-                            // Recalculate x,y relative to the new canvas
-                            signaturePageInfo.x = currentSigX - newTargetCanvas.offsetLeft;
-                            signaturePageInfo.y = currentSigY - newTargetCanvas.offsetTop;
-                        }
-                    }
-                }
+        applySignatureBtn.addEventListener('click', () => {
+            const activeTab = document.querySelector('.tab-content.active').id;
+            
+            if (activeTab === 'draw-tab' && !signaturePad.isEmpty()) {
+                signature.dataUrl = signaturePad.toDataURL();
+                signature.type = 'image/png';
+            } else if (activeTab === 'type-tab' && typeInput.value.trim()) {
+                signature.dataUrl = createSignatureFromText(typeInput.value);
+                signature.type = 'image/png';
+            }
+            
+            if (signature.dataUrl) {
+                addDraggableSignature(signature.dataUrl);
+                signatureModal.style.display = 'none';
+            } else {
+                alert("Please create or upload a signature first.");
             }
         });
-});
+        
+        const createSignatureFromText = (text) => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 400; canvas.height = 100;
+            ctx.font = "50px 'Dancing Script', cursive";
+            ctx.fillText(text, 10, 70);
+            return canvas.toDataURL();
+        };
+
+        const addDraggableSignature = (dataUrl) => {
+            let existingSig = document.getElementById('draggable-signature');
+            if(existingSig) existingSig.remove();
+            const img = document.createElement('img');
+            img.src = dataUrl; img.id = 'draggable-signature'; img.style.width = '150px';
+            pdfViewer.appendChild(img);
+            
+            let pos = { x: 0, y: 0, currentX: 0, currentY: 0 };
+            img.onmousedown = (e) => {
+                e.preventDefault();
+                pos.currentX = e.clientX; pos.currentY = e.clientY;
+                document.onmouseup = () => document.onmouseup = document.onmousemove = null;
+                document.onmousemove = (e) => {
+                    e.preventDefault();
+                    pos.x = pos.currentX - e.clientX; pos.y = pos.currentY - e.clientY;
+                    pos.currentX = e.clientX; pos.currentY = e.clientY;
+                    img.style.top = (img.offsetTop - pos.y) + "px";
+                    img.style.left = (img.offsetLeft - pos.x) + "px";
+                };
+            };
+        };
+        
+        finalizeBtn.addEventListener('click', () => {
+            const signatureEl = document.getElementById('draggable-signature');
+            if (!signatureEl) return alert("Please add and place your signature first.");
+            
+            const sigRect = signatureEl.getBoundingClientRect();
+            const canvases = Array.from(pdfViewer.querySelectorAll('canvas'));
+            const targetCanvas = canvases.find(canvas => {
+                const canvasRect = canvas.getBoundingClientRect();
+                return sigRect.top >= canvasRect.top && sigRect.bottom <= canvasRect.bottom + 5;
+            });
+            
+            if (!targetCanvas) return alert("Please place the signature fully within a single page.");
+
+            const pageNum = parseInt(targetCanvas.dataset.pageNumber);
+            const pageRect = targetCanvas.getBoundingClientRect();
+            const originalPage = pdfPageDimensions[pageNum - 1];
+            const scaleX = originalPage.width / pageRect.width;
+            const scaleY = originalPage.height / pageRect.height;
+            const sigX_px = sigRect.left - pageRect.left;
+            const sigY_px = sigRect.top - pageRect.top;
+            const finalX = sigX_px * scaleX;
+            const finalY = originalPage.height - (sigY_px * scaleY) - (sigRect.height * scaleY);
+            const finalWidth = sigRect.width * scaleX;
+            const finalHeight = sigRect.height * scaleY;
+
+            signaturePosition = { pageNum: pageNum - 1, x: finalX, y: finalY, width: finalWidth, height: finalHeight };
+            
+            signatureEl.remove();
+            signingSection.style.display = 'none';
+            downloadSection.style.display = 'block';
+        });
+
+        downloadBtn.addEventListener('click', async () => {
+            if (!pdfFileBytes) return;
+            downloadBtn.disabled = true;
+            setStatus('Applying signature and saving...', 'info');
+            
+            try {
+                const pdfDoc = await PDFDocument.load(pdfFileBytes);
+                const signatureBytes = await fetch(signature.dataUrl).then(res => res.arrayBuffer());
+                
+                let signatureImage;
+                if (signature.type === 'image/jpeg') {
+                    signatureImage = await pdfDoc.embedJpg(signatureBytes);
+                } else {
+                    signatureImage = await pdfDoc.embedPng(signatureBytes);
+                }
+                
+                const pos = signaturePosition;
+                const page = pdfDoc.getPages()[pos.pageNum];
+                page.drawImage(signatureImage, { x: pos.x, y: pos.y, width: pos.width, height: pos.height });
+
+                const finalPdfBytes = await pdfDoc.save();
+                const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
+                const signedFileName = originalFileName.replace(/\.pdf$/i, '_signed.pdf');
+                saveAs(blob, signedFileName);
+                setStatus('Your signed PDF has been downloaded!', 'success');
+            } catch (e) {
+                console.error("Saving Error:", e);
+                setStatus('An error occurred while saving the PDF. Please try again.', 'error');
+            } finally {
+                downloadBtn.disabled = false;
+            }
+        });
+    });
   </script>
 </body>
 </html>
