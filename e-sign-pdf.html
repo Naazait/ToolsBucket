@@ -312,210 +312,282 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const { PDFDocument } = PDFLib;
-        const pdfjsLib = window['pdfjs-dist/build/pdf'];
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+    const { PDFDocument } = PDFLib;
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
-        const pdfInput = document.getElementById("pdfInput");
-        const signaturePadCanvas = document.getElementById("signaturePad");
-        const pdfViewer = document.getElementById("pdf-viewer");
-        const clearBtn = document.getElementById("clearBtn");
-        const downloadBtn = document.getElementById("downloadBtn");
-        const signatureImage = document.getElementById('signature-image');
-        
-        const signaturePad = new SignaturePad(signaturePadCanvas);
-        let pdfFile = null;
+    const pdfInput = document.getElementById("pdfInput");
+    const signaturePadCanvas = document.getElementById("signaturePad");
+    const pdfViewer = document.getElementById("pdf-viewer");
+    const clearBtn = document.getElementById("clearBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const signatureImage = document.getElementById('signature-image');
+    
+    const signaturePad = new SignaturePad(signaturePadCanvas);
+    let pdfFile = null;
+    let currentPdfDoc = null; // Store pdfjsDoc for easy page access
+    let signaturePageInfo = null; // To store { pageNumber, x, y, width, height } relative to PDF.js canvas
 
-        function resizeCanvas() {
-            const ratio = Math.max(window.devicePixelRatio || 1, 1);
-            signaturePadCanvas.width = signaturePadCanvas.offsetWidth * ratio;
-            signaturePadCanvas.height = signaturePadCanvas.offsetHeight * ratio;
-            signaturePadCanvas.getContext("2d").scale(ratio, ratio);
-            signaturePad.clear();
-        }
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        signaturePadCanvas.width = signaturePadCanvas.offsetWidth * ratio;
+        signaturePadCanvas.height = signaturePadCanvas.offsetHeight * ratio;
+        signaturePadCanvas.getContext("2d").scale(ratio, ratio);
+        signaturePad.clear();
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
 
-        const renderPdf = async (file) => {
-            pdfViewer.innerHTML = '<p>Loading PDF...</p>';
-            try {
-                const data = await file.arrayBuffer();
-                pdfFile = data; // Store the raw buffer for pdf-lib
+    const renderPdf = async (file) => {
+        pdfViewer.innerHTML = '<p>Loading PDF...</p>';
+        try {
+            const data = await file.arrayBuffer();
+            pdfFile = data; // Store the raw buffer for pdf-lib
+            
+            const pdfjsDoc = await pdfjsLib.getDocument({ data }).promise;
+            currentPdfDoc = pdfjsDoc; // Store the pdfjsDoc
+            pdfViewer.innerHTML = ''; 
+
+            for (let i = 1; i <= pdfjsDoc.numPages; i++) {
+                const page = await pdfjsDoc.getPage(i);
+                const viewport = page.getViewport({ scale: 1.5 }); // Use a consistent scale for rendering
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                canvas.dataset.pageNumber = i;
+				canvas.classList.add('pdf-page-canvas'); // Add this line
                 
-                const pdfjsDoc = await pdfjsLib.getDocument({ data }).promise;
-                pdfViewer.innerHTML = ''; 
+                await page.render({ canvasContext: context, viewport: viewport }).promise;
+                pdfViewer.appendChild(canvas);
 
-                for (let i = 1; i <= pdfjsDoc.numPages; i++) {
-                    const page = await pdfjsDoc.getPage(i);
-                    const viewport = page.getViewport({ scale: 1.5 });
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-                    canvas.dataset.pageNumber = i;
+                canvas.addEventListener('click', (e) => {
+                    if (signaturePad.isEmpty()) {
+                        alert('Please draw your signature first.');
+                        return;
+                    }
                     
-                    await page.render({ canvasContext: context, viewport: viewport }).promise;
-                    pdfViewer.appendChild(canvas);
+                    const rect = canvas.getBoundingClientRect();
+                    // Click coordinates relative to the clicked canvas
+                    const xRelativeToCanvas = e.clientX - rect.left;
+                    const yRelativeToCanvas = e.clientY - rect.top;
 
-                    canvas.addEventListener('click', (e) => {
-                        if (signaturePad.isEmpty()) {
-                            alert('Please draw your signature first.');
-                            return;
-                        }
-                        
-                        const rect = canvas.getBoundingClientRect();
-                        const x = e.clientX - rect.left;
-                        const y = e.clientY - rect.top;
+                    const sigInitialWidth = 150;
+                    const sigInitialHeight = 75;
 
-                        const sigInitialWidth = 150;
-                        const sigInitialHeight = 75;
+                    signatureImage.style.display = 'block';
+                    signatureImage.src = signaturePad.toDataURL();
+                    signatureImage.style.width = `${sigInitialWidth}px`;
+                    signatureImage.style.height = `${sigInitialHeight}px`;
 
-                        signatureImage.style.display = 'block';
-                        signatureImage.src = signaturePad.toDataURL();
-                        signatureImage.style.width = `${sigInitialWidth}px`;
-                        signatureImage.style.height = `${sigInitialHeight}px`;
+                    // Position signature image relative to pdfViewer (its parent)
+                    // Center the signature where clicked
+                    const absoluteX = canvas.offsetLeft + xRelativeToCanvas - (sigInitialWidth / 2);
+                    const absoluteY = canvas.offsetTop + yRelativeToCanvas - (sigInitialHeight / 2);
+                    
+                    signatureImage.style.transform = `translate(${absoluteX}px, ${absoluteY}px)`;
+                    signatureImage.setAttribute('data-x', absoluteX);
+                    signatureImage.setAttribute('data-y', absoluteY);
+                    
+                    // Store initial placement info
+                    signaturePageInfo = {
+                        pageNumber: parseInt(canvas.dataset.pageNumber),
+                        // These will be updated by interact.js during drag/resize
+                        x: xRelativeToCanvas - (sigInitialWidth / 2), 
+                        y: yRelativeToCanvas - (sigInitialHeight / 2),
+                        width: sigInitialWidth,
+                        height: sigInitialHeight,
+                        canvas: canvas // Reference to the canvas it was placed on
+                    };
 
-                        const absoluteX = canvas.offsetLeft + x - (sigInitialWidth / 2);
-                        const absoluteY = canvas.offsetTop + y - (sigInitialHeight / 2);
-                        
-                        signatureImage.style.transform = `translate(${absoluteX}px, ${absoluteY}px)`;
-                        signatureImage.dataset.x = absoluteX;
-                        signatureImage.dataset.y = absoluteY;
-                        
-                        pdfViewer.appendChild(signatureImage);
-                        downloadBtn.disabled = false;
-                    });
-                }
-            } catch (error) {
-                console.error("Failed to load PDF:", error);
-                pdfViewer.innerHTML = '<p>Error: Could not load the PDF file. It might be corrupted or protected.</p>';
-            }
-        };
-
-        pdfInput.addEventListener("change", (e) => {
-            const file = e.target.files[0];
-            if (file && file.type === "application/pdf") {
-                renderPdf(file);
-            } else {
-                alert("Please upload a valid PDF file.");
-            }
-        });
-
-        clearBtn.addEventListener("click", () => signaturePad.clear());
-
-        downloadBtn.addEventListener("click", async () => {
-            if (!pdfFile || signatureImage.style.display === 'none') {
-                alert("Please upload a PDF and place your signature first.");
-                return;
-            }
-
-            try {
-                downloadBtn.disabled = true;
-                downloadBtn.textContent = 'Applying...';
-                
-                const pdfDoc = await PDFDocument.load(pdfFile);
-                const signatureImgPng = await pdfDoc.embedPng(signatureImage.src);
-                
-                // Find the target page
-                let targetPageNum = -1;
-                let accumulatedHeight = 0;
-                const signatureTop = signatureImage.offsetTop;
-                const canvases = pdfViewer.querySelectorAll('canvas');
-
-                for (let i = 0; i < canvases.length; i++) {
-                    const canvas = canvases[i];
-                    if (signatureTop < accumulatedHeight + canvas.offsetHeight) {
-                        targetPageNum = i;
-                        break;
-                    }
-                    accumulatedHeight += canvas.offsetHeight + 10; // 10px margin
-                }
-
-                if (targetPageNum === -1) throw new Error("Could not determine signature page.");
-                
-                const page = pdfDoc.getPages()[targetPageNum];
-                const pageCanvas = canvases[targetPageNum];
-
-                // Calculate signature position and size relative to the PDF page
-                const scale = page.getWidth() / pageCanvas.offsetWidth;
-                
-                const sigX = (signatureImage.offsetLeft - pageCanvas.offsetLeft) * scale;
-                const sigYOnCanvas = (signatureImage.offsetTop - pageCanvas.offsetTop) * scale;
-                const sigHeight = signatureImage.offsetHeight * scale;
-                
-                // pdf-lib's origin is bottom-left, so we need to invert the Y coordinate
-                const sigY = page.getHeight() - sigYOnCanvas - sigHeight;
-
-                page.drawImage(signatureImgPng, {
-                    x: sigX,
-                    y: sigY,
-                    width: signatureImage.offsetWidth * scale,
-                    height: sigHeight,
+                    pdfViewer.appendChild(signatureImage);
+                    downloadBtn.disabled = false;
                 });
-
-                const signedPdfBytes = await pdfDoc.save();
-                const blob = new Blob([signedPdfBytes], { type: "application/pdf" });
-                const url = URL.createObjectURL(blob);
-
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "signed-document.pdf";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-            } catch (err) {
-                console.error("Error signing PDF: ", err);
-                alert("An error occurred while applying the signature. Please try again.");
-            } finally {
-                downloadBtn.disabled = false;
-                downloadBtn.textContent = 'Apply Signature & Download';
             }
-        });
+        } catch (error) {
+            console.error("Failed to load PDF:", error);
+            pdfViewer.innerHTML = '<p>Error: Could not load the PDF file. It might be corrupted or protected.</p>';
+        }
+    };
 
-        // Make the signature resizable and draggable
-        interact('#signature-image')
-            .resizable({
-                edges: { left: true, right: true, bottom: true, top: true },
-                listeners: {
-                    move(event) {
-                        const target = event.target;
-                        let x = (parseFloat(target.getAttribute('data-x')) || 0);
-                        let y = (parseFloat(target.getAttribute('data-y')) || 0);
+    pdfInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file && file.type === "application/pdf") {
+            renderPdf(file);
+            signatureImage.style.display = 'none'; // Hide existing signature on new PDF load
+            signaturePageInfo = null; // Clear old signature info
+            downloadBtn.disabled = true;
+        } else {
+            alert("Please upload a valid PDF file.");
+        }
+    });
 
-                        target.style.width = `${event.rect.width}px`;
-                        target.style.height = `${event.rect.height}px`;
+    clearBtn.addEventListener("click", () => signaturePad.clear());
 
-                        // Update the position based on the resize
-                        x += event.deltaRect.left;
-                        y += event.deltaRect.top;
+    downloadBtn.addEventListener("click", async () => {
+        if (!pdfFile || !signaturePageInfo || signatureImage.style.display === 'none') {
+            alert("Please upload a PDF and place your signature first.");
+            return;
+        }
 
-                        target.style.transform = `translate(${x}px, ${y}px)`;
-                        target.setAttribute('data-x', x);
-                        target.setAttribute('data-y', y);
-                    }
-                },
-                modifiers: [
-                    interact.modifiers.aspectRatio({
-                        ratio: 'preserve'
-                    })
-                ]
-            })
-            .draggable({
-                listeners: {
-                    move(event) {
-                        const target = event.target;
-                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                        
-                        target.style.transform = `translate(${x}px, ${y}px)`;
-                        target.setAttribute('data-x', x);
-                        target.setAttribute('data-y', y);
+        try {
+            downloadBtn.disabled = true;
+            downloadBtn.textContent = 'Applying...';
+            
+            const pdfDoc = await PDFDocument.load(pdfFile);
+            const signatureImgPng = await pdfDoc.embedPng(signatureImage.src);
+            
+            const targetPagePdfLib = pdfDoc.getPages()[signaturePageInfo.pageNumber - 1]; // pdf-lib is 0-indexed
+            const originalPdfjsPage = await currentPdfDoc.getPage(signaturePageInfo.pageNumber);
+            const originalPdfjsViewport = originalPdfjsPage.getViewport({ scale: 1.5 }); // Use same scale as rendering
+            
+            // Calculate scale factor from rendered canvas to actual PDF page size
+            const scaleX = targetPagePdfLib.getWidth() / signaturePageInfo.canvas.offsetWidth;
+            const scaleY = targetPagePdfLib.getHeight() / signaturePageInfo.canvas.offsetHeight;
+            
+            // Get current transform values from signatureImage
+            const transformMatrix = new WebKitCSSMatrix(window.getComputedStyle(signatureImage).transform);
+            const currentSigX = transformMatrix.m41; // translate X
+            const currentSigY = transformMatrix.m42; // translate Y
+            
+            // Calculate signature's top-left corner relative to its *target PDF.js canvas*
+            // signatureImage.offsetLeft/Top are relative to pdfViewer.
+            // signaturePageInfo.canvas.offsetLeft/Top are relative to pdfViewer.
+            const sigXRelativeToCanvas = currentSigX - signaturePageInfo.canvas.offsetLeft;
+            const sigYRelativeToCanvas = currentSigY - signaturePageInfo.canvas.offsetTop;
+
+            // Apply the scale to convert from display pixels to PDF points
+            const sigWidthPdf = signatureImage.offsetWidth * scaleX;
+            const sigHeightPdf = signatureImage.offsetHeight * scaleY; // Use scaleY for height
+
+            const sigX = sigXRelativeToCanvas * scaleX;
+            // pdf-lib's origin is bottom-left, so we need to invert the Y coordinate
+            // Y position relative to the bottom of the PDF page
+            const sigY = targetPagePdfLib.getHeight() - (sigYRelativeToCanvas * scaleY) - sigHeightPdf;
+
+            page.drawImage(signatureImgPng, {
+                x: sigX,
+                y: sigY,
+                width: sigWidthPdf,
+                height: sigHeightPdf,
+            });
+
+            const signedPdfBytes = await pdfDoc.save();
+            const blob = new Blob([signedPdfBytes], { type: "application/pdf" });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "signed-document.pdf";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+        } catch (err) {
+            console.error("Error signing PDF: ", err);
+            // Use a more user-friendly modal or error display
+            alert("An error occurred while applying the signature. Please try again. Details: " + err.message);
+        } finally {
+            downloadBtn.disabled = false;
+            downloadBtn.textContent = 'Apply Signature & Download';
+        }
+    });
+
+    // Make the signature resizable and draggable
+    interact('#signature-image')
+        .resizable({
+            edges: { left: true, right: true, bottom: true, top: true },
+            listeners: {
+                move(event) {
+                    const target = event.target;
+                    let x = (parseFloat(target.getAttribute('data-x')) || 0);
+                    let y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+                    target.style.width = `${event.rect.width}px`;
+                    target.style.height = `${event.rect.height}px`;
+
+                    // Update the position based on the resize
+                    x += event.deltaRect.left;
+                    y += event.deltaRect.top;
+
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+
+                    // Update signaturePageInfo with current dimensions
+                    if (signaturePageInfo) {
+                        signaturePageInfo.width = event.rect.width;
+                        signaturePageInfo.height = event.rect.height;
                     }
                 }
-            });
-    });
+            },
+            modifiers: [
+                interact.modifiers.aspectRatio({
+                    ratio: 'preserve'
+                }),
+                // Optionally add restrictRect to keep it within the canvas
+                // interact.modifiers.restrictRect({
+                //     restriction: 'parent' // This would restrict to pdfViewer, not specific canvas
+                // })
+            ]
+        })
+        .draggable({
+            listeners: {
+                move(event) {
+                    const target = event.target;
+                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                    
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                },
+                // Add an end listener to update signaturePageInfo after drag
+                end(event) {
+                    if (signaturePageInfo) {
+                        const target = event.target;
+                        const currentSigX = (parseFloat(target.getAttribute('data-x')) || 0);
+                        const currentSigY = (parseFloat(target.getAttribute('data-y')) || 0);
+
+                        // Recalculate signature's position relative to its canvas
+                        signaturePageInfo.x = currentSigX - signaturePageInfo.canvas.offsetLeft;
+                        signaturePageInfo.y = currentSigY - signaturePageInfo.canvas.offsetTop;
+
+                        // Check if the signature has been dragged off its original page
+                        // This is a more complex check, but critical for multi-page PDFs
+                        const canvases = pdfViewer.querySelectorAll('.pdf-page-canvas');
+                        let newTargetCanvas = null;
+                        for (const canvas of canvases) {
+                            const rect = canvas.getBoundingClientRect();
+                            const sigRect = target.getBoundingClientRect();
+                            
+                            // Check for significant overlap or if signature center is on new canvas
+                            if (sigRect.left < rect.right && sigRect.right > rect.left &&
+                                sigRect.top < rect.bottom && sigRect.bottom > rect.top) {
+                                
+                                // Simple check: if the signature's top-left is within this canvas
+                                if (currentSigX >= canvas.offsetLeft && currentSigX <= (canvas.offsetLeft + canvas.offsetWidth) &&
+                                    currentSigY >= canvas.offsetTop && currentSigY <= (canvas.offsetTop + canvas.offsetHeight)) {
+                                    newTargetCanvas = canvas;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (newTargetCanvas && newTargetCanvas !== signaturePageInfo.canvas) {
+                            console.log(`Signature moved from page ${signaturePageInfo.pageNumber} to page ${newTargetCanvas.dataset.pageNumber}`);
+                            signaturePageInfo.canvas = newTargetCanvas;
+                            signaturePageInfo.pageNumber = parseInt(newTargetCanvas.dataset.pageNumber);
+                            // Recalculate x,y relative to the new canvas
+                            signaturePageInfo.x = currentSigX - newTargetCanvas.offsetLeft;
+                            signaturePageInfo.y = currentSigY - newTargetCanvas.offsetTop;
+                        }
+                    }
+                }
+            }
+        });
+});
   </script>
 </body>
 </html>
