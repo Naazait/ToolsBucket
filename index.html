@@ -73,7 +73,7 @@
             padding: 0 20px;
         }
         
-      /* Header (unchanged largely, but relevant for context) */
+        /* Header */
         header {
             background-color: var(--white);
             box-shadow: var(--shadow);
@@ -82,97 +82,62 @@
             z-index: 100;
             padding: 15px 0;
         }
-
+        
         .header-container {
             display: flex;
-            justify-content: space-between; /* Ensures logo and button are spaced */
+            justify-content: space-between;
             align-items: center;
         }
-
-        /* Nav for Desktop */
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--text-dark);
+        }
+        
         nav ul {
-            display: flex; /* Always display as flex on desktop */
+            display: flex;
             list-style: none;
             gap: 25px;
         }
         
-        /* Mobile menu button (initially hidden on desktop) */
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary-blue);
+        }
+        
+        .contact-email {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .contact-email i {
+            color: var(--primary-blue);
+        }
+        
         .mobile-menu-btn {
-            display: none; /* Hide on desktop */
+            display: none;
             background: none;
             border: none;
             font-size: 24px;
             color: var(--primary-blue);
             cursor: pointer;
-            z-index: 110; /* Ensure it's above the nav overlay */
         }
-
-        /* New CSS for Mobile Navigation */
-        @media (max-width: 576px) { /* Apply these styles only on small screens */
-            .header-container {
-                /* On mobile, keep logo and button on one line, remove column flex */
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            nav {
-                position: fixed; /* Fixed position to act as an overlay */
-                top: 0;
-                left: -100%; /* Start off-screen to the left */
-                width: 100%; /* Full width */
-                height: 100%; /* Full height */
-                background-color: var(--white); /* White background for the menu */
-                z-index: 105; /* Above content, below header (if needed) */
-                display: flex; /* Use flexbox for centering/aligning menu items */
-                flex-direction: column;
-                justify-content: center; /* Center items vertically */
-                align-items: center; /* Center items horizontally */
-                transition: left 0.3s ease-out; /* Smooth slide-in/out transition */
-                box-shadow: var(--shadow); /* Add a subtle shadow */
-            }
-
-            nav.active { /* Class to activate the menu */
-                left: 0; /* Slide into view */
-            }
-
-            nav ul {
-                flex-direction: column; /* Stack menu items vertically */
-                text-align: center;
-                gap: 30px; /* More space between links */
-            }
-
-            nav ul li a {
-                font-size: 1.5rem; /* Larger font size for mobile links */
-                padding: 10px 0;
-                display: block; /* Make links block level for easier tapping */
-                color: var(--text-dark);
-            }
-
-            nav ul li a:hover {
-                color: var(--primary-blue);
-            }
-
-            .contact-email {
-                display: none; /* Hide contact email in header on mobile */
-            }
-            
-            .mobile-menu-btn {
-                display: block; /* Show hamburger button on mobile */
-            }
-
-            /* Add a close button for the mobile menu */
-            .nav-close-btn {
-                position: absolute;
-                top: 20px;
-                right: 20px;
-                background: none;
-                border: none;
-                font-size: 28px;
-                color: var(--text-dark);
-                cursor: pointer;
-                z-index: 110;
-            }
+        
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
@@ -569,6 +534,106 @@
             
             .footer-container {
                 grid-template-columns: 1fr;
+            }
+			/* Header (unchanged largely, but relevant for context) */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 15px 0;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between; /* Ensures logo and button are spaced */
+            align-items: center;
+        }
+
+        /* Nav for Desktop */
+        nav ul {
+            display: flex; /* Always display as flex on desktop */
+            list-style: none;
+            gap: 25px;
+        }
+        
+        /* Mobile menu button (initially hidden on desktop) */
+        .mobile-menu-btn {
+            display: none; /* Hide on desktop */
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary-blue);
+            cursor: pointer;
+            z-index: 110; /* Ensure it's above the nav overlay */
+        }
+
+        /* New CSS for Mobile Navigation */
+        @media (max-width: 576px) { /* Apply these styles only on small screens */
+            .header-container {
+                /* On mobile, keep logo and button on one line, remove column flex */
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            nav {
+                position: fixed; /* Fixed position to act as an overlay */
+                top: 0;
+                left: -100%; /* Start off-screen to the left */
+                width: 100%; /* Full width */
+                height: 100%; /* Full height */
+                background-color: var(--white); /* White background for the menu */
+                z-index: 105; /* Above content, below header (if needed) */
+                display: flex; /* Use flexbox for centering/aligning menu items */
+                flex-direction: column;
+                justify-content: center; /* Center items vertically */
+                align-items: center; /* Center items horizontally */
+                transition: left 0.3s ease-out; /* Smooth slide-in/out transition */
+                box-shadow: var(--shadow); /* Add a subtle shadow */
+            }
+
+            nav.active { /* Class to activate the menu */
+                left: 0; /* Slide into view */
+            }
+
+            nav ul {
+                flex-direction: column; /* Stack menu items vertically */
+                text-align: center;
+                gap: 30px; /* More space between links */
+            }
+
+            nav ul li a {
+                font-size: 1.5rem; /* Larger font size for mobile links */
+                padding: 10px 0;
+                display: block; /* Make links block level for easier tapping */
+                color: var(--text-dark);
+            }
+
+            nav ul li a:hover {
+                color: var(--primary-blue);
+            }
+
+            .contact-email {
+                display: none; /* Hide contact email in header on mobile */
+            }
+            
+            .mobile-menu-btn {
+                display: block; /* Show hamburger button on mobile */
+            }
+
+            /* Add a close button for the mobile menu */
+            .nav-close-btn {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: none;
+                border: none;
+                font-size: 28px;
+                color: var(--text-dark);
+                cursor: pointer;
+                z-index: 110;
             }
         }
     </style>
