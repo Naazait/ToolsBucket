@@ -1250,83 +1250,128 @@
     </footer>
     
     <script>
-        // Mobile menu toggle functionality
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
-            const nav = document.querySelector('nav');
-            nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
-        });
-        
-        // Search functionality
-        document.getElementById('searchButton').addEventListener('click', function() {
+    // Mobile menu toggle functionality
+    document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+        const nav = document.querySelector('nav');
+        // Toggle display using CSS class for better responsiveness if you expand the nav for mobile
+        if (nav.style.display === 'block') {
+            nav.style.display = 'none';
+        } else {
+            nav.style.display = 'block';
+        }
+    });
+    
+    // Search functionality
+    document.getElementById('searchButton').addEventListener('click', function() {
+        performSearch();
+    });
+    
+    // Also search when Enter key is pressed
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
             performSearch();
-        });
+        }
+    });
+    
+    function performSearch() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const resultsContainer = document.getElementById('searchResults');
+        const resultsList = document.getElementById('resultsList');
         
-        // Also search when Enter key is pressed
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
-        });
+        // Clear previous results
+        resultsList.innerHTML = '';
         
-        function performSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const resultsContainer = document.getElementById('searchResults');
-            const resultsList = document.getElementById('resultsList');
-            
-            // Clear previous results
-            resultsList.innerHTML = '';
-            
-            if (searchTerm.trim() === '') {
-                resultsContainer.style.display = 'none';
-                return;
-            }
-            
-            // Get all tool cards
-            const toolCards = document.querySelectorAll('.tool-card');
-            let foundResults = false;
-            
-            toolCards.forEach(card => {
-                const toolName = card.querySelector('h3').textContent.toLowerCase();
-                const toolDesc = card.querySelector('p').textContent.toLowerCase();
-                
-                if (toolName.includes(searchTerm) || toolDesc.includes(searchTerm)) {
-                    foundResults = true;
-                    const listItem = document.createElement('li');
-                    const link = document.createElement('a');
-                    link.href = '#' + card.closest('.tools-section').id;
-                    link.textContent = toolName;
-                    link.onclick = function() {
-                        // Scroll to the tool section
-                        card.scrollIntoView({ behavior: 'smooth' });
-                        // Highlight the card
-                        card.style.boxShadow = '0 0 0 3px var(--primary-blue)';
-                        setTimeout(() => {
-                            card.style.boxShadow = 'var(--shadow)';
-                        }, 2000);
-                        resultsContainer.style.display = 'none';
-                    };
-                    listItem.appendChild(link);
-                    resultsList.appendChild(listItem);
-                }
-            });
-            
-            if (foundResults) {
-                resultsContainer.style.display = 'block';
-            } else {
-                const listItem = document.createElement('li');
-                listItem.textContent = 'No tools found matching your search.';
-                resultsList.appendChild(listItem);
-                resultsContainer.style.display = 'block';
-            }
+        if (searchTerm.trim() === '') {
+            resultsContainer.style.display = 'none';
+            return;
         }
         
-        // Close search results when clicking outside
-        document.addEventListener('click', function(event) {
-            const searchContainer = document.querySelector('.search-container');
-            if (!searchContainer.contains(event.target)) {
-                document.getElementById('searchResults').style.display = 'none';
+        const toolCards = document.querySelectorAll('.tool-card');
+        let foundResults = false;
+        
+        toolCards.forEach(card => {
+            const toolName = card.querySelector('h3').textContent.toLowerCase();
+            const toolDesc = card.querySelector('p').textContent.toLowerCase();
+            
+            if (toolName.includes(searchTerm) || toolDesc.includes(searchTerm)) {
+                foundResults = true;
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                
+                // Assign a unique ID to each tool-card if it doesn't have one
+                if (!card.id) {
+                    card.id = 'tool-' + toolName.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''); // Create a slug-like ID, remove non-alphanumeric chars
+                }
+
+                link.href = '#' + card.id; // Link directly to the card's ID
+                link.textContent = card.querySelector('h3').textContent; // Use original case for display
+
+                link.onclick = function(e) {
+                    e.preventDefault(); // Stop the browser from performing default hash jump
+                    
+                    // Scroll to the tool card smoothly
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Highlight the card
+                    card.style.transition = 'box-shadow 0.3s ease-in-out'; // Ensure smooth highlight transition
+                    card.style.boxShadow = '0 0 0 3px var(--primary-blue), var(--shadow)'; // Add highlight and keep original shadow
+                    
+                    // Remove highlight after a delay
+                    setTimeout(() => {
+                        card.style.boxShadow = 'var(--shadow)'; // Revert to original shadow
+                    }, 2000); // Highlight for 2 seconds
+                    
+                    resultsContainer.style.display = 'none'; // Hide search results
+                    document.getElementById('searchInput').value = ''; // Clear search input
+                };
+                listItem.appendChild(link);
+                resultsList.appendChild(listItem);
             }
         });
-    </script>
+        
+        if (foundResults) {
+            resultsContainer.style.display = 'block';
+        } else {
+            const listItem = document.createElement('li');
+            listItem.textContent = 'No tools found matching your search.';
+            resultsList.appendChild(listItem);
+            resultsContainer.style.display = 'block';
+        }
+    }
+    
+    // Close search results when clicking outside
+    document.addEventListener('click', function(event) {
+        const searchContainer = document.querySelector('.search-container');
+        const resultsContainer = document.getElementById('searchResults');
+        if (resultsContainer.style.display === 'block' && !searchContainer.contains(event.target)) {
+            resultsContainer.style.display = 'none';
+        }
+    });
+
+    // Handle smooth scrolling for header navigation links
+    document.querySelectorAll('nav ul li a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+
+            // For mobile menu, close it after clicking a link
+            const nav = document.querySelector('nav');
+            if (window.innerWidth <= 576 && nav.style.display === 'block') { // Adjust breakpoint as needed
+                nav.style.display = 'none';
+            }
+        });
+    });
+
+    // Handle smooth scrolling for CTA button
+    document.querySelector('.cta-button').addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+</script>
 </body>
 </html>
