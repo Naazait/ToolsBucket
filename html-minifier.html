@@ -343,12 +343,19 @@
                         minifyCSS: true,
                         minifyJS: true,
                     });
-                } else if (activeType === 'css') {
-                    if (typeof CleanCSS === 'undefined') throw new Error("CleanCSS library not loaded.");
-                    const output = new CleanCSS().minify(code);
-                    if (output.errors.length > 0) throw new Error(output.errors.join(', '));
-                    minified = output.styles;
-                } else if (activeType === 'js') {
+                            } else if (activeType === 'css') {
+                // Ensure CleanCSS is available globally.
+                // The CDN link you are using for clean-css@5.3.1 usually
+                // exposes CleanCSS as a global variable.
+                if (typeof CleanCSS === 'undefined') {
+                    // This error indicates the script either failed to load or
+                    // did not expose CleanCSS globally.
+                    throw new Error("CleanCSS library not loaded or not globally accessible. Please check your internet connection and browser's console for errors.");
+                }
+                const output = new CleanCSS().minify(code);
+                if (output.errors.length > 0) throw new Error(output.errors.join(', '));
+                minified = output.styles;
+            } else if (activeType === 'js') {
                     if (typeof Terser === 'undefined') throw new Error("Terser library not loaded.");
                     const result = await Terser.minify(code);
                     if (result.error) throw result.error;
