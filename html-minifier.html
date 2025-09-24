@@ -2,21 +2,21 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MJYDCHGD51"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MJYDCHGD51"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'G-MJYDCHGD51');
-</script>
+      gtag('config', 'G-MJYDCHGD51');
+    </script>
     <!-- ============== BASIC META TAGS ============== -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Free Online HTML, CSS & JS Minifier | Minify Code</title>
     <meta name="description" content="Free online HTML, CSS & JavaScript minifier. Reduce file size instantly to boost website speed. Paste code and get minified version fast and easy.">
     <meta name="keywords" content="html minifier, css minifier, js minifier, minify code, javascript minifier, code optimizer, online minifier, reduce file size">
-    
+
     <!-- ============== SEO & SOCIAL META TAGS ============== -->
     <link rel="canonical" href="https://toolsbucket.online/html-minifier.html">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -34,14 +34,15 @@
     <meta property="og:url" content="https://toolsbucket.online/html-minifier.html">
     <meta property="og:image" content="https://toolsbucket.online/og-image.png">
 	<!-- Twitter Card meta tags -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@ToolsBucket2025"> <!-- Replace with your Twitter username -->
-  <meta name="twitter:title" content="ToolsBucket - Free Online Tools">
-  <meta name="twitter:description" content="A collection of free, fast, and secure online utilities for PDFs, images, text, and web development.">
-  <meta name="twitter:image" content="https://toolsbucket.online/ToolsBucket_banner.jpg"> <!-- Replace with your image URL -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ToolsBucket2025"> <!-- Replace with your Twitter username -->
+    <meta name="twitter:title" content="ToolsBucket - Free Online Tools">
+    <meta name="twitter:description" content="A collection of free, fast, and secure online utilities for PDFs, images, text, and web development.">
+    <meta name="twitter:image" content="https://toolsbucket.online/ToolsBucket_banner.jpg"> <!-- Replace with your image URL -->
 
     <!-- External Minifier Libraries - CORRECTED HTML MINIFIER LINK -->
-    <script src="https://cdn.jsdelivr.net/npm/html-minifier@4.0.0/dist/htmlminifier.min.js"></script>
+    <!-- Replaced the original html-minifier CDN with one that exposes a global HTMLMinifier object -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-minifier/3.5.2/htmlminifier.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/clean-css@5.3.1/dist/clean-css.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/terser@5.15.1/dist/bundle.min.js"></script>
 
@@ -67,7 +68,7 @@
             align-items: center;
             padding: 20px;
         }
-        
+
         .page-header {
             width: 100%;
             max-width: 1200px;
@@ -90,7 +91,7 @@
             border: 1px solid var(--border-color);
         }
         .back-button:hover { background-color: #dee2e6; }
-        
+
         .main-container { width: 100%; max-width: 1200px; }
         .content-section, .tool-container, footer {
             background-color: var(--card-background);
@@ -102,7 +103,7 @@
         h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
         h1 { font-size: 2em; }
         h2 { font-size: 1.6em; }
-        
+
         .tabs { display: flex; gap: 5px; margin-bottom: -1px; }
         .tab-btn {
             padding: 10px 15px;
@@ -125,7 +126,7 @@
         @media (min-width: 768px) {
             .editor-grid { grid-template-columns: 1fr 1fr; }
         }
-        
+
         .editor-box textarea {
             width: 100%;
             height: 300px;
@@ -141,7 +142,7 @@
             background: none; border: 1px solid var(--border-color); cursor: pointer;
             padding: 5px 10px; border-radius: 5px;
         }
-        
+
         .minify-action { text-align: center; margin: 20px 0; }
         .btn {
             background-color: var(--primary-color);
@@ -149,7 +150,7 @@
             cursor: pointer; font-size: 16px; font-weight: 600;
         }
         #result-info { font-weight: 600; color: #28a745; }
-        
+
         footer { text-align: center; }
         .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
         .footer-container li { display: inline; margin: 0 10px; }
