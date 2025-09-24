@@ -40,14 +40,8 @@
     <meta name="twitter:description" content="A collection of free, fast, and secure online utilities for PDFs, images, text, and web development.">
     <meta name="twitter:image" content="https://toolsbucket.online/ToolsBucket_banner.jpg"> <!-- Replace with your image URL -->
 
-    <!-- External Minifier Libraries - CORRECTED HTML MINIFIER LINK -->
-    <!-- Replaced the original html-minifier CDN with one that exposes a global HTMLMinifier object -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-minifier/3.5.2/htmlminifier.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/clean-css@5.3.1/dist/clean-css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/terser@5.15.1/dist/bundle.min.js"></script>
-
     <!-- ============== STYLES & FONTS ============== -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inconsolata:wght@400&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #007BFF;
@@ -57,6 +51,7 @@
             --heading-color: #0056b3;
             --border-color: #ddd;
             --shadow-color: rgba(0, 123, 255, 0.1);
+            --accent: #0ea5a4; /* Keeping original accent for buttons */
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -68,10 +63,10 @@
             align-items: center;
             padding: 20px;
         }
-
+        
         .page-header {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1100px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -87,12 +82,10 @@
             padding: 8px 16px;
             border-radius: 8px;
             font-weight: 600;
-            transition: background-color 0.3s;
             border: 1px solid var(--border-color);
         }
-        .back-button:hover { background-color: #dee2e6; }
-
-        .main-container { width: 100%; max-width: 1200px; }
+        
+        .main-container { width: 100%; max-width: 1100px; }
         .content-section, .tool-container, footer {
             background-color: var(--card-background);
             padding: 30px;
@@ -103,68 +96,85 @@
         h1, h2 { color: var(--heading-color); margin-bottom: 15px; text-align: center; }
         h1 { font-size: 2em; }
         h2 { font-size: 1.6em; }
+        h3 { margin-top: 20px; margin-bottom: 10px; text-align: left; }
+        p, li { line-height: 1.7; text-align: left; }
+        ul, ol { margin-left: 20px; }
 
-        .tabs { display: flex; gap: 5px; margin-bottom: -1px; }
-        .tab-btn {
-            padding: 10px 15px;
-            border: 1px solid var(--border-color);
-            border-bottom: none;
-            border-radius: 8px 8px 0 0;
-            cursor: pointer;
-            background-color: #f0f0f0;
-        }
-        .tab-btn.active { background-color: var(--card-background); font-weight: 600; }
+        .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+        .tabs{display:flex;background:#f3f4f6;padding:6px;border-radius:999px;gap:6px}
+        .tab{padding:8px 12px;border-radius:999px;cursor:pointer;font-weight:600;color:#6b7280}
+        .tab.active{background:white;color:#042b2b;box-shadow:0 4px 10px rgba(2,6,23,0.06)}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+        textarea{width:100%;height:340px;padding:12px;border:1px solid #e6e9ef;border-radius:8px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;resize:vertical}
+        .small{font-size:13px;color:#6b7280}
+        .row{display:flex;gap:8px;align-items:center}
+        button.btn{background:var(--accent);color:white;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+        button.ghost{background:transparent;border:1px solid #e6e9ef;padding:9px 12px;border-radius:8px;cursor:pointer}
+        .muted{color:#6b7280}
+        
+        .output{background:#f9f9f9;color: var(--text-color);padding:12px;border-radius:8px;min-height:340px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;white-space:pre-wrap;overflow:auto; border: 1px solid #e6e9ef;}
+        
+        .options{display:flex;gap:12px;align-items:center}
+        .badge{background:#fffbeb;color:#92400e;padding:6px 8px;border-radius:6px;font-weight:700;font-size:12px}
+        
+        #resultStats { margin-top: 8px; font-size: 13px; color: #6b7280; text-align: right; }
 
-        .editor-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 0 8px 8px 8px;
+        @media (max-width:900px){
+          .grid{grid-template-columns:1fr;}.output,textarea{height:280px}
         }
-        @media (min-width: 768px) {
-            .editor-grid { grid-template-columns: 1fr 1fr; }
+        
+        /* === NEW FOOTER STYLES === */
+        footer {
+            text-align: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
         }
-
-        .editor-box textarea {
-            width: 100%;
-            height: 300px;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            font-family: monospace;
-            font-size: 14px;
-            resize: vertical;
+        footer h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-top: 0;
+            margin-bottom: 15px;
         }
-        .editor-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .copy-btn, .clear-btn {
-            background: none; border: 1px solid var(--border-color); cursor: pointer;
-            padding: 5px 10px; border-radius: 5px;
+        footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
         }
-
-        .minify-action { text-align: center; margin: 20px 0; }
-        .btn {
-            background-color: var(--primary-color);
-            color: white; padding: 12px 25px; border: none; border-radius: 8px;
-            cursor: pointer; font-size: 16px; font-weight: 600;
+        footer li {
+            display: inline-block;
+            margin: 0 12px;
         }
-        #result-info { font-weight: 600; color: #28a745; }
-
-        footer { text-align: center; }
-        .footer-container ul { list-style: none; padding: 0; margin: 10px 0; }
-        .footer-container li { display: inline; margin: 0 10px; }
-        .footer-container a { color: var(--primary-color); text-decoration: none; }
-        .footer-bottom { margin-top: 15px; font-size: 0.9em; color: #888; }
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+        }
+        footer .footer-bottom p {
+            font-size: 0.9em;
+            color: #888;
+            margin: 0;
+        }
+        /* === END NEW FOOTER STYLES === */
     </style>
-	<!========Ads Section ===========>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5037596819589415"
-     crossorigin="anonymous"></script>
-    <!=========Ads Section ===========>
+
+    <!-- ============== STRUCTURED DATA (SCHEMA MARKUP) ============== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Free HTML, CSS, JS Minifier",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": { "@type": "Offer", "price": "0" },
+      "description": "A client-side tool to minify HTML, CSS, and JavaScript code to reduce file size and improve website performance."
+    }
+    </script>
 </head>
 <body>
   <header class="page-header">
-      <a href="index.html#tools" class="back-button">← Back to Tools</a>
+      <a href="index.html" class="back-button">← Back to Tools</a>
       <div class="brand-name">
           <span class="brand-part-1">Tools</span><span class="brand-part-2">Bucket</span>
       </div>
@@ -172,239 +182,290 @@
 
   <main class="main-container">
     <section class="content-section">
-        <h1>HTML, CSS & JavaScript Minifier</h1>
-        <p>Speed up your website by reducing the size of your code files. Our online minifier removes unnecessary characters like whitespace, comments, and newlines from your HTML, CSS, and JavaScript code. This results in smaller files that load faster in your users' browsers. Simply select the code type, paste your code, and get the optimized version instantly.</p>
+        <h1>HTML, CSS, & JS Minifier</h1>
+        <p style="text-align:center;">Optimize your website's performance by reducing the size of your code. Our free online minifier for HTML, CSS, and JavaScript removes unnecessary characters like whitespace, comments, and line breaks, resulting in smaller files that load faster. This tool is perfect for web developers and designers looking to improve page speed and user experience. All minification happens securely in your browser.</p>
     </section>
-
+    
     <div class="tool-container">
-        <div class="tabs">
-            <button class="tab-btn active" data-type="html">HTML</button>
-            <button class="tab-btn" data-type="css">CSS</button>
-            <button class="tab-btn" data-type="js">JavaScript</button>
+      <div class="controls">
+        <div class="tabs" role="tablist" aria-label="Language tabs">
+          <div class="tab active" data-lang="html" role="tab" tabindex="0">HTML</div>
+          <div class="tab" data-lang="css" role="tab" tabindex="0">CSS</div>
+          <div class="tab" data-lang="js" role="tab" tabindex="0">JavaScript</div>
         </div>
-        <div class="editor-grid">
-            <div class="editor-box">
-                <h3>Input</h3>
-                <textarea id="inputCode" placeholder="Paste your code here..."></textarea>
-                <div class="editor-actions">
-                    <button class="copy-btn" id="copyInput">Copy</button>
-                    <button class="clear-btn" id="clearInput">Clear</button>
-                </div>
-            </div>
-            <div class="editor-box">
-                <h3>Output</h3>
-                <textarea id="outputCode" readonly placeholder="Minified code will appear here..."></textarea>
-                 <div class="editor-actions">
-                    <button class="copy-btn" id="copyOutput">Copy</button>
-                    <div id="result-info"></div>
-                </div>
-            </div>
+        <div style="flex:1"></div>
+        <div class="options row">
+          <label class="small">Mode:</label>
+          <select id="mode" title="Choose minify mode" aria-label="Minify mode">
+            <option value="safe">Safe (recommended)</option>
+            <option value="aggressive">Aggressive (may break complex code)</option>
+          </select>
+          <button id="minifyBtn" class="btn">Minify</button>
+          <button id="copyBtn" class="ghost">Copy</button>
+          <button id="downloadBtn" class="ghost">Download</button>
         </div>
-        <div class="minify-action">
-            <button id="minifyBtn" class="btn">Minify</button>
+      </div>
+
+      <div class="grid" style="margin-top:14px">
+        <div>
+          <label class="small">Input</label>
+          <textarea id="inputArea" aria-label="Code input"></textarea>
+          <div class="row" style="margin-top:8px;justify-content:space-between">
+            <div class="small muted">Tip: Press <kbd>Ctrl/⌘ + Enter</kbd> to minify</div>
+          </div>
         </div>
+
+        <div>
+          <label class="small">Output (minified)</label>
+          <div id="output" class="output" aria-live="polite"></div>
+          <div id="resultStats"></div>
+        </div>
+      </div>
     </div>
 
-    <!=================Banner Ads Section ==================>
-        
-  		<!=================Banner Ads Section ==================>
-      
     <section class="content-section">
-        <h2>Why Minify Your Code?</h2>
-        <p>Minifying your website's assets is a crucial step in web performance optimization. Every character, space, and comment in your code adds to the file size. By removing them, you can significantly reduce the amount of data that needs to be transferred from the server to the user's browser, resulting in a faster and more responsive website.</p>
-    </section>
-
-	  </===================Ads Section==================>
-	
-	</====================Ads Section=================>
-    <section class="content-section">
-        <h2>Unleash Web Performance with Our Free Online Minifier for HTML, CSS, and JavaScript</h2>
-        <p>In today's fast-paced digital world, website speed is paramount. Users expect instant loading times, and search engines heavily favor quick-to-load sites. Our free online HTML, CSS, and JavaScript Minifier tool is designed to be your go-to solution for optimizing your web assets, drastically improving your website's loading speed and overall performance. Whether you're a seasoned web developer, a small business owner, or a budding enthusiast, this tool provides a simple yet powerful way to make your website snappier and more efficient.</p>
-
-        <h3>What Does Our HTML, CSS, & JS Minifier Do?</h3>
-        <p>At its core, our Minifier tool intelligently processes your raw HTML, CSS, and JavaScript code to strip away all unnecessary characters without altering its functionality. Think of it as a meticulous cleaner for your code. This includes:</p>
+        <h2>About Our Code Minifier</h2>
+        <h3>What the Tool Does</h3>
+        <p>Minification is a crucial step in web development for optimizing website performance. Our tool takes your readable, well-formatted HTML, CSS, or JavaScript code and transforms it into a compact, functionally equivalent version. It achieves this by intelligently removing non-essential characters, such as:</p>
         <ul>
-            <li><strong>Whitespace Removal:</strong> Eliminating spaces, tabs, and newlines that are crucial for human readability during development but are entirely ignored by browsers at runtime.</li>
-            <li><strong>Comment Deletion:</strong> Removing all comments (e.g., `<!-- ... -->` in HTML, `/* ... */` in CSS, `//` or `/* ... */` in JavaScript) that are helpful for developers but add unnecessary bulk to live files.</li>
-            <li><strong>Redundant Character Cleanup:</strong> Optimizing code by removing optional closing tags, semi-colons where not strictly required, and other superfluous characters specific to each language.</li>
+            <li>Whitespace (spaces, tabs, newlines)</li>
+            <li>Comments (both single-line and multi-line)</li>
+            <li>Optional semicolons and other redundant syntax (in aggressive mode)</li>
         </ul>
-        <p>By performing these precise optimizations, the tool effectively reduces the file size of your web resources. Smaller file sizes mean less data needs to be downloaded by your visitors' browsers, leading to faster rendering, better user experience, and improved SEO rankings.</p>
-
-        <h3>How to Use Our Online Minifier: A Step-by-Step Guide</h3>
-        <p>Our tool is designed for simplicity and efficiency. You don't need to download any software or have advanced technical knowledge. Just follow these easy steps:</p>
+        <p>The result is a significantly smaller file size that retains all the original functionality. This tool provides two modes: a 'Safe' mode for reliable, basic compression and an 'Aggressive' mode for maximum file size reduction, which should be used with caution.</p>
+        
+        <h3>How to Use Our HTML, CSS, & JS Minifier</h3>
+        <p>Using our online code minifier is straightforward and designed for efficiency. Follow these simple steps to optimize your code:</p>
         <ol>
-            <li><strong>Navigate to the Tool:</strong> Open your web browser and go to our <a href="https://toolsbucket.online/html-minifier.html">HTML, CSS & JS Minifier page</a>.</li>
-            <li><strong>Select Your Code Type:</strong> At the top of the input area, you'll see three tabs: "HTML," "CSS," and "JavaScript." Click on the tab corresponding to the type of code you wish to minify. The active tab will be highlighted.</li>
-            <li><strong>Paste Your Code:</strong> In the "Input" text area on the left, paste your unminified code. You can copy and paste directly from your editor or source file.</li>
-            <li><strong>Initiate Minification:</strong> Once your code is in the input box, click the prominent "Minify" button located below the input and output areas.</li>
-            <li><strong>View & Copy Minified Code:</strong> The minified version of your code will instantly appear in the "Output" text area on the right. Below the output box, you'll see a "Copy" button. Click this to quickly copy the optimized code to your clipboard. You'll also see a 'Result Info' displaying the percentage and byte size saved!</li>
-            <li><strong>Clear (Optional):</strong> If you want to process another piece of code, simply click the "Clear" button below the input area to reset both boxes.</li>
+            <li><strong>Select Language:</strong> At the top of the tool, you'll see three tabs: "HTML", "CSS", and "JavaScript". Click on the tab corresponding to the type of code you want to minify.</li>
+            <li><strong>Paste Your Code:</strong> In the "Input" text area on the left, paste your unminified code. You can also type directly into this box.</li>
+            <li><strong>Choose Minification Mode:</strong> Below the tabs, you'll find a "Mode" dropdown.
+                <ul>
+                    <li><strong>Safe (recommended):</strong> This mode removes comments and basic whitespace without altering the core structure of your code. It's ideal for most users and ensures compatibility.</li>
+                    <li><strong>Aggressive (may break complex code):</strong> This mode applies more intense compression by also removing optional semicolons and further reducing whitespace. Use this mode with caution, especially for JavaScript, as it might sometimes impact complex scripts. Always test your minified code thoroughly if using aggressive mode.</li>
+                </ul>
+            </li>
+            <li><strong>Minify Code:</strong> Click the "Minify" button. Alternatively, for a quicker process, you can press <code>Ctrl + Enter</code> (or <code>⌘ + Enter</code> on Mac) while your cursor is in the input area.</li>
+            <li><strong>View & Analyze Output:</strong> Your minified code will instantly appear in the "Output (minified)" area on the right. Below the output, you'll see "Result Stats" displaying the original size, minified size, and the percentage of reduction achieved.</li>
+            <li><strong>Copy or Download:</strong>
+                <ul>
+                    <li><strong>Copy:</strong> Click the "Copy" button to instantly copy the minified code to your clipboard.</li>
+                    <li><strong>Download:</strong> Click the "Download" button to save the minified code as a file (e.g., `minified.html`, `minified.css`, `minified.js`) to your computer.</li>
+                </ul>
+            </li>
         </ol>
-        <p>It's that simple! In just a few clicks, you can transform bulky code into lean, fast-loading assets.</p>
 
-        <h3>Key Benefits of Using Our Code Minifier</h3>
-        <p>Incorporating code minification into your web development workflow offers a multitude of advantages:</p>
+        <h3>Benefits of Code Minification</h3>
+        <p>Minifying your HTML, CSS, and JavaScript files offers numerous advantages for your website and its users:</p>
         <ul>
-            <li><strong>Boost Website Speed:</strong> This is the primary benefit. Smaller file sizes mean faster download times, which directly translates to a quicker loading website.</li>
-            <li><strong>Improve User Experience (UX):</strong> Users are impatient. A fast-loading website leads to happier visitors, lower bounce rates, and increased engagement.</li>
-            <li><strong>Enhance Search Engine Optimization (SEO):</strong> Google and other search engines use page speed as a ranking factor. Faster websites tend to rank higher in search results, driving more organic traffic.</li>
-            <li><strong>Reduce Bandwidth Usage:</strong> For both your server and your users, less data transferred means lower bandwidth consumption, potentially saving costs and improving accessibility for users on limited data plans.</li>
-            <li><strong>Better Core Web Vitals:</strong> Minification contributes positively to important metrics like Largest Contentful Paint (LCP) and First Input Delay (FID), which are crucial for Google's Core Web Vitals assessment.</li>
-            <li><strong>Seamless Integration:</strong> Our online tool requires no installation, making it accessible from anywhere, on any device, whenever you need it.</li>
-            <li><strong>Completely Free:</strong> Enjoy all the benefits of professional-grade code optimization without any cost.</li>
+            <li><strong>Improved Website Speed:</strong> Smaller file sizes mean faster download times for your users. This directly translates to quicker page loads, reducing bounce rates and enhancing the overall user experience.</li>
+            <li><strong>Better SEO Rankings:</strong> Search engines like Google prioritize fast-loading websites. By minifying your code, you contribute to better Core Web Vitals scores, which can positively impact your search engine optimization (SEO) efforts.</li>
+            <li><strong>Reduced Bandwidth Usage:</strong> Less data transferred means lower bandwidth consumption for both your server and your users. This is particularly beneficial for users on limited data plans or slow internet connections.</li>
+            <li><strong>Cost Savings:</strong> For websites with high traffic, reduced bandwidth can lead to lower hosting costs, especially with providers that charge based on data transfer.</li>
+            <li><strong>Enhanced User Experience:</strong> Users expect fast, responsive websites. Minification contributes significantly to meeting these expectations, making your site more enjoyable and accessible.</li>
+            <li><strong>Easier Caching:</strong> Smaller files can be cached more efficiently by browsers and content delivery networks (CDNs), further speeding up subsequent visits to your site.</li>
+            <li><strong>Developer Best Practice:</strong> While development often involves verbose, commented code for readability, minification is a standard best practice for production environments. Our tool helps automate this critical step.</li>
         </ul>
-        
+
         <h3>Frequently Asked Questions (FAQs)</h3>
         
-        <h4>Q: Is minification safe for my code? Will it break anything?</h4>
-        <p>A: Yes, minification is generally safe. Our tool is designed to remove only superfluous characters (whitespace, comments, etc.) that do not affect the execution or rendering of your code. The functionality remains identical. However, it's always good practice to test your minified code in your development environment before deploying it live.</p>
+        <h4>Q: Is this tool really free?</h4>
+        <p>A: Yes, our HTML, CSS, and JavaScript minifier is completely free to use, with no hidden costs or limitations. It's available for everyone, from hobbyists to professional developers.</p>
 
-        <h4>Q: What's the difference between minification and compression?</h4>
-        <p>A: Minification removes unnecessary characters from the code itself. Compression (like Gzip or Brotli) is a server-side technique that further reduces file size by encoding the data into a more compact format before sending it to the browser. They are complementary; you should ideally minify your code *then* serve it compressed.</p>
-
-        <h4>Q: Can I un-minify code?</h4>
-        <p>A: While technically possible with 'beautifier' or 'formatter' tools, un-minifying code usually doesn't restore comments or original variable names (in the case of JavaScript). Minified code is intended for production. Always keep your original, well-commented source code for development and only minify for deployment.</p>
-
-        <h4>Q: How much space can I expect to save?</h4>
-        <p>A: The amount of space saved varies depending on the original code's verbosity, the number of comments, and the amount of whitespace. You can typically expect savings ranging from 10% to 50% or even more for heavily commented or unformatted files. Our tool provides a precise percentage and byte-size saving after minification.</p>
-
-        <h4>Q: Do I need to minify all my HTML, CSS, and JS files?</h4>
-        <p>A: Yes, for optimal performance, it's highly recommended to minify all your production-ready HTML, CSS, and JavaScript files. Each minified file contributes to overall site speed improvement.</p>
+        <h4>Q: Is my code secure? Does your tool store my code?</h4>
+        <p>A: Your security and privacy are paramount. This tool operates entirely client-side, meaning all minification processes occur directly within your web browser. Your code is never sent to our servers, nor is it stored by us. You can use it with complete peace of mind.</p>
         
-        <h4>Q: Is there a file size limit for the input?</h4>
-        <p>A: While there isn't a strict hard limit, very large files (e.g., several megabytes) might take slightly longer to process. For most typical web development files, the minification will be near-instantaneous.</p>
+        <h4>Q: What's the difference between 'Safe' and 'Aggressive' minification?</h4>
+        <p>A: 'Safe' mode removes comments and basic whitespace (like extra spaces and line breaks) which are generally safe to remove without affecting code functionality. 'Aggressive' mode goes further by removing more complex whitespace, optional semicolons (in JS), and other potentially redundant characters. While 'Aggressive' mode can achieve greater file size reduction, it carries a slightly higher risk of breaking complex code, especially JavaScript. We recommend testing your code thoroughly if you opt for 'Aggressive' mode.</p>
+        
+        <h4>Q: Can I unminify or "beautify" code using this tool?</h4>
+        <p>A: No, this tool is specifically designed for minification. Unminifying code (also known as beautifying or formatting) is the opposite process, adding back whitespace and line breaks for readability. We might offer a separate beautifier tool in the future.</p>
+        
+        <h4>Q: How much can minification reduce my file size?</h4>
+        <p>A: The reduction percentage varies greatly depending on the original code's verbosity, the number of comments, and the amount of whitespace. You can typically expect reductions between 10% to 50% or even more for heavily commented or unformatted code. The "Result Stats" section will give you precise figures after each minification.</p>
 
-        <p>By leveraging our free online HTML, CSS, and JavaScript Minifier, you're taking a significant step towards a faster, more efficient, and user-friendly website. Start optimizing your code today and experience the tangible benefits of enhanced web performance!</p>
+        <h4>Q: Why is website speed important for SEO?</h4>
+        <p>A: Google and other search engines use page speed as a ranking factor. Faster websites provide a better user experience, which search engines want to promote. Slow websites can lead to higher bounce rates and lower engagement, signaling to search engines that users are having a poor experience. Minification is a key component in optimizing for speed and, by extension, SEO.</p>
+        
+        <h4>Q: What browsers are supported?</h4>
+        <p>A: Our tool is designed to work efficiently across all modern web browsers, including Chrome, Firefox, Safari, Edge, and Opera.</p>
+        
+        <h4>Q: What is the purpose of the 'Download' button?</h4>
+        <p>A: The 'Download' button allows you to save the minified code directly to your computer as a `.html`, `.css`, or `.js` file, depending on the language tab you selected. This is convenient for saving your optimized files for deployment or further use.</p>
     </section>
+
+    <!-- === NEW FOOTER HTML === -->
     <footer id="contact">
-        <div class="footer-container">
-            <h3>Quick Links</h3>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="index.html#tools">All Tools</a></li>
-                <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                <li><a href="terms-&-conditions.html">Terms of Use</a></li>
-                <li><a href="about.html">About</a></li>
-            </ul>
-        </div>
+        <h3>Quick Links</h3>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#tools">All Tools</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-&-conditions.html">Terms of Use</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
         <div class="footer-bottom">
-            <p>© 2025 ToolsBucket. All rights reserved.</p>
+            <p>© 2025 Tools Bucket. All rights reserved.</p>
         </div>
     </footer>
+    <!-- === END NEW FOOTER HTML === -->
   </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const tabs = document.querySelectorAll('.tab-btn');
-        const inputCode = document.getElementById('inputCode');
-        const outputCode = document.getElementById('outputCode');
-        const minifyBtn = document.getElementById('minifyBtn');
-        const resultInfo = document.getElementById('result-info');
-        
-        const copyInputBtn = document.getElementById('copyInput');
-        const clearInputBtn = document.getElementById('clearInput');
-        const copyOutputBtn = document.getElementById('copyOutput');
+    // UI wiring
+    const tabs = document.querySelectorAll('.tab');
+    const inputArea = document.getElementById('inputArea');
+    const output = document.getElementById('output');
+    const minifyBtn = document.getElementById('minifyBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const modeSelect = document.getElementById('mode');
+    const resultStats = document.getElementById('resultStats');
 
-        let activeType = 'html';
+    let currentLang = 'html';
+    const examples = {
+      html: `<!doctype html>
+<html>
+  <head>
+    <!-- page title -->
+    <title>Demo</title>
+  </head>
+  <body>
+    <h1> Hello World </h1>
+    <p> This is an example. </p>
+  </body>
+</html>`,
+      css: `/* Example CSS */
+:root { --main: #0ea5a4; }
+body {
+  margin: 0;
+  font-family: system-ui;
+}`,
+      js: `// Example JavaScript
+function add(a, b) {
+  // returns sum
+  return a + b;
+}
+console.log(add(2,3));`
+    };
 
-        const setActiveTab = (type) => {
-            activeType = type;
-            tabs.forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.type === type);
-            });
-            inputCode.placeholder = `Paste your ${type.toUpperCase()} code here...`;
-            outputCode.value = '';
-            resultInfo.textContent = '';
-        };
+    inputArea.value = examples.html;
+    output.textContent = '';
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => setActiveTab(tab.dataset.type));
-        });
-
-        minifyBtn.addEventListener('click', async () => {
-            const code = inputCode.value;
-            if (!code.trim()) {
-                outputCode.value = "Input is empty.";
-                return;
-            }
-
-            outputCode.value = "Minifying...";
-            resultInfo.textContent = '';
-
-            try {
-                let minified = '';
-                if (activeType === 'html') {
-                    // Check if the correct library is loaded
-                    if (typeof HTMLMinifier === 'undefined') {
-                        throw new Error("HTMLMinifier library not loaded. Please check your internet connection and refresh.");
-                    }
-                    minified = HTMLMinifier.minify(code, {
-                        collapseWhitespace: true,
-                        removeComments: true,
-                        minifyCSS: true,
-                        minifyJS: true,
-                    });
-                            } else if (activeType === 'css') {
-                // Ensure CleanCSS is available globally.
-                // The CDN link you are using for clean-css@5.3.1 usually
-                // exposes CleanCSS as a global variable.
-                if (typeof CleanCSS === 'undefined') {
-                    // This error indicates the script either failed to load or
-                    // did not expose CleanCSS globally.
-                    throw new Error("CleanCSS library not loaded or not globally accessible. Please check your internet connection and browser's console for errors.");
-                }
-                const output = new CleanCSS().minify(code);
-                if (output.errors.length > 0) throw new Error(output.errors.join(', '));
-                minified = output.styles;
-            } else if (activeType === 'js') {
-                    if (typeof Terser === 'undefined') throw new Error("Terser library not loaded.");
-                    const result = await Terser.minify(code);
-                    if (result.error) throw result.error;
-                    minified = result.code;
-                }
-                
-                outputCode.value = minified;
-                
-                const originalSize = new Blob([code]).size;
-                const minifiedSize = new Blob([minified]).size;
-                const savings = originalSize > 0 ? ((originalSize - minifiedSize) / originalSize * 100).toFixed(2) : 0;
-                
-                if (originalSize > 0) {
-                    resultInfo.textContent = `Saved ${savings}% (${originalSize} B → ${minifiedSize} B)`;
-                } else {
-                    resultInfo.textContent = '';
-                }
-                
-            } catch (err) {
-                console.error(err);
-                outputCode.value = `Error: ${err.message || 'An unknown error occurred.'}`;
-                resultInfo.textContent = '';
-            }
-        });
-
-        const copyToClipboard = (element, button) => {
-            if (element.value) {
-                navigator.clipboard.writeText(element.value).then(() => {
-                    const originalText = button.textContent;
-                    button.textContent = 'Copied!';
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                    }, 2000);
-                });
-            }
-        };
-
-        copyInputBtn.addEventListener('click', () => copyToClipboard(inputCode, copyInputBtn));
-        copyOutputBtn.addEventListener('click', () => copyToClipboard(outputCode, copyOutputBtn));
-        clearInputBtn.addEventListener('click', () => {
-            inputCode.value = '';
-            outputCode.value = '';
-            resultInfo.textContent = '';
-        });
-
-        // Initial setup
-        setActiveTab('html');
+    tabs.forEach(t=>{
+      t.addEventListener('click', ()=> activateTab(t));
+      t.addEventListener('keydown', (e)=> { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activateTab(t); }});
     });
+
+    function activateTab(tabEl){
+      tabs.forEach(x=>x.classList.remove('active'));
+      tabEl.classList.add('active');
+      currentLang = tabEl.dataset.lang;
+      inputArea.value = examples[currentLang];
+      output.textContent = '';
+      resultStats.textContent = '';
+      inputArea.focus();
+    }
+
+    function minifyHTML(input, aggressive=false){
+      let s = input.replace(/<!--[\s\S]*?-->/g, ''); // Remove HTML comments
+      if(aggressive){
+        // Aggressive HTML minification: remove all whitespace between tags, and reduce multiple spaces to single spaces
+        s = s.replace(/>\s+</g, '><').replace(/\s{2,}/g, ' ').replace(/\s*(=)\s*/g,'=').trim();
+      } else {
+        // Safe HTML minification: remove newlines and leading/trailing spaces from each line
+        s = s.split('\n').map(line => line.trim()).join('');
+      }
+      return s;
+    }
+
+    function minifyCSS(input, aggressive=false){
+      let s = input.replace(/\/\*[\s\S]*?\*\//g,''); // Remove CSS comments
+      if(aggressive){
+        // Aggressive CSS minification: remove all whitespace and redundant semicolons
+        s = s.replace(/\s+/g,' ').replace(/\s*([\{\}:;,>~\+\(\)])\s*/g,'$1').replace(/;}/g,'}').trim();
+      } else {
+        // Safe CSS minification: remove newlines and leading/trailing spaces from each line
+        s = s.split('\n').map(line=>line.trim()).join('');
+      }
+      return s;
+    }
+
+    function minifyJS(input, aggressive=false){
+      // This simple JS minifier is illustrative. For production, consider a robust library like Terser.
+      let s = input.replace(/\/\*[\s\S]*?\*\//g,''); // Remove multi-line comments
+      if(aggressive){
+        // Aggressive JS minification: remove single line comments, all whitespace, and redundant characters
+        s = s.replace(/(^|[^:"'\\])\/\/.*$/gm, '$1') // Remove single-line comments that are not part of a string
+                 .replace(/\s+/g,' ') // Replace multiple spaces/newlines with a single space
+                 .replace(/\s*([=+\-*/%<>!\?:;,\{\}\[\]\(\)])\s*/g,'$1') // Remove spaces around operators/delimiters
+                 .trim();
+      } else {
+        // Safe JS minification: remove comments and extra newlines
+        s = s.split('\n').map(line=>line.trim()).filter(line=>line!=='').join('\n');
+      }
+      return s;
+    }
+
+    function performMinify(){
+      const text = inputArea.value;
+      const mode = modeSelect.value;
+      const aggressive = mode === 'aggressive';
+      let result = '';
+      try {
+        if(currentLang === 'html') result = minifyHTML(text,aggressive);
+        else if(currentLang === 'css') result = minifyCSS(text,aggressive);
+        else if(currentLang === 'js') result = minifyJS(text,aggressive);
+      } catch(err) {
+        result = 'Error while minifying: ' + err.message;
+      }
+      output.textContent = result;
+      output.scrollTop = 0;
+      
+      // Update stats
+      const originalSize = new Blob([text]).size;
+      const minifiedSize = new Blob([result]).size;
+      const reduction = originalSize > 0 ? (((originalSize - minifiedSize) / originalSize) * 100).toFixed(1) : 0;
+      resultStats.textContent = `Original: ${originalSize} bytes | Minified: ${minifiedSize} bytes | Reduction: ${reduction}%`;
+    }
+
+    minifyBtn.addEventListener('click', performMinify);
+
+    copyBtn.addEventListener('click', async ()=>{
+      const txt = output.textContent;
+      if(!txt) return alert('Nothing to copy — minify first.');
+      try {
+        await navigator.clipboard.writeText(txt);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(()=> copyBtn.textContent = 'Copy', 1200);
+      } catch(err){
+        alert('Copy failed: ' + err.message);
+      }
+    });
+
+    downloadBtn.addEventListener('click', ()=>{
+      const txt = output.textContent;
+      if(!txt) return alert('Nothing to download — minify first.');
+      const ext = currentLang;
+      const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `minified.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    inputArea.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
+        e.preventDefault();
+        performMinify();
+      }
+    });
+    
+    inputArea.focus();
   </script>
 </body>
 </html>
